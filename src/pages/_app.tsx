@@ -1,20 +1,15 @@
 import Point from '@/pages/meshes/Point';
-import Erase from '@/assets/eraser.svg';
 import "@/pages/app.css";
 
+import Controls from "@/pages/components/Controls";
 import { Canvas } from "@react-three/fiber";
 import { useState, useMemo, useEffect, useRef, MouseEvent } from 'react';
-import { Create, Straighten, Architecture, Undo, Delete } from '@mui/icons-material';
-import { SvgIcon } from "@mui/material";
+import { InputMode, DRAW, ERASE } from "@/pages/constants";
 
-const DRAW = 'draw';
-const STRAIGHTEDGE = 'straightedge';
-const COMPASS = 'compass';
-const ERASE = 'erase';
-type InputMode = 'draw' | 'straightedge' | 'compass' | 'erase';
 
 export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(DRAW);
+
 
   /// ===== CANVAS =====
   const [width, setWidth] = useState(0)
@@ -104,36 +99,11 @@ export default function App() {
         ))}
       </Canvas>
 
-      <div style={{
-        position: 'absolute',
-        display: 'inline-flex',
-        flexDirection: 'column',
-        width: '48px',
-        top: '5rem',
-        left: '2rem',
-        gap: '1rem'
-      }}>
-        <div className='modeButton' onClick={() => setInputMode(DRAW)}>
-          <Create fontSize='inherit'/>
-        </div>
-        <div className='modeButton' onClick={() => setInputMode(STRAIGHTEDGE)}>
-          <Straighten fontSize='inherit'/>
-        </div>
-        <div className='modeButton' onClick={() => setInputMode(COMPASS)}>
-          <Architecture fontSize='inherit'/>
-        </div>
-        <div className='modeButton' onClick={() => setInputMode(ERASE)}>
-          <SvgIcon fontSize='inherit'>
-            <Erase/>
-          </SvgIcon>
-        </div>
-        <div className='modeButton'>
-          <Undo fontSize='inherit' onClick={() => undo()}/>
-        </div>
-        <div className='modeButton' onClick={() => clear()}>
-          <Delete fontSize='inherit'/>
-        </div>
-      </div>
+      <Controls
+        setInputMode={setInputMode}
+        undo={undo}
+        clear={clear}
+      />
     </div>
   )
 }
