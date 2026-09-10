@@ -1,0 +1,22 @@
+
+
+body {
+    margin: 0;
+}
+
+.modeButton {
+    display: flex;
+    flex-direction: row;
+    background-color: #bbbbbb;
+    font-size: 48px;
+    width:fit-content;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 8px;
+    border-radius: 12px;
+}
+
+.modeButton:hover {
+    background-color: #888888;
+}
