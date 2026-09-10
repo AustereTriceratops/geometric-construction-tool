@@ -86,13 +86,21 @@ export default function App() {
     }
   }
 
+  const clickPoint = (index: number) => {
+    return (ev: MouseEvent<HTMLDivElement>) => {
+      if (inputMode == ERASE) {
+        deletePoint(index);
+      }
+    }
+  }
+
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
       <Canvas onClick={onClick}>
         <color attach="background" args={['#e8ddcf']}/>
 
         {points.map((p, i) => (
-          <Point key={i} x={p[0]} y={p[1]}/>
+          <Point key={i} x={p[0]} y={p[1]} clickPoint={clickPoint(i)}/>
         ))}
       </Canvas>
 
