@@ -1,4 +1,4 @@
-import Erase from '@/assets/EraserIcon.svg';
+import Erase from '@/assets/eraser.svg';
 import "@/pages/app.css";
 
 import { Canvas } from "@react-three/fiber";
@@ -42,8 +42,8 @@ export default function App() {
           <Architecture fontSize='inherit'/>
         </div>
         <div className='modeButton'>
-          <SvgIcon>
-            
+          <SvgIcon fontSize='inherit'>
+            <Erase/>
           </SvgIcon>
         </div>
         <div className='modeButton'>
