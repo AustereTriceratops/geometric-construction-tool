@@ -1,30 +1,16 @@
+import Point from '@/pages/meshes/Point';
 import Erase from '@/assets/eraser.svg';
 import "@/pages/app.css";
 
 import { Canvas } from "@react-three/fiber";
-import {useState, useMemo, useEffect, useRef} from 'react';
-import {Create, Straighten, Architecture, Undo, Delete} from '@mui/icons-material';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { Create, Straighten, Architecture, Undo, Delete } from '@mui/icons-material';
 import { SvgIcon } from "@mui/material";
 
-interface PointProps {
-  x: number,
-  y: number
-}
-
-function Point(props : PointProps) {
-  const {x, y} = props;
-
-  return (
-    <mesh position={[x, y, 0]}>
-      <circleGeometry args={[0.05, 10]}/>
-      <meshStandardMaterial color='black'/>
-    </mesh>
-  )
-}
 
 export default function App() {
-  const [points, setPoints] = useState([[1.2, 0], [0, -0.3]])
-  
+  const [points, setPoints] = useState([[1.2, 2], [-2, -0.6]])
+
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
       <Canvas>
