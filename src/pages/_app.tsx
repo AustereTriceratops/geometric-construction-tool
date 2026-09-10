@@ -6,9 +6,16 @@ import {useState, useMemo, useEffect, useRef} from 'react';
 import {Create, Straighten, Architecture, Undo, Delete} from '@mui/icons-material';
 import { SvgIcon } from "@mui/material";
 
-function Point() {
+interface PointProps {
+  x: number,
+  y: number
+}
+
+function Point(props : PointProps) {
+  const {x, y} = props;
+
   return (
-    <mesh>
+    <mesh position={[x, y, 0]}>
       <circleGeometry args={[0.05, 10]}/>
       <meshStandardMaterial color='black'/>
     </mesh>
@@ -16,11 +23,16 @@ function Point() {
 }
 
 export default function App() {
+  const [points, setPoints] = useState([[1.2, 0], [0, -0.3]])
+  
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
       <Canvas>
         <color attach="background" args={['#e8ddcf']}/>
-        <Point/>
+
+        {points.map((p) => (
+          <Point x={p[0]} y={p[1]}/>
+        ))}
       </Canvas>
 
       <div style={{
