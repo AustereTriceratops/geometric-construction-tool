@@ -25,5 +25,5 @@
 + (X) move sidebar to separate component
 + (X) move sidebar buttons to separate component
 + figure out how to best represent edit history
-+ set up ortho camera for tighter control of rendering
++ (X) set up ortho camera for tighter control of rendering
 + create a plane mesh to act as the background

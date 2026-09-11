@@ -1,15 +1,13 @@
 import Point from '@/pages/meshes/Point';
+import Controls from "@/pages/components/Controls";
 import "@/pages/app.css";
 
-import Controls from "@/pages/components/Controls";
 import { Canvas } from "@react-three/fiber";
 import { useState, useMemo, useEffect, useRef, MouseEvent } from 'react';
 import { InputMode, DRAW, ERASE } from "@/pages/constants";
 
-
 export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(DRAW);
-
 
   /// ===== CANVAS =====
   const [width, setWidth] = useState(0)
@@ -22,8 +20,11 @@ export default function App() {
 
   const aspect = useMemo(() => width/height, [width, height]);
 
+  /// ===== CAMERA =====
+  const [scale, setScale] = useState(5);
+
   /// ===== POINTS =====
-  const [points, setPoints] = useState<number[][]>([[1.2, 2], [-2, -0.6]]);
+  const [points, setPoints] = useState<number[][]>([[0, 0], [1.2, 2], [-2, -0.6]]);
 
    const addPoint = (x: number, y: number) => {
     const newPoint = [x, y];
@@ -72,9 +73,8 @@ export default function App() {
     y = 2*y - 1;
 
     // transform to scene space
-    const scl = 3.82;
-    x = scl*x;
-    y = -scl*y;
+    x = scale * x;
+    y = -scale * y;
 
     if (inputMode == DRAW) {
       addPoint(x, y);
@@ -91,7 +91,7 @@ export default function App() {
 
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
-      <Canvas onClick={onClick}>
+      <Canvas orthographic camera={{zoom: 1/scale, position: [0, 0, 1], left: -aspect, right: aspect, top: 1, bottom: -1}} onClick={onClick}>
         <color attach="background" args={['#e8ddcf']}/>
 
         {points.map((p, i) => (
