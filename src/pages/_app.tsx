@@ -4,7 +4,7 @@ import "@/pages/app.css";
 
 import { Canvas } from "@react-three/fiber";
 import { useState, useMemo, useEffect, useRef, MouseEvent } from 'react';
-import { InputMode, DRAW, ERASE, COMPASS, STRAIGHTEDGE } from "@/pages/constants";
+import { InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE } from "@/pages/constants";
 
 const NO_SEL = 'no_sel';
 const ONE_SEL = 'one_sel';
@@ -12,7 +12,7 @@ const READY = 'ready';
 type SecondaryInputStep = 'no_sel' | 'one_sel' | 'ready';
 
 export default function App() {
-  const [inputMode, setInputMode] = useState<InputMode>(DRAW);
+  const [inputMode, setInputMode] = useState<InputMode>(ADD);
 
   const [secondaryInputStep, setSecondaryInputStep] = useState<SecondaryInputStep>(NO_SEL);
   const [anchorPointIndex, setAnchorPointIndex] = useState<number | null>(null);
@@ -107,7 +107,7 @@ const [dragging, setDragging] = useState(false);
     x = scale * x;
     y = -scale * y;
 
-    if (inputMode == DRAW) {
+    if (inputMode == ADD) {
       addPoint(x, y);
     }
   }

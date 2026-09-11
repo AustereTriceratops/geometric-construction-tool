@@ -4,11 +4,13 @@
 + (X) tags that show the name of the tool upon mouseover
 + click+dragging the canvas around
 + zoom in and out of the canvas
++ change cursor when drawing
+
 
 #== features
 + straightedge
     + dotted preview line
-    + state machine:
+    + (X) state machine:
         + select first point
         + either point or background canvas must be selected next
         + the user can then draw along
@@ -18,6 +20,7 @@
         + select first point
         + either point or background canvas must be selected next
         + the user can then draw along
+        + user can "unset" the anchor point while keeping the length of the compass fixed
 
 
 #== Codebase

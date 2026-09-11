@@ -1,4 +1,4 @@
-import { InputMode, DRAW, ERASE, STRAIGHTEDGE, COMPASS } from "@/pages/constants";
+import { InputMode, ADD, ERASE, STRAIGHTEDGE, COMPASS } from "@/pages/constants";
 import ToolButton from "@/pages/components/ToolButton";
 import Erase from '@/assets/eraser.svg';
 
@@ -22,7 +22,7 @@ const Controls = (props: ControlsProps) => {
             left: '2rem',
             gap: '0.1rem'
         }}>
-            <ToolButton name="add point" onClick={() => setInputMode(DRAW)}>
+            <ToolButton name="add point" onClick={() => setInputMode(ADD)}>
                 <Create fontSize='inherit'/>
             </ToolButton>
             <ToolButton name="straightedge" onClick={() => setInputMode(STRAIGHTEDGE)}>
