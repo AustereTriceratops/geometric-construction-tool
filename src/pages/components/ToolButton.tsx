@@ -37,10 +37,21 @@ const ToolButton = (props: ToolButtonProps) => {
                 </div>
             </div>
             <div
-                className='toolButton'
                 onClick={onClick}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    backgroundColor: (hovered) ? '#888888' : '#bbbbbb',
+                    fontSize: '48px',
+                    width:'fit-content',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: 'white',
+                    padding: '8px',
+                    borderRadius: '12px',
+                }}
             >
                 {children}
             </div>

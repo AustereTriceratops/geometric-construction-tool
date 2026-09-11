@@ -4,10 +4,39 @@ import "@/pages/app.css";
 
 import { Canvas } from "@react-three/fiber";
 import { useState, useMemo, useEffect, useRef, MouseEvent } from 'react';
-import { InputMode, DRAW, ERASE } from "@/pages/constants";
+import { InputMode, DRAW, ERASE, COMPASS, STRAIGHTEDGE } from "@/pages/constants";
+
+const NO_SEL = 'no_sel';
+const ONE_SEL = 'one_sel';
+const READY = 'ready';
+type SecondaryInputStep = 'no_sel' | 'one_sel' | 'ready';
 
 export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(DRAW);
+
+  const [secondaryInputStep, setSecondaryInputStep] = useState<SecondaryInputStep>(NO_SEL);
+  const [anchorPointIndex, setAnchorPointIndex] = useState<number | null>(null);
+  const [secondaryPointIndex, setSecondaryPointIndex] = useState<number | null>(null);
+
+  const resetSecondaryInputStep = () => {
+    setSecondaryInputStep(NO_SEL);
+    setAnchorPointIndex(null);
+    setSecondaryPointIndex(null);
+  }
+
+  const updateInputMode = (newMode: InputMode) => {
+    // if we switch from straightedge to comapss or vice-versa
+    // then we'd like to keep our selected points
+    if (!(
+      (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
+      (newMode == STRAIGHTEDGE || newMode == COMPASS)
+    )) {
+      console.log('resetting secondary input')
+      resetSecondaryInputStep();
+    }
+
+    setInputMode(newMode);
+  }
 
   /// ===== CANVAS =====
   const [width, setWidth] = useState(0)
@@ -63,6 +92,8 @@ export default function App() {
 
 
   /// ===== EVENTS =====
+const [dragging, setDragging] = useState(false);
+
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
     // both in [0, 1]
     let x = event.clientX/width;
@@ -85,22 +116,59 @@ export default function App() {
     return (ev: MouseEvent<HTMLDivElement>) => {
       if (inputMode == ERASE) {
         deletePoint(index);
+      } else if (inputMode == STRAIGHTEDGE || inputMode == COMPASS) {
+        if (secondaryInputStep == NO_SEL) {
+          setAnchorPointIndex(index);
+          setSecondaryInputStep(ONE_SEL);
+          console.log('selected first point', index)
+        } else if (secondaryInputStep == ONE_SEL) {
+          setSecondaryPointIndex(index);
+          setSecondaryInputStep(READY);
+          console.log('selected second point', index)
+        }
+      }
+    }
+  }
+
+  const onPointerDown = () => {
+    setDragging(true);
+  }
+
+  const onPointerUp = () => {
+    setDragging(false);
+  }
+
+  const onPointerMove = () => {
+    if (dragging) {
+      if (
+        (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
+        secondaryInputStep == READY
+      ) {
+        console.log('drawing');
+      } else {
+        console.log('dragging');
       }
     }
   }
 
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
-      <Canvas orthographic camera={{zoom: 1/scale, position: [0, 0, 1], left: -aspect, right: aspect, top: 1, bottom: -1}} onClick={onClick}>
+      <Canvas
+        orthographic
+        camera={{zoom: 1/scale, position: [0, 0, 1], left: -aspect, right: aspect, top: 1, bottom: -1}}
+        onClick={onClick}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerMove={onPointerMove}
+      >
         <color attach="background" args={['#e8ddcf']}/>
-
         {points.map((p, i) => (
           <Point key={i} x={p[0]} y={p[1]} clickPoint={clickPoint(i)}/>
         ))}
       </Canvas>
 
       <Controls
-        setInputMode={setInputMode}
+        setInputMode={updateInputMode}
         undo={undo}
         clear={clear}
       />
