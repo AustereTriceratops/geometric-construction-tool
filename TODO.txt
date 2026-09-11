@@ -1,7 +1,7 @@
 #== UI/UX
 + outline buttons to denote the active input mode
 + side-buttons to display the state of the straightedge and compass modes
-+ tags that show the name of the tool upon mouseover
++ (X) tags that show the name of the tool upon mouseover
 + click+dragging the canvas around
 + zoom in and out of the canvas
 
@@ -23,5 +23,7 @@
 #== Codebase
 + data classes for Points, Lines, Arcs
 + (X) move sidebar to separate component
-+ move sidebar buttons to separate component
++ (X) move sidebar buttons to separate component
 + figure out how to best represent edit history
++ set up ortho camera for tighter control of rendering
++ create a plane mesh to act as the background

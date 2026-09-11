@@ -1,4 +1,5 @@
 import { InputMode, DRAW, ERASE, STRAIGHTEDGE, COMPASS } from "@/pages/constants";
+import ToolButton from "@/pages/components/ToolButton";
 import Erase from '@/assets/eraser.svg';
 
 import { Create, Straighten, Architecture, Undo, Delete } from '@mui/icons-material';
@@ -15,33 +16,32 @@ const Controls = (props: ControlsProps) => {
     return (
         <div style={{
             position: 'absolute',
-            display: 'inline-flex',
+            display: 'flex',
             flexDirection: 'column',
-            width: '48px',
             top: '5rem',
             left: '2rem',
-            gap: '1rem'
+            gap: '0.1rem'
         }}>
-            <div className='modeButton' onClick={() => setInputMode(DRAW)}>
+            <ToolButton name="add point" onClick={() => setInputMode(DRAW)}>
                 <Create fontSize='inherit'/>
-            </div>
-            <div className='modeButton' onClick={() => setInputMode(STRAIGHTEDGE)}>
+            </ToolButton>
+            <ToolButton name="straightedge" onClick={() => setInputMode(STRAIGHTEDGE)}>
                 <Straighten fontSize='inherit'/>
-            </div>
-            <div className='modeButton' onClick={() => setInputMode(COMPASS)}>
+            </ToolButton>
+            <ToolButton name="compass" onClick={() => setInputMode(COMPASS)}>
                 <Architecture fontSize='inherit'/>
-            </div>
-            <div className='modeButton' onClick={() => setInputMode(ERASE)}>
+            </ToolButton>
+            <ToolButton name='erase' onClick={() => setInputMode(ERASE)}>
                 <SvgIcon fontSize='inherit'>
                     <Erase/>
                 </SvgIcon>
-            </div>
-            <div className='modeButton'>
-                <Undo fontSize='inherit' onClick={() => undo()}/>
-            </div>
-            <div className='modeButton' onClick={() => clear()}>
+            </ToolButton>
+            <ToolButton name='undo' onClick={() => undo()}>
+                <Undo fontSize='inherit' />
+            </ToolButton>
+            <ToolButton name='clear' onClick={() => clear()}>
                 <Delete fontSize='inherit'/>
-            </div>
+            </ToolButton>
         </div>
     )
 }
