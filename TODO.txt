@@ -2,7 +2,7 @@
 + outline buttons to denote the active input mode
 + side-buttons to display the state of the straightedge and compass modes
 + (X) tags that show the name of the tool upon mouseover
-+ click+dragging the canvas around
++ (X) click+dragging the canvas around
 + zoom in and out of the canvas
 + change cursor when drawing
 
@@ -30,3 +30,4 @@
 + figure out how to best represent edit history
 + (X) set up ortho camera for tighter control of rendering
 + create a plane mesh to act as the background
++ code for finding intersections between lines and arcs (any combination)

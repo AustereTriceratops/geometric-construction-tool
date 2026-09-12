@@ -95,7 +95,9 @@ export default function App() {
 
 
   /// ===== EVENTS =====
-const [dragging, setDragging] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [mouseX, setMouseX] = useState(0)
+  const [mouseY, setMouseY] = useState(0)
 
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
     // both in [0, 1]
@@ -142,6 +144,9 @@ const [dragging, setDragging] = useState(false);
   }
 
   const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {
+    setMouseX(ev.clientX);
+    setMouseY(ev.clientY);
+
     if (dragging) {
       if (
         (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
@@ -155,6 +160,16 @@ const [dragging, setDragging] = useState(false);
     }
   }
 
+  const onScroll = (ev: React.WheelEvent<HTMLDivElement>) => {
+      const dZoom = 0.002 * scale * ev.deltaY;
+      setScale(scale + dZoom);
+
+      const biasX = mouseX/width;
+      const biasY = mouseY/height;
+      setCameraOffsetX(cameraOffsetX - (2.0 * biasX - 1) * dZoom);
+      setCameraOffsetY(cameraOffsetY + (2.0 * biasY - 1) * dZoom);
+  };
+
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
       <Canvas
@@ -162,6 +177,7 @@ const [dragging, setDragging] = useState(false);
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         onPointerMove={onPointerMove}
+        onWheel={onScroll}
       >
         <color attach="background" args={['#e8ddcf']}/>
 
