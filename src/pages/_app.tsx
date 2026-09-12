@@ -3,6 +3,7 @@ import Controls from "@/pages/components/Controls";
 import "@/pages/app.css";
 
 import { Canvas } from "@react-three/fiber";
+import { OrthographicCamera } from '@react-three/drei';
 import { useState, useMemo, useEffect, useRef, MouseEvent } from 'react';
 import { InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE } from "@/pages/constants";
 
@@ -51,6 +52,8 @@ export default function App() {
 
   /// ===== CAMERA =====
   const [scale, setScale] = useState(5);
+  const [cameraOffsetX, setCameraOffsetX] = useState(0);
+  const [cameraOffsetY, setCameraOffsetY] = useState(0);
 
   /// ===== POINTS =====
   const [points, setPoints] = useState<number[][]>([[0, 0], [1.2, 2], [-2, -0.6]]);
@@ -104,8 +107,8 @@ const [dragging, setDragging] = useState(false);
     y = 2*y - 1;
 
     // transform to scene space
-    x = scale * x;
-    y = -scale * y;
+    x = scale * x + cameraOffsetX;
+    y = -scale * y + cameraOffsetY;
 
     if (inputMode == ADD) {
       addPoint(x, y);
@@ -138,7 +141,7 @@ const [dragging, setDragging] = useState(false);
     setDragging(false);
   }
 
-  const onPointerMove = () => {
+  const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {
     if (dragging) {
       if (
         (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
@@ -146,7 +149,8 @@ const [dragging, setDragging] = useState(false);
       ) {
         console.log('drawing');
       } else {
-        console.log('dragging');
+        setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
+        setCameraOffsetY(cameraOffsetY + 2*scale*ev.movementY/height);
       }
     }
   }
@@ -154,14 +158,23 @@ const [dragging, setDragging] = useState(false);
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
       <Canvas
-        orthographic
-        camera={{zoom: 1/scale, position: [0, 0, 1], left: -aspect, right: aspect, top: 1, bottom: -1}}
         onClick={onClick}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         onPointerMove={onPointerMove}
       >
         <color attach="background" args={['#e8ddcf']}/>
+
+        <OrthographicCamera
+          makeDefault
+          zoom={1/scale}
+          position={[cameraOffsetX, cameraOffsetY, 1]}
+          left={-aspect}
+          right={aspect}
+          top={1}
+          bottom={-1}
+        />
+
         {points.map((p, i) => (
           <Point key={i} x={p[0]} y={p[1]} clickPoint={clickPoint(i)}/>
         ))}
