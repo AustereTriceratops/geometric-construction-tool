@@ -96,10 +96,15 @@ export default function App() {
 
   /// ===== EVENTS =====
   const [dragging, setDragging] = useState(false);
-  const [mouseX, setMouseX] = useState(0)
-  const [mouseY, setMouseY] = useState(0)
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
+
+  const [time, setTime] = useState(new Date().getTime());
 
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
+    const currentTime = new Date().getTime();
+    if (currentTime - time > 200) return;
+
     // both in [0, 1]
     let x = event.clientX/width;
     let y = event.clientY/height;
@@ -137,6 +142,8 @@ export default function App() {
 
   const onPointerDown = () => {
     setDragging(true);
+
+    setTime(new Date().getTime());
   }
 
   const onPointerUp = () => {
