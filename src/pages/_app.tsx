@@ -210,11 +210,12 @@ export default function App() {
         cameraOffsetX={cameraOffsetX}
         cameraOffsetY={cameraOffsetY}
 
-        inputMode={inputMode}
-        mouseCoords={mouseCoords}
-
         points={points}
+        inputMode={inputMode}
         anchorPointIndex={anchorPointIndex}
+        secondaryPointIndex={secondaryPointIndex}
+        secondaryInputStep={secondaryInputStep}
+        mouseCoords={mouseCoords}
       />
 
       <Controls

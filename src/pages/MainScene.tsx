@@ -4,7 +4,7 @@ import { OrthographicCamera } from '@react-three/drei';
 
 import Point from '@/pages/meshes/Point';
 import PreviewLine from '@/pages/meshes/PreviewLine';
-import { InputMode, COMPASS, STRAIGHTEDGE } from "@/pages/constants";
+import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
 
 
 interface MainSceneProps {
@@ -21,17 +21,19 @@ interface MainSceneProps {
     cameraOffsetY: number;
 
     inputMode: InputMode;
+    secondaryInputStep: SecondaryInputStep;
     mouseCoords: number[];
 
-    points: number[][]
-    anchorPointIndex: number | null
+    points: number[][];
+    anchorPointIndex: number | null;
+    secondaryPointIndex: number | null;
 }
 
 const MainScene = (props: MainSceneProps) => {
     const {
         onClick, onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint,
-        scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, mouseCoords,
-        points, anchorPointIndex
+        scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
+        mouseCoords, points, anchorPointIndex, secondaryPointIndex
     } = props;
 
     return (
@@ -41,6 +43,7 @@ const MainScene = (props: MainSceneProps) => {
             onPointerUp={onPointerUp}
             onPointerMove={onPointerMove}
             onWheel={onScroll}
+            style={{cursor: (secondaryInputStep == READY) ? 'crosshair' : 'default'}}
         >
             <color attach="background" args={['#e8ddcf']}/>
     
@@ -58,12 +61,20 @@ const MainScene = (props: MainSceneProps) => {
                 <Point key={i} x={p[0]} y={p[1]} clickPoint={clickPoint(i)}/>
             ))}
     
-            {((inputMode == STRAIGHTEDGE || COMPASS) && anchorPointIndex != null) ?
+            {((inputMode == STRAIGHTEDGE || COMPASS) && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
+                ?
                 <PreviewLine
                     p_start={points[anchorPointIndex]}
                     p_end={mouseCoords}
                 />
-            : null}
+                : ((inputMode == STRAIGHTEDGE || COMPASS) && secondaryInputStep == READY && anchorPointIndex != null && secondaryPointIndex != null) 
+                    ?
+                    <PreviewLine
+                        p_start={points[anchorPointIndex]}
+                        p_end={points[secondaryPointIndex]}
+                    />
+                    : null
+            }
         </Canvas>
     )
 }

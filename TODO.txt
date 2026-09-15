@@ -6,15 +6,16 @@
 + (X) tags that show the name of the tool upon mouseover
 + (X) click+dragging the canvas around
 + (X) zoom in and out of the canvas
-+ change cursor when drawing
++ (X) change cursor when drawing
++ dotted straightedge line should extend beyond the anchoring points
 
 
 #== features
 + straightedge
     + (X) dotted preview line
     + (X) state machine:
-        + select first point
-        + either point or background canvas must be selected next
+        + (X) select first point
+        + (X) select second point
         + the user can then draw along
 + compass
     + dotted preview circle
