@@ -1,10 +1,7 @@
-import Point from '@/pages/meshes/Point';
-import PreviewLine from '@/pages/meshes/PreviewLine';
 import Controls from "@/pages/components/Controls";
+import MainScene from '@/pages/MainScene';
 import "@/pages/app.css";
 
-import { Canvas } from "@react-three/fiber";
-import { OrthographicCamera } from '@react-three/drei';
 import { useState, useMemo, useEffect, MouseEvent } from 'react';
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
@@ -78,14 +75,14 @@ export default function App() {
 
     setPoints(newPoints);
     setHistory(newHistory);
-  }
+  };
 
   const deletePoint = (index: number) => {
     const newPoints = points.filter((p, i) => i != index);
 
     setPoints(newPoints);
     setHistory(history.concat([newPoints]));
-  }
+  };
   
 
   /// ===== HISTORY =====
@@ -99,12 +96,12 @@ export default function App() {
 
     setPoints(lastState);
     setHistory(history.slice(0, len - 1));
-  }
+  };
 
   const clear = () => {
     setPoints([[]]);
     setHistory(history.concat([[[]]]));
-  }
+  };
 
 
   /// ===== EVENTS =====
@@ -184,7 +181,7 @@ export default function App() {
         setCameraOffsetY(cameraOffsetY + 2*scale*ev.movementY/height);
       }
     }
-  }
+  };
 
   const onScroll = (ev: React.WheelEvent<HTMLDivElement>) => {
       const increment = 0.002 * scale * ev.deltaY;
@@ -200,36 +197,25 @@ export default function App() {
 
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
-      <Canvas
+      <MainScene
         onClick={onClick}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         onPointerMove={onPointerMove}
-        onWheel={onScroll}
-      >
-        <color attach="background" args={['#e8ddcf']}/>
+        onScroll={onScroll}
+        clickPoint={clickPoint}
 
-        <OrthographicCamera
-          makeDefault
-          zoom={1/scale}
-          position={[cameraOffsetX, cameraOffsetY, 1]}
-          left={-aspect}
-          right={aspect}
-          top={1}
-          bottom={-1}
-        />
+        scale={scale}
+        aspect={aspect}
+        cameraOffsetX={cameraOffsetX}
+        cameraOffsetY={cameraOffsetY}
 
-        {points.map((p, i) => (
-          <Point key={i} x={p[0]} y={p[1]} clickPoint={clickPoint(i)}/>
-        ))}
+        inputMode={inputMode}
+        mouseCoords={mouseCoords}
 
-        {((inputMode == STRAIGHTEDGE || COMPASS) && anchorPointIndex != null) ?
-          <PreviewLine
-            p_start={points[anchorPointIndex]}
-            p_end={mouseCoords}
-          />
-        : null}
-      </Canvas>
+        points={points}
+        anchorPointIndex={anchorPointIndex}
+      />
 
       <Controls
         setInputMode={updateInputMode}
