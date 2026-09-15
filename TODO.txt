@@ -9,7 +9,7 @@
 
 #== features
 + straightedge
-    + dotted preview line
+    + (X) dotted preview line
     + (X) state machine:
         + select first point
         + either point or background canvas must be selected next
@@ -31,6 +31,7 @@
 + (X) set up ortho camera for tighter control of rendering
 + create a plane mesh to act as the background
 + code for finding intersections between lines and arcs (any combination)
++ move entire canvas out of _app and into a separate scene component
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up

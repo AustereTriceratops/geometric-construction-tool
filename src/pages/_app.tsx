@@ -1,9 +1,10 @@
 import Point from '@/pages/meshes/Point';
+import PreviewLine from '@/pages/meshes/PreviewLine';
 import Controls from "@/pages/components/Controls";
 import "@/pages/app.css";
 
 import { Canvas } from "@react-three/fiber";
-import { OrthographicCamera } from '@react-three/drei';
+import { Line, OrthographicCamera } from '@react-three/drei';
 import { useState, useMemo, useEffect, useRef, MouseEvent } from 'react';
 import { InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE } from "@/pages/constants";
 
@@ -18,7 +19,7 @@ const MIN_SCALE = 0.2;
 export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(ADD);
 
-  const [secondaryInputStep, setSecondaryInputStep] = useState<SecondaryInputStep>(NO_SEL);
+  const [secondaryInputStep, setSecondaryInputStep] = useState<SecondaryInputStep>(NO_SEL); // TODO: remove
   const [anchorPointIndex, setAnchorPointIndex] = useState<number | null>(null);
   const [secondaryPointIndex, setSecondaryPointIndex] = useState<number | null>(null);
 
@@ -59,6 +60,7 @@ export default function App() {
   const [cameraOffsetY, setCameraOffsetY] = useState(0);
 
   /// ===== POINTS =====
+  // TODO: change type to ([number, number])[]
   const [points, setPoints] = useState<number[][]>([[0, 0], [1.2, 2], [-2, -0.6]]);
 
    const addPoint = (x: number, y: number) => {
@@ -102,15 +104,10 @@ export default function App() {
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
 
-  const [time, setTime] = useState(new Date().getTime());
-
-  const onClick = (event: MouseEvent<HTMLDivElement>) => {
-    const currentTime = new Date().getTime();
-    if (currentTime - time > 150) return;
-
+  const mouseCoords = useMemo<[number, number]>(() => {
     // both in [0, 1]
-    let x = event.clientX/width;
-    let y = event.clientY/height;
+    let x = mouseX/width;
+    let y = mouseY/height;
 
     // transform to x in [-aspect, aspect], y in [-1, 1]
     x = aspect*(2*x - 1);
@@ -120,8 +117,17 @@ export default function App() {
     x = scale * x + cameraOffsetX;
     y = -scale * y + cameraOffsetY;
 
+    return [x, y]
+  }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY])
+
+  const [time, setTime] = useState(new Date().getTime());
+
+  const onClick = (event: MouseEvent<HTMLDivElement>) => {
+    const currentTime = new Date().getTime();
+    if (currentTime - time > 150) return;
+
     if (inputMode == ADD) {
-      addPoint(x, y);
+      addPoint(mouseCoords[0], mouseCoords[1]);
     }
   }
 
@@ -158,11 +164,12 @@ export default function App() {
     setMouseY(ev.clientY);
 
     if (dragging) {
-      if (
-        (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
-        secondaryInputStep == READY
-      ) {
-        console.log('drawing');
+      if ((inputMode == STRAIGHTEDGE || inputMode == COMPASS)) {
+        if (secondaryInputStep == READY) {
+          console.log('drawing');
+        } else if (secondaryInputStep == ONE_SEL) {
+          console.log('dotted line');
+        }
       } else {
         setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
         setCameraOffsetY(cameraOffsetY + 2*scale*ev.movementY/height);
@@ -206,6 +213,15 @@ export default function App() {
         {points.map((p, i) => (
           <Point key={i} x={p[0]} y={p[1]} clickPoint={clickPoint(i)}/>
         ))}
+
+        {((inputMode == STRAIGHTEDGE || COMPASS) && anchorPointIndex != null) ?
+          <PreviewLine
+            x_1={points[anchorPointIndex][0]}
+            y_1={points[anchorPointIndex][1]}
+            x_2={mouseCoords[0]}
+            y_2={mouseCoords[1]}
+          />
+        : null}
       </Canvas>
 
       <Controls
