@@ -41,19 +41,20 @@ export default function App() {
   const updateInputMode = (newMode: InputMode) => {
     // if we switch from straightedge to comapss or vice-versa
     // then we'd like to keep our selected points
-    if (!(
+    if (inputMode == newMode) {
+      resetSecondaryInputStep();
+    } else if (!(
       (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
       (newMode == STRAIGHTEDGE || newMode == COMPASS)
     )) {
       resetSecondaryInputStep();
     }
-
     setInputMode(newMode);
   }
 
   /// ===== CANVAS =====
-  const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -68,7 +69,6 @@ export default function App() {
   const [cameraOffsetY, setCameraOffsetY] = useState(0);
 
   /// ===== POINTS =====
-  // TODO: change type to ([number, number])[]
   const [points, setPoints] = useState<number[][]>([[0, 0], [1.2, 2], [-2, -0.6]]);
 
    const addPoint = (x: number, y: number) => {
@@ -225,10 +225,8 @@ export default function App() {
 
         {((inputMode == STRAIGHTEDGE || COMPASS) && anchorPointIndex != null) ?
           <PreviewLine
-            x_1={points[anchorPointIndex][0]}
-            y_1={points[anchorPointIndex][1]}
-            x_2={mouseCoords[0]}
-            y_2={mouseCoords[1]}
+            p_start={points[anchorPointIndex]}
+            p_end={mouseCoords}
           />
         : null}
       </Canvas>
