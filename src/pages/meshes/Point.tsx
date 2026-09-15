@@ -20,7 +20,7 @@ function Point(props : PointProps) {
             onPointerLeave={() => setHighlighted(false)}
             onClick={clickPoint}
         >
-            <circleGeometry args={[0.08, 10]}/>
+            <circleGeometry args={[0.08, 12]}/>
             <meshBasicMaterial color={'#4a82bb'}/>
         </mesh>
         <mesh position={[x, y, 0]}>

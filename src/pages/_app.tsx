@@ -12,6 +12,9 @@ const ONE_SEL = 'one_sel';
 const READY = 'ready';
 type SecondaryInputStep = 'no_sel' | 'one_sel' | 'ready';
 
+const MAX_SCALE = 40;
+const MIN_SCALE = 0.2;
+
 export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(ADD);
 
@@ -103,7 +106,7 @@ export default function App() {
 
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
     const currentTime = new Date().getTime();
-    if (currentTime - time > 200) return;
+    if (currentTime - time > 150) return;
 
     // both in [0, 1]
     let x = event.clientX/width;
@@ -168,13 +171,15 @@ export default function App() {
   }
 
   const onScroll = (ev: React.WheelEvent<HTMLDivElement>) => {
-      const dZoom = 0.002 * scale * ev.deltaY;
-      setScale(scale + dZoom);
+      const increment = 0.002 * scale * ev.deltaY;
+      const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale + increment));
+      const dScale = newScale - scale;
+      setScale(newScale);
 
       const biasX = mouseX/width;
       const biasY = mouseY/height;
-      setCameraOffsetX(cameraOffsetX - (2.0 * biasX - 1) * dZoom);
-      setCameraOffsetY(cameraOffsetY + (2.0 * biasY - 1) * dZoom);
+      setCameraOffsetX(cameraOffsetX - (2.0 * biasX - 1) * dScale);
+      setCameraOffsetY(cameraOffsetY + (2.0 * biasY - 1) * dScale);
   };
 
   return (

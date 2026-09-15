@@ -33,4 +33,4 @@
 + code for finding intersections between lines and arcs (any combination)
 
 #== Bugs
-+ Dragging still results in placing a point when the mouse comes up
++ (X) Dragging results in placing a point when the mouse comes up
