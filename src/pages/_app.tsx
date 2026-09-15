@@ -4,14 +4,12 @@ import Controls from "@/pages/components/Controls";
 import "@/pages/app.css";
 
 import { Canvas } from "@react-three/fiber";
-import { Line, OrthographicCamera } from '@react-three/drei';
-import { useState, useMemo, useEffect, useRef, MouseEvent } from 'react';
-import { InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE } from "@/pages/constants";
+import { OrthographicCamera } from '@react-three/drei';
+import { useState, useMemo, useEffect, MouseEvent } from 'react';
+import { 
+  InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
+} from "@/pages/constants";
 
-const NO_SEL = 'no_sel';
-const ONE_SEL = 'one_sel';
-const READY = 'ready';
-type SecondaryInputStep = 'no_sel' | 'one_sel' | 'ready';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
@@ -19,15 +17,26 @@ const MIN_SCALE = 0.2;
 export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(ADD);
 
-  const [secondaryInputStep, setSecondaryInputStep] = useState<SecondaryInputStep>(NO_SEL); // TODO: remove
   const [anchorPointIndex, setAnchorPointIndex] = useState<number | null>(null);
   const [secondaryPointIndex, setSecondaryPointIndex] = useState<number | null>(null);
 
   const resetSecondaryInputStep = () => {
-    setSecondaryInputStep(NO_SEL);
     setAnchorPointIndex(null);
     setSecondaryPointIndex(null);
   }
+
+  // TODO: figure out how to use this with the compass tool
+  const secondaryInputStep = useMemo<SecondaryInputStep>(() => {
+    if (anchorPointIndex == null) {
+      return NO_SEL;
+    } else {
+      if (secondaryPointIndex == null) {
+        return ONE_SEL;
+      } else {
+        return READY;
+      }
+    }
+  }, [anchorPointIndex, secondaryPointIndex]);
 
   const updateInputMode = (newMode: InputMode) => {
     // if we switch from straightedge to comapss or vice-versa
@@ -36,7 +45,6 @@ export default function App() {
       (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
       (newMode == STRAIGHTEDGE || newMode == COMPASS)
     )) {
-      console.log('resetting secondary input')
       resetSecondaryInputStep();
     }
 
@@ -104,6 +112,7 @@ export default function App() {
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
 
+  // TODO: maybe this should just be a function instead of a memo
   const mouseCoords = useMemo<[number, number]>(() => {
     // both in [0, 1]
     let x = mouseX/width;
@@ -118,7 +127,7 @@ export default function App() {
     y = -scale * y + cameraOffsetY;
 
     return [x, y]
-  }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY])
+  }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY]);
 
   const [time, setTime] = useState(new Date().getTime());
 
@@ -129,7 +138,7 @@ export default function App() {
     if (inputMode == ADD) {
       addPoint(mouseCoords[0], mouseCoords[1]);
     }
-  }
+  };
 
   const clickPoint = (index: number) => {
     return (ev: MouseEvent<HTMLDivElement>) => {
@@ -138,37 +147,37 @@ export default function App() {
       } else if (inputMode == STRAIGHTEDGE || inputMode == COMPASS) {
         if (secondaryInputStep == NO_SEL) {
           setAnchorPointIndex(index);
-          setSecondaryInputStep(ONE_SEL);
-          console.log('selected first point', index)
         } else if (secondaryInputStep == ONE_SEL) {
           setSecondaryPointIndex(index);
-          setSecondaryInputStep(READY);
-          console.log('selected second point', index)
         }
       }
     }
-  }
+  };
 
-  const onPointerDown = () => {
-    setDragging(true);
-
-    setTime(new Date().getTime());
-  }
+  const onPointerDown = (ev: MouseEvent<HTMLDivElement>) => {
+    if (ev.button == 0 || ev.button == 1) {
+      setDragging(true);
+      setTime(new Date().getTime());
+    } else if (ev.button == 2) {
+      resetSecondaryInputStep();
+    }
+  };
 
   const onPointerUp = () => {
     setDragging(false);
-  }
+  };
 
   const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {
     setMouseX(ev.clientX);
     setMouseY(ev.clientY);
 
     if (dragging) {
-      if ((inputMode == STRAIGHTEDGE || inputMode == COMPASS)) {
+      if (
+        (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
+        secondaryInputStep == READY
+      ) {
         if (secondaryInputStep == READY) {
           console.log('drawing');
-        } else if (secondaryInputStep == ONE_SEL) {
-          console.log('dotted line');
         }
       } else {
         setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
