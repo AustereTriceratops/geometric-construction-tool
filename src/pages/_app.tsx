@@ -220,6 +220,7 @@ export default function App() {
       <Controls
         inputMode={inputMode}
         setInputMode={updateInputMode}
+        secondaryInputStep={secondaryInputStep}
         undo={undo}
         clear={clear}
       />

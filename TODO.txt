@@ -1,6 +1,8 @@
 #== UI/UX
 + (X) outline buttons to denote the active input mode
 + side-buttons to display the state of the straightedge and compass modes
+    + (X) straightedge
+    + compass
 + (X) tags that show the name of the tool upon mouseover
 + (X) click+dragging the canvas around
 + (X) zoom in and out of the canvas
