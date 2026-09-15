@@ -8,12 +8,13 @@ const roboto = Roboto({
 
 interface ToolButtonProps {
     name: string;
+    selected?: Boolean;
     onClick: () => void;
     children: ReactNode;
 }
 
 const ToolButton = (props: ToolButtonProps) => {
-    const {name, onClick, children} = props;
+    const {name, selected, onClick, children} = props;
 
     const [hovered, setHovered] = useState(false);
 
@@ -30,7 +31,8 @@ const ToolButton = (props: ToolButtonProps) => {
                 color: '#555',
                 font: 'roboto',
                 fontSize: '12px',
-                fontWeight: '700'
+                fontWeight: '700',
+                userSelect: 'none',
             }}>
                 <div className={roboto.className}>
                     {name}
@@ -51,6 +53,8 @@ const ToolButton = (props: ToolButtonProps) => {
                     color: 'white',
                     padding: '8px',
                     borderRadius: '12px',
+                    borderStyle: 'solid',
+                    borderColor: (selected) ? '#ffffff' : '#ffffff00',
                 }}
             >
                 {children}

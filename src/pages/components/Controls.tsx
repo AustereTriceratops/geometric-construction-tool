@@ -6,13 +6,15 @@ import { Create, Straighten, Architecture, Undo, Delete } from '@mui/icons-mater
 import { SvgIcon } from "@mui/material";
 
 interface ControlsProps {
+    inputMode: InputMode;
     setInputMode: (mode: InputMode) => void;
     undo: () => void;
     clear: () => void;
 }
 
 const Controls = (props: ControlsProps) => {
-    const {setInputMode, undo, clear} = props;
+    const {inputMode, setInputMode, undo, clear} = props;
+
     return (
         <div style={{
             position: 'absolute',
@@ -22,16 +24,16 @@ const Controls = (props: ControlsProps) => {
             left: '2rem',
             gap: '0.1rem'
         }}>
-            <ToolButton name="add point" onClick={() => setInputMode(ADD)}>
+            <ToolButton name="add point" selected={inputMode == ADD} onClick={() => setInputMode(ADD)}>
                 <Create fontSize='inherit'/>
             </ToolButton>
-            <ToolButton name="straightedge" onClick={() => setInputMode(STRAIGHTEDGE)}>
+            <ToolButton name="straightedge" selected={inputMode == STRAIGHTEDGE} onClick={() => setInputMode(STRAIGHTEDGE)}>
                 <Straighten fontSize='inherit'/>
             </ToolButton>
-            <ToolButton name="compass" onClick={() => setInputMode(COMPASS)}>
+            <ToolButton name="compass" selected={inputMode == COMPASS} onClick={() => setInputMode(COMPASS)}>
                 <Architecture fontSize='inherit'/>
             </ToolButton>
-            <ToolButton name='erase' onClick={() => setInputMode(ERASE)}>
+            <ToolButton name='erase' selected={inputMode == ERASE} onClick={() => setInputMode(ERASE)}>
                 <SvgIcon fontSize='inherit'>
                     <Erase/>
                 </SvgIcon>

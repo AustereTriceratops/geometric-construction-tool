@@ -1,5 +1,5 @@
 #== UI/UX
-+ outline buttons to denote the active input mode
++ (X) outline buttons to denote the active input mode
 + side-buttons to display the state of the straightedge and compass modes
 + (X) tags that show the name of the tool upon mouseover
 + (X) click+dragging the canvas around
@@ -31,7 +31,7 @@
 + (X) set up ortho camera for tighter control of rendering
 + create a plane mesh to act as the background
 + code for finding intersections between lines and arcs (any combination)
-+ move entire canvas out of _app and into a separate scene component
++ (X) move entire canvas out of _app and into a separate scene component
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up
