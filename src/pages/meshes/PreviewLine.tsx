@@ -1,8 +1,9 @@
 import { Line } from '@react-three/drei';
+import * as THREE from 'three';
 
 interface PreviewLineProps {
-   p_start: number[];
-   p_end: number[]
+   p_start: THREE.Vector2;
+   p_end: THREE.Vector2;
 }
 
 const PreviewLine = (props : PreviewLineProps) => {
@@ -11,7 +12,7 @@ const PreviewLine = (props : PreviewLineProps) => {
     return (
         <Line
             dashed
-            points={[[p_start[0], p_start[1]], [p_end[0], p_end[1]]]}
+            points={[p_start, p_end]}
             lineWidth={2}
             color="black"
             dashScale={10}

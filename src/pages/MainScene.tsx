@@ -1,6 +1,7 @@
 import { MouseEvent, WheelEvent } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera } from '@react-three/drei';
+import * as THREE from 'three';
 
 import Point from '@/pages/meshes/Point';
 import PreviewLine from '@/pages/meshes/PreviewLine';
@@ -22,9 +23,9 @@ interface MainSceneProps {
 
     inputMode: InputMode;
     secondaryInputStep: SecondaryInputStep;
-    mouseCoords: number[];
+    mouseCoords: THREE.Vector2;
 
-    points: number[][];
+    points: THREE.Vector2[];
     anchorPointIndex: number | null;
     secondaryPointIndex: number | null;
 }
@@ -58,7 +59,7 @@ const MainScene = (props: MainSceneProps) => {
             />
     
             {points.map((p, i) => (
-                <Point key={i} x={p[0]} y={p[1]} clickPoint={clickPoint(i)}/>
+                <Point key={i} p={p} clickPoint={clickPoint(i)}/>
             ))}
     
             {((inputMode == STRAIGHTEDGE || COMPASS) && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 

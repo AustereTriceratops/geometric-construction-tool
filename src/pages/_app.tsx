@@ -1,12 +1,12 @@
 import Controls from "@/pages/components/Controls";
 import MainScene from '@/pages/MainScene';
 import "@/pages/app.css";
-
-import { useState, useMemo, useEffect, MouseEvent } from 'react';
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
 
+import { useState, useMemo, useEffect, MouseEvent } from 'react';
+import * as THREE from 'three';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
@@ -66,10 +66,12 @@ export default function App() {
   const [cameraOffsetY, setCameraOffsetY] = useState(0);
 
   /// ===== POINTS =====
-  const [points, setPoints] = useState<number[][]>([[0, 0], [1.2, 2], [-2, -0.6]]);
+  const [points, setPoints] = useState<THREE.Vector2[]>(
+    [new THREE.Vector2(0, 0), new THREE.Vector2(1.2, 2), new THREE.Vector2(-2, -0.6)]
+  );
 
-   const addPoint = (x: number, y: number) => {
-    const newPoint = [x, y];
+  const addPoint = (p: THREE.Vector2) => {
+    const newPoint = p.clone();
     const newPoints = points.concat([newPoint]);
     const newHistory = history.concat([newPoints]);
 
@@ -86,7 +88,7 @@ export default function App() {
   
 
   /// ===== HISTORY =====
-  const [history, setHistory] = useState<number[][][]>([points]);
+  const [history, setHistory] = useState<THREE.Vector2[][]>([points]);
   
   const undo = () => {
     const len = history.length;
@@ -99,8 +101,8 @@ export default function App() {
   };
 
   const clear = () => {
-    setPoints([[]]);
-    setHistory(history.concat([[[]]]));
+    setPoints([]);
+    setHistory(history.concat([[]]));
   };
 
 
@@ -110,7 +112,7 @@ export default function App() {
   const [mouseY, setMouseY] = useState(0);
 
   // TODO: maybe this should just be a function instead of a memo
-  const mouseCoords = useMemo<[number, number]>(() => {
+  const mouseCoords = useMemo<THREE.Vector2>(() => {
     // both in [0, 1]
     let x = mouseX/width;
     let y = mouseY/height;
@@ -123,7 +125,7 @@ export default function App() {
     x = scale * x + cameraOffsetX;
     y = -scale * y + cameraOffsetY;
 
-    return [x, y]
+    return new THREE.Vector2(x, y);
   }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY]);
 
   const [time, setTime] = useState(new Date().getTime());
@@ -133,7 +135,7 @@ export default function App() {
     if (currentTime - time > 150) return;
 
     if (inputMode == ADD) {
-      addPoint(mouseCoords[0], mouseCoords[1]);
+      addPoint(mouseCoords);
     }
   };
 

@@ -28,6 +28,9 @@
 
 #== Codebase
 + data classes for Points, Lines, Arcs
+    + (X) Points converted to Vector2
+    + Lines to [Vector2, Vector2]
+    + Arcs to {center, radius, startAngle, endAngle}
 + (X) move sidebar to separate component
 + (X) move sidebar buttons to separate component
 + figure out how to best represent edit history
