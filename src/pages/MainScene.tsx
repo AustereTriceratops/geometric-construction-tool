@@ -1,4 +1,4 @@
-import { MouseEvent, WheelEvent } from 'react';
+import { MouseEvent, WheelEvent, useMemo } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera } from '@react-three/drei';
 import * as THREE from 'three';
@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import Point from '@/pages/meshes/Point';
 import PreviewLine from '@/pages/meshes/PreviewLine';
 import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
+import { extrapolateByMidpoint, midpoint } from './utils';
 
 
 interface MainSceneProps {
@@ -36,6 +37,14 @@ const MainScene = (props: MainSceneProps) => {
         scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
         mouseCoords, points, anchorPointIndex, secondaryPointIndex
     } = props;
+
+    const mp = useMemo<THREE.Vector2>(() => {
+        if (anchorPointIndex != null && secondaryPointIndex != null) {
+            return midpoint(points[anchorPointIndex], points[secondaryPointIndex]);
+        }
+
+        return new THREE.Vector2();
+    }, [points, anchorPointIndex, secondaryPointIndex])
 
     return (
         <Canvas
@@ -68,11 +77,16 @@ const MainScene = (props: MainSceneProps) => {
                     p_start={points[anchorPointIndex]}
                     p_end={mouseCoords}
                 />
-                : ((inputMode == STRAIGHTEDGE || COMPASS) && secondaryInputStep == READY && anchorPointIndex != null && secondaryPointIndex != null) 
+                : (
+                    (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
+                    secondaryInputStep == READY &&
+                    anchorPointIndex != null &&
+                    secondaryPointIndex != null
+                ) 
                     ?
                     <PreviewLine
-                        p_start={points[anchorPointIndex]}
-                        p_end={points[secondaryPointIndex]}
+                        p_start={extrapolateByMidpoint(points[anchorPointIndex], mp, 10)}
+                        p_end={extrapolateByMidpoint(points[secondaryPointIndex], mp, 10)}
                     />
                     : null
             }
