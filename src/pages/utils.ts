@@ -27,3 +27,10 @@ export function project(a: THREE.Vector2, b: THREE.Vector2): THREE.Vector2 {
 
     return b.clone().multiplyScalar(a_dot_b/b_sq);
 }
+
+// project x onto the line defined by a (anchor point) and b (secondary point)
+export function projectToLine(x: THREE.Vector2, a: THREE.Vector2, b: THREE.Vector2) {
+    const diff = b.clone().sub(a);
+    const relativeCoords = x.clone().sub(a);
+    return project(relativeCoords, diff).add(a);
+}

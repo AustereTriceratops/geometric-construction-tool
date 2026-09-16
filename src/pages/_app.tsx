@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { project } from './utils';
+import { projectToLine } from './utils';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
@@ -21,6 +21,7 @@ export default function App() {
   const resetSecondaryInputStep = () => {
     setAnchorPointIndex(null);
     setSecondaryPointIndex(null);
+    // setActiveLine([]);
   }
 
   // TODO: figure out how to use this with the compass tool
@@ -169,8 +170,10 @@ export default function App() {
         inputMode == STRAIGHTEDGE && secondaryInputStep == READY &&
         anchorPointIndex != null && secondaryPointIndex != null
       ) {
-        const diff = points[secondaryPointIndex].clone().sub(points[anchorPointIndex]);
-        setActiveLine([project(mouseCoords, diff), project(mouseCoords, diff)])
+        const anchorPoint = points[anchorPointIndex];
+        const secondaryPoint = points[secondaryPointIndex];
+        const startPoint = projectToLine(mouseCoords, anchorPoint, secondaryPoint);
+        setActiveLine([startPoint, startPoint]);
       }
     } else if (ev.button == 2) {
       resetSecondaryInputStep();
@@ -190,12 +193,11 @@ export default function App() {
     setMouseY(ev.clientY);
 
     if (dragging) {
-      if (
-        secondaryInputStep == READY
-      ) {
-        if (inputMode == STRAIGHTEDGE && anchorPointIndex != null && secondaryPointIndex != null) {
-          const diff = points[secondaryPointIndex].clone().sub(points[anchorPointIndex]);
-          setActiveLine([activeLine[0].clone(), project(mouseCoords, diff)])
+      if (anchorPointIndex != null && secondaryPointIndex != null) {
+        if (inputMode == STRAIGHTEDGE) {
+          const anchorPoint = points[anchorPointIndex];
+          const secondaryPoint = points[secondaryPointIndex];
+          setActiveLine([activeLine[0].clone(), projectToLine(mouseCoords, anchorPoint, secondaryPoint)]);
         } else if (inputMode == COMPASS) {
           console.log('drawing arcs');
         }
