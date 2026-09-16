@@ -1,12 +1,13 @@
+import { useState, useMemo, useEffect, MouseEvent } from 'react';
+import * as THREE from 'three';
+
 import Controls from "@/pages/components/Controls";
 import MainScene from '@/pages/MainScene';
 import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-
-import { useState, useMemo, useEffect, MouseEvent } from 'react';
-import * as THREE from 'three';
+import { project } from './utils';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
@@ -85,7 +86,12 @@ export default function App() {
     setPoints(newPoints);
     setHistory(history.concat([newPoints]));
   };
+
+  /// ===== LINES =====
+  const [lines, setLines] = useState<THREE.Vector2[][]>([]);
+  const [activeLine, setActiveLine] = useState<THREE.Vector2[]>([]);
   
+
 
   /// ===== HISTORY =====
   const [history, setHistory] = useState<THREE.Vector2[][]>([points]);
@@ -112,6 +118,7 @@ export default function App() {
   const [mouseY, setMouseY] = useState(0);
 
   // TODO: maybe this should just be a function instead of a memo
+  // returns the mouse coordinates in terms of the scene's coordinate space
   const mouseCoords = useMemo<THREE.Vector2>(() => {
     // both in [0, 1]
     let x = mouseX/width;
@@ -157,6 +164,14 @@ export default function App() {
     if (ev.button == 0 || ev.button == 1) {
       setDragging(true);
       setTime(new Date().getTime());
+
+      if (
+        inputMode == STRAIGHTEDGE && secondaryInputStep == READY &&
+        anchorPointIndex != null && secondaryPointIndex != null
+      ) {
+        const diff = points[secondaryPointIndex].clone().sub(points[anchorPointIndex]);
+        setActiveLine([project(mouseCoords, diff), project(mouseCoords, diff)])
+      }
     } else if (ev.button == 2) {
       resetSecondaryInputStep();
     }
@@ -164,6 +179,10 @@ export default function App() {
 
   const onPointerUp = () => {
     setDragging(false);
+
+    if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY) {
+        console.log('accept drawn line');
+      }
   };
 
   const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {
@@ -172,11 +191,13 @@ export default function App() {
 
     if (dragging) {
       if (
-        (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
         secondaryInputStep == READY
       ) {
-        if (secondaryInputStep == READY) {
-          console.log('drawing');
+        if (inputMode == STRAIGHTEDGE && anchorPointIndex != null && secondaryPointIndex != null) {
+          const diff = points[secondaryPointIndex].clone().sub(points[anchorPointIndex]);
+          setActiveLine([activeLine[0].clone(), project(mouseCoords, diff)])
+        } else if (inputMode == COMPASS) {
+          console.log('drawing arcs');
         }
       } else {
         setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
@@ -186,15 +207,15 @@ export default function App() {
   };
 
   const onScroll = (ev: React.WheelEvent<HTMLDivElement>) => {
-      const increment = 0.002 * scale * ev.deltaY;
-      const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale + increment));
-      const dScale = newScale - scale;
-      setScale(newScale);
+    const increment = 0.002 * scale * ev.deltaY;
+    const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale + increment));
+    const dScale = newScale - scale;
+    setScale(newScale);
 
-      const biasX = mouseX/width;
-      const biasY = mouseY/height;
-      setCameraOffsetX(cameraOffsetX - (2.0 * biasX - 1) * dScale);
-      setCameraOffsetY(cameraOffsetY + (2.0 * biasY - 1) * dScale);
+    const biasX = mouseX/width;
+    const biasY = mouseY/height;
+    setCameraOffsetX(cameraOffsetX - (2.0 * biasX - 1) * dScale);
+    setCameraOffsetY(cameraOffsetY + (2.0 * biasY - 1) * dScale);
   };
 
   return (
@@ -218,6 +239,8 @@ export default function App() {
         secondaryPointIndex={secondaryPointIndex}
         secondaryInputStep={secondaryInputStep}
         mouseCoords={mouseCoords}
+
+        activeLine={activeLine}
       />
 
       <Controls

@@ -1,6 +1,6 @@
 import { MouseEvent, WheelEvent, useMemo } from 'react';
 import { Canvas } from "@react-three/fiber";
-import { OrthographicCamera } from '@react-three/drei';
+import { Line, OrthographicCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
 import Point from '@/pages/meshes/Point';
@@ -29,13 +29,15 @@ interface MainSceneProps {
     points: THREE.Vector2[];
     anchorPointIndex: number | null;
     secondaryPointIndex: number | null;
+
+    activeLine: THREE.Vector2[];
 }
 
 const MainScene = (props: MainSceneProps) => {
     const {
         onClick, onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint,
         scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
-        mouseCoords, points, anchorPointIndex, secondaryPointIndex
+        mouseCoords, points, anchorPointIndex, secondaryPointIndex, activeLine
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -44,8 +46,9 @@ const MainScene = (props: MainSceneProps) => {
         }
 
         return new THREE.Vector2();
-    }, [points, anchorPointIndex, secondaryPointIndex])
+    }, [points, anchorPointIndex, secondaryPointIndex]);
 
+    // TODO: the preview line logic needs some cleanup
     return (
         <Canvas
             onClick={onClick}
@@ -90,6 +93,19 @@ const MainScene = (props: MainSceneProps) => {
                     />
                     : null
             }
+
+            {(activeLine.length == 2) 
+                ?
+                <Line
+                    points={[activeLine[0], activeLine[1]]}
+                    lineWidth={2}
+                    color="black"
+                />
+                :
+                null
+            }
+
+            
         </Canvas>
     )
 }

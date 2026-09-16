@@ -7,7 +7,7 @@
 + (X) click+dragging the canvas around
 + (X) zoom in and out of the canvas
 + (X) change cursor when drawing
-+ dotted straightedge line should extend beyond the anchoring points
++ (X) dotted straightedge line should extend beyond the anchoring points
 
 
 #== features
@@ -41,3 +41,4 @@
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up
++ Should hide secondary input state buttons when tool is not selected
