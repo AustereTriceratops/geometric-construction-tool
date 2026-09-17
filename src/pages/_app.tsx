@@ -18,11 +18,11 @@ export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(ADD);
 
   const [anchorPointIndex, setAnchorPointIndex] = useState<number | null>(null);
-  const [secondaryPointIndex, setSecondaryPointIndex] = useState<number | null>(null);
+  const [secondaryPoint, setSecondaryPoint] = useState<THREE.Vector2 | null>(null);
 
   const resetSecondaryInputStep = () => {
     setAnchorPointIndex(null);
-    setSecondaryPointIndex(null);
+    setSecondaryPoint(null);
     // setActiveLine([]);
   }
 
@@ -31,13 +31,13 @@ export default function App() {
     if (anchorPointIndex == null) {
       return NO_SEL;
     } else {
-      if (secondaryPointIndex == null) {
+      if (secondaryPoint == null) {
         return ONE_SEL;
       } else {
         return READY;
       }
     }
-  }, [anchorPointIndex, secondaryPointIndex]);
+  }, [anchorPointIndex, secondaryPoint]);
 
   const updateInputMode = (newMode: InputMode) => {
     // if we switch from straightedge to comapss or vice-versa
@@ -94,7 +94,6 @@ export default function App() {
   /// ===== LINES =====
   const [lines, setLines] = useState<THREE.Vector2[][]>([]);
   const [activeLine, setActiveLine] = useState<THREE.Vector2[]>([]);
-
 
 
   /// ===== HISTORY =====
@@ -159,7 +158,7 @@ export default function App() {
         if (secondaryInputStep == NO_SEL) {
           setAnchorPointIndex(index);
         } else if (secondaryInputStep == ONE_SEL) {
-          setSecondaryPointIndex(index);
+          setSecondaryPoint(points[index].clone());
         }
       }
     }
@@ -172,10 +171,9 @@ export default function App() {
 
       if (
         inputMode == STRAIGHTEDGE && secondaryInputStep == READY &&
-        anchorPointIndex != null && secondaryPointIndex != null
+        anchorPointIndex != null && secondaryPoint != null
       ) {
         const anchorPoint = points[anchorPointIndex];
-        const secondaryPoint = points[secondaryPointIndex];
         const startPoint = projectToLine(mouseCoords, anchorPoint, secondaryPoint);
         setActiveLine([startPoint, startPoint]);
       }
@@ -203,10 +201,9 @@ export default function App() {
     setMouseY(ev.clientY);
 
     if (dragging) {
-      if (anchorPointIndex != null && secondaryPointIndex != null) {
+      if (anchorPointIndex != null && secondaryPoint != null) {
         if (inputMode == STRAIGHTEDGE) {
           const anchorPoint = points[anchorPointIndex];
-          const secondaryPoint = points[secondaryPointIndex];
           setActiveLine([activeLine[0].clone(), projectToLine(mouseCoords, anchorPoint, secondaryPoint)]);
         } else if (inputMode == COMPASS) {
           console.log('drawing arcs');
@@ -248,7 +245,7 @@ export default function App() {
         points={points}
         inputMode={inputMode}
         anchorPointIndex={anchorPointIndex}
-        secondaryPointIndex={secondaryPointIndex}
+        secondaryPoint={secondaryPoint}
         secondaryInputStep={secondaryInputStep}
         mouseCoords={mouseCoords}
 

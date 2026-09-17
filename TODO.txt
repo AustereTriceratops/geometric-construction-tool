@@ -16,7 +16,7 @@
     + (X) state machine:
         + (X) select first point
         + (X) select second point
-        + the user can then draw along
+        + (X) the user can then draw along
 + compass
     + dotted preview circle
     + state machine:
@@ -24,7 +24,8 @@
         + either point or background canvas must be selected next
         + the user can then draw along
         + user can "unset" the anchor point while keeping the length of the compass fixed
-
++ colliders for lines
++ colliders for arcs
 
 #== Codebase
 + data classes for Points, Lines, Arcs
@@ -33,7 +34,8 @@
     + Arcs to {center, radius, startAngle, endAngle}
 + (X) move sidebar to separate component
 + (X) move sidebar buttons to separate component
-+ figure out how to best represent edit history
++ (X) edit history for lines
++ edit history for arcs
 + (X) set up ortho camera for tighter control of rendering
 + create a plane mesh to act as the background
 + code for finding intersections between lines and arcs (any combination)
@@ -41,4 +43,4 @@
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up
-+ Should hide secondary input state buttons when tool is not selected
++ (X) Should hide secondary input state buttons when tool is not selected

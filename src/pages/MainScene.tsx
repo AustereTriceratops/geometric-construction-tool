@@ -28,7 +28,7 @@ interface MainSceneProps {
 
     points: THREE.Vector2[];
     anchorPointIndex: number | null;
-    secondaryPointIndex: number | null;
+    secondaryPoint: THREE.Vector2 | null;
 
     lines: THREE.Vector2[][];
     activeLine: THREE.Vector2[];
@@ -38,16 +38,16 @@ const MainScene = (props: MainSceneProps) => {
     const {
         onClick, onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint,
         scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
-        mouseCoords, points, anchorPointIndex, secondaryPointIndex, activeLine, lines
+        mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
-        if (anchorPointIndex != null && secondaryPointIndex != null) {
-            return midpoint(points[anchorPointIndex], points[secondaryPointIndex]);
+        if (anchorPointIndex != null && secondaryPoint != null) {
+            return midpoint(points[anchorPointIndex], secondaryPoint);
         }
 
         return new THREE.Vector2();
-    }, [points, anchorPointIndex, secondaryPointIndex]);
+    }, [points, anchorPointIndex, secondaryPoint]);
 
     // TODO: the preview line logic needs some cleanup
     return (
@@ -83,22 +83,22 @@ const MainScene = (props: MainSceneProps) => {
                 <Point key={i} p={p} clickPoint={clickPoint(i)}/>
             ))}
     
-            {((inputMode == STRAIGHTEDGE || COMPASS) && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
+            {((inputMode == STRAIGHTEDGE) && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
                 ?
                 <PreviewLine
                     p_start={points[anchorPointIndex]}
                     p_end={mouseCoords}
                 />
                 : (
-                    (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
+                    (inputMode == STRAIGHTEDGE) &&
                     secondaryInputStep == READY &&
                     anchorPointIndex != null &&
-                    secondaryPointIndex != null
+                    secondaryPoint != null
                 ) 
                     ?
                     <PreviewLine
                         p_start={extrapolateByMidpoint(points[anchorPointIndex], mp, 10)}
-                        p_end={extrapolateByMidpoint(points[secondaryPointIndex], mp, 10)}
+                        p_end={extrapolateByMidpoint(secondaryPoint, mp, 10)}
                     />
                     : null
             }
