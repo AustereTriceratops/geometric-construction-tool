@@ -1,50 +1,14 @@
-import { STRAIGHTEDGE, COMPASS, SecondaryInputStep, READY, ONE_SEL } from "../constants";
-
 import { MouseEvent, ReactNode, useState } from "react";
 import { Roboto } from 'next/font/google';
+
+import ButtonIcon from "./ButtonIcon";
+import { STRAIGHTEDGE, COMPASS, SecondaryInputStep, READY, ONE_SEL } from "../constants";
+
 
 const roboto = Roboto({
   subsets: ['latin'],
   display: 'swap',
 })
-
-
-interface ButtonIconProps {
-    onClick: () => void;
-    selected?: Boolean;
-    hovered: Boolean;
-    setHovered: (b: Boolean) => void;
-    children: ReactNode;
-}
-
-const ButtonIcon = (props: ButtonIconProps) => {
-    const {onClick, selected, hovered, setHovered, children} = props;
-
-    return (
-        <div
-            onClick={onClick}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            style={{
-                display: 'flex',
-                flexDirection: 'row',
-                backgroundColor: (selected) ? '#626a72' : ((hovered) ? '#888888' : '#bbbbbb'),
-                fontSize: '48px',
-                width:'fit-content',
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: 'white',
-                padding: '8px',
-                borderRadius: '12px',
-                borderStyle: 'solid',
-                borderColor: (selected) ? '#ffffff' : '#ffffff00',
-            }}
-        >
-            {children}
-        </div>
-    )
-}
-
 
 interface ToolButtonProps {
     onClick: () => void;
@@ -95,12 +59,14 @@ const ToolButton = (props: ToolButtonProps) => {
                     </ButtonIcon>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '0.1rem', justifyContent: 'center'}}>
                         <div style={{
+                            visibility: (selected)? 'visible' : 'hidden',
                             width: '20px',
                             height: '20px',
                             borderRadius: '6px',
                             backgroundColor: (secondaryInputStep == READY) ? '#7fa629' : ((secondaryInputStep == ONE_SEL) ? '#6db4ff' : '#ebc958')
                         }}></div>
                         <div style={{
+                            visibility: (selected)? 'visible' : 'hidden',
                             width: '20px',
                             height: '20px',
                             borderRadius: '6px',
