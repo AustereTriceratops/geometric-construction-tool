@@ -30,6 +30,7 @@ interface MainSceneProps {
     anchorPointIndex: number | null;
     secondaryPointIndex: number | null;
 
+    lines: THREE.Vector2[][];
     activeLine: THREE.Vector2[];
 }
 
@@ -37,7 +38,7 @@ const MainScene = (props: MainSceneProps) => {
     const {
         onClick, onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint,
         scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
-        mouseCoords, points, anchorPointIndex, secondaryPointIndex, activeLine
+        mouseCoords, points, anchorPointIndex, secondaryPointIndex, activeLine, lines
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -69,7 +70,15 @@ const MainScene = (props: MainSceneProps) => {
                 top={1}
                 bottom={-1}
             />
-    
+
+            {lines.map((l, i) => (
+                <Line
+                    key={i}
+                    points={[l[0], l[1]]}
+                    lineWidth={2}
+                    color="black"
+                />
+            ))}
             {points.map((p, i) => (
                 <Point key={i} p={p} clickPoint={clickPoint(i)}/>
             ))}
@@ -94,18 +103,16 @@ const MainScene = (props: MainSceneProps) => {
                     : null
             }
 
-            {(activeLine.length == 2) 
+            {(activeLine.length > 1)
                 ?
                 <Line
                     points={[activeLine[0], activeLine[1]]}
                     lineWidth={2}
-                    color="black"
+                    color="#666"
                 />
                 :
                 null
-            }
-
-            
+            } 
         </Canvas>
     )
 }

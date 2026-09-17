@@ -14,7 +14,7 @@ const PreviewLine = (props : PreviewLineProps) => {
             dashed
             points={[p_start, p_end]}
             lineWidth={2}
-            color="black"
+            color="#888"
             dashScale={10}
         />
     )

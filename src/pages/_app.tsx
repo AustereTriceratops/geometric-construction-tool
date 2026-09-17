@@ -8,9 +8,11 @@ import {
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
 import { projectToLine } from './utils';
+import ConstructionState from '@/pages/api/ConstructionState';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
+
 
 export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(ADD);
@@ -75,7 +77,7 @@ export default function App() {
   const addPoint = (p: THREE.Vector2) => {
     const newPoint = p.clone();
     const newPoints = points.concat([newPoint]);
-    const newHistory = history.concat([newPoints]);
+    const newHistory = history.concat(new ConstructionState(newPoints));
 
     setPoints(newPoints);
     setHistory(newHistory);
@@ -85,17 +87,18 @@ export default function App() {
     const newPoints = points.filter((p, i) => i != index);
 
     setPoints(newPoints);
-    setHistory(history.concat([newPoints]));
+    setHistory(history.concat(new ConstructionState(newPoints)));
   };
+
 
   /// ===== LINES =====
   const [lines, setLines] = useState<THREE.Vector2[][]>([]);
   const [activeLine, setActiveLine] = useState<THREE.Vector2[]>([]);
-  
+
 
 
   /// ===== HISTORY =====
-  const [history, setHistory] = useState<THREE.Vector2[][]>([points]);
+  const [history, setHistory] = useState<ConstructionState[]>([new ConstructionState(points)]);
   
   const undo = () => {
     const len = history.length;
@@ -103,13 +106,14 @@ export default function App() {
 
     const lastState = history[len - 2];
 
-    setPoints(lastState);
+    setPoints(lastState.points);
+    setLines(lastState.lines);
     setHistory(history.slice(0, len - 1));
   };
 
   const clear = () => {
     setPoints([]);
-    setHistory(history.concat([[]]));
+    setHistory(history.concat([new ConstructionState()]));
   };
 
 
@@ -117,6 +121,7 @@ export default function App() {
   const [dragging, setDragging] = useState(false);
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
+  const [time, setTime] = useState(new Date().getTime());
 
   // TODO: maybe this should just be a function instead of a memo
   // returns the mouse coordinates in terms of the scene's coordinate space
@@ -136,7 +141,6 @@ export default function App() {
     return new THREE.Vector2(x, y);
   }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY]);
 
-  const [time, setTime] = useState(new Date().getTime());
 
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
     const currentTime = new Date().getTime();
@@ -184,7 +188,13 @@ export default function App() {
     setDragging(false);
 
     if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY) {
-        console.log('accept drawn line');
+        if (activeLine.length > 0) {
+          const newLines = lines.concat([activeLine]);
+
+          setLines(newLines);
+          setActiveLine([]);
+          setHistory(history.concat([new ConstructionState(points, newLines)]));
+        }
       }
   };
 
@@ -242,6 +252,7 @@ export default function App() {
         secondaryInputStep={secondaryInputStep}
         mouseCoords={mouseCoords}
 
+        lines={lines}
         activeLine={activeLine}
       />
 
