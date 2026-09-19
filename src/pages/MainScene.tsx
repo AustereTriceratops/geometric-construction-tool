@@ -9,6 +9,7 @@ import PreviewCircle from '@/pages/meshes/PreviewCircle';
 import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
 import { extrapolateByMidpoint, midpoint } from './utils';
 import LineData from './api/LineData';
+import Background from './meshes/Background';
 
 
 interface MainSceneProps {
@@ -61,16 +62,28 @@ const MainScene = (props: MainSceneProps) => {
             onWheel={onScroll}
             style={{cursor: (secondaryInputStep == READY) ? 'crosshair' : 'default'}}
         >
-            <color attach="background" args={['#e8ddcf']}/>
+            <Background color='#e8ddcf' position={[cameraOffsetX, cameraOffsetY]}/>
+            <color attach="background" args={['#000']}/>
     
             <OrthographicCamera
                 makeDefault
                 zoom={1/scale}
-                position={[cameraOffsetX, cameraOffsetY, 1]}
+                position={[cameraOffsetX, cameraOffsetY, 10]}
                 left={-aspect}
                 right={aspect}
                 top={1}
                 bottom={-1}
+            />
+
+            <Line
+                dashed
+                points={[
+                    new THREE.Vector3(-30, -30, 1), new THREE.Vector3(-30, 30, 1), new THREE.Vector3(30, 30, 1),
+                    new THREE.Vector3(30, -30, 1), new THREE.Vector3(-30, -30, 1)
+                ]}
+                lineWidth={5}
+                color="#99b8ff"
+                dashScale={0.5}
             />
 
             {lines.map((l, i) => (
