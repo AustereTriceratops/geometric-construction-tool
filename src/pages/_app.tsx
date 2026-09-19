@@ -187,14 +187,17 @@ export default function App() {
     setDragging(false);
 
     if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY) {
-        if (activeLine != null) {
-          const newLines = lines.concat([activeLine]);
+      if (activeLine != null) {
+        const newLines = lines.concat([activeLine]);
 
-          setLines(newLines);
-          setActiveLine(null);
-          setHistory(history.concat([new ConstructionState(points, newLines)]));
-        }
+        setLines(newLines);
+        setActiveLine(null);
+        setHistory(history.concat([new ConstructionState(points, newLines)]));
       }
+    } else if (inputMode == COMPASS && secondaryInputStep == ONE_SEL) {
+      setSecondaryPoint(mouseCoords.clone());
+      console.log('mouseup');
+    }
   };
 
   const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {

@@ -74,16 +74,45 @@ const ToolButton = (props: ToolButtonProps) => {
                         }}></div>
                     </div>
                 </div>
-                :
-                <ButtonIcon
-                    onClick={onClick}
+                : (name == COMPASS)
+                    ?
+                    <div style={{display: 'flex', flexDirection: 'row', gap: '0.3rem'}}>
+                        <ButtonIcon
+                            onClick={onClick}
 
-                    selected={selected}
-                    hovered={hovered}
-                    setHovered={setHovered}
-                >
-                    {children}
-                </ButtonIcon>
+                            selected={selected}
+                            hovered={hovered}
+                            setHovered={setHovered}
+                        >
+                            {children}
+                        </ButtonIcon>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: '0.1rem', justifyContent: 'center'}}>
+                            <div style={{
+                                visibility: (selected)? 'visible' : 'hidden',
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '6px',
+                                backgroundColor: (secondaryInputStep == READY) ? '#7fa629' : ((secondaryInputStep == ONE_SEL) ? '#6db4ff' : '#ebc958')
+                            }}></div>
+                            <div style={{
+                                visibility: (selected)? 'visible' : 'hidden',
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '6px',
+                                backgroundColor: (secondaryInputStep == READY ) ? '#7fa629' : ((secondaryInputStep == ONE_SEL) ? '#ebc958' : '#ffffff00')
+                            }}></div>
+                        </div>
+                    </div>
+                    :
+                    <ButtonIcon
+                        onClick={onClick}
+
+                        selected={selected}
+                        hovered={hovered}
+                        setHovered={setHovered}
+                    >
+                        {children}
+                    </ButtonIcon>
             }
         </div>
     )

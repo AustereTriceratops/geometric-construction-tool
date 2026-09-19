@@ -1,10 +1,11 @@
-import { MouseEvent, WheelEvent, useMemo } from 'react';
-import { Canvas } from "@react-three/fiber";
 import { Line, OrthographicCamera } from '@react-three/drei';
+import { Canvas } from "@react-three/fiber";
 import * as THREE from 'three';
+import { MouseEvent, WheelEvent, useMemo } from 'react';
 
 import Point from '@/pages/meshes/Point';
 import PreviewLine from '@/pages/meshes/PreviewLine';
+import PreviewCircle from '@/pages/meshes/PreviewCircle';
 import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
 import { extrapolateByMidpoint, midpoint } from './utils';
 import LineData from './api/LineData';
@@ -84,14 +85,14 @@ const MainScene = (props: MainSceneProps) => {
                 <Point key={i} p={p} clickPoint={clickPoint(i)}/>
             ))}
     
-            {((inputMode == STRAIGHTEDGE) && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
+            {(inputMode == STRAIGHTEDGE && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
                 ?
                 <PreviewLine
                     p_start={points[anchorPointIndex]}
                     p_end={mouseCoords}
                 />
                 : (
-                    (inputMode == STRAIGHTEDGE) &&
+                    inputMode == STRAIGHTEDGE &&
                     secondaryInputStep == READY &&
                     anchorPointIndex != null &&
                     secondaryPoint != null
@@ -100,6 +101,25 @@ const MainScene = (props: MainSceneProps) => {
                     <PreviewLine
                         p_start={extrapolateByMidpoint(points[anchorPointIndex], mp, 10)}
                         p_end={extrapolateByMidpoint(secondaryPoint, mp, 10)}
+                    />
+                    : null
+            }
+            {(inputMode == COMPASS && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
+                ?
+                <PreviewCircle
+                    center={points[anchorPointIndex]}
+                    radius={points[anchorPointIndex].distanceTo(mouseCoords)}
+                />
+                : (
+                    inputMode == COMPASS &&
+                    secondaryInputStep == READY &&
+                    anchorPointIndex != null &&
+                    secondaryPoint != null
+                ) 
+                    ?
+                    <PreviewCircle
+                        center={points[anchorPointIndex]}
+                        radius={points[anchorPointIndex].distanceTo(secondaryPoint)}
                     />
                     : null
             }

@@ -18,9 +18,9 @@
         + (X) select second point
         + (X) the user can then draw along
 + compass
-    + dotted preview circle
+    + (X) dotted preview circle
     + state machine:
-        + select first point
+        + (X) select first point
         + either point or background canvas must be selected next
         + the user can then draw along
         + user can "unset" the anchor point while keeping the length of the compass fixed
@@ -30,7 +30,7 @@
 #== Codebase
 + data classes for Points, Lines, Arcs
     + (X) Points converted to Vector2
-    + Lines to [Vector2, Vector2]
+    + (X) Lines to [Vector2, Vector2]
     + Arcs to {center, radius, startAngle, endAngle}
 + (X) move sidebar to separate component
 + (X) move sidebar buttons to separate component
