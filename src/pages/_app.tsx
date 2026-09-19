@@ -195,7 +195,9 @@ export default function App() {
         setHistory(history.concat([new ConstructionState(points, newLines)]));
       }
     } else if (inputMode == COMPASS && secondaryInputStep == ONE_SEL) {
-      setSecondaryPoint(mouseCoords.clone());
+      // NOT GOOD
+      // clicking background must be treated completely separately from clicking points
+      // setSecondaryPoint(mouseCoords.clone());
       console.log('mouseup');
     }
   };

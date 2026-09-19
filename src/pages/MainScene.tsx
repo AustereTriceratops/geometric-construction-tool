@@ -108,7 +108,7 @@ const MainScene = (props: MainSceneProps) => {
                 ?
                 <PreviewCircle
                     center={points[anchorPointIndex]}
-                    radius={points[anchorPointIndex].distanceTo(mouseCoords)}
+                    radial={mouseCoords}
                 />
                 : (
                     inputMode == COMPASS &&
@@ -119,7 +119,7 @@ const MainScene = (props: MainSceneProps) => {
                     ?
                     <PreviewCircle
                         center={points[anchorPointIndex]}
-                        radius={points[anchorPointIndex].distanceTo(secondaryPoint)}
+                        radial={secondaryPoint}
                     />
                     : null
             }
