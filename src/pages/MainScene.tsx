@@ -7,6 +7,7 @@ import Point from '@/pages/meshes/Point';
 import PreviewLine from '@/pages/meshes/PreviewLine';
 import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
 import { extrapolateByMidpoint, midpoint } from './utils';
+import LineData from './api/LineData';
 
 
 interface MainSceneProps {
@@ -30,8 +31,8 @@ interface MainSceneProps {
     anchorPointIndex: number | null;
     secondaryPoint: THREE.Vector2 | null;
 
-    lines: THREE.Vector2[][];
-    activeLine: THREE.Vector2[];
+    lines: LineData[];
+    activeLine: LineData | null;
 }
 
 const MainScene = (props: MainSceneProps) => {
@@ -74,7 +75,7 @@ const MainScene = (props: MainSceneProps) => {
             {lines.map((l, i) => (
                 <Line
                     key={i}
-                    points={[l[0], l[1]]}
+                    points={[l.start, l.end]}
                     lineWidth={2}
                     color="black"
                 />
@@ -103,10 +104,10 @@ const MainScene = (props: MainSceneProps) => {
                     : null
             }
 
-            {(activeLine.length > 1)
+            {(activeLine != null)
                 ?
                 <Line
-                    points={[activeLine[0], activeLine[1]]}
+                    points={[activeLine.start, activeLine.end]}
                     lineWidth={2}
                     color="#666"
                 />

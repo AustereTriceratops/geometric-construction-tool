@@ -9,6 +9,7 @@ import {
 } from "@/pages/constants";
 import { projectToLine } from './utils';
 import ConstructionState from '@/pages/api/ConstructionState';
+import LineData from '@/pages/api/LineData';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
@@ -92,8 +93,8 @@ export default function App() {
 
 
   /// ===== LINES =====
-  const [lines, setLines] = useState<THREE.Vector2[][]>([]);
-  const [activeLine, setActiveLine] = useState<THREE.Vector2[]>([]);
+  const [lines, setLines] = useState<LineData[]>([]);
+  const [activeLine, setActiveLine] = useState<LineData | null>(null);
 
 
   /// ===== HISTORY =====
@@ -175,7 +176,7 @@ export default function App() {
       ) {
         const anchorPoint = points[anchorPointIndex];
         const startPoint = projectToLine(mouseCoords, anchorPoint, secondaryPoint);
-        setActiveLine([startPoint, startPoint]);
+        setActiveLine(new LineData(startPoint, startPoint));
       }
     } else if (ev.button == 2) {
       resetSecondaryInputStep();
@@ -186,11 +187,11 @@ export default function App() {
     setDragging(false);
 
     if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY) {
-        if (activeLine.length > 0) {
+        if (activeLine != null) {
           const newLines = lines.concat([activeLine]);
 
           setLines(newLines);
-          setActiveLine([]);
+          setActiveLine(null);
           setHistory(history.concat([new ConstructionState(points, newLines)]));
         }
       }
@@ -201,10 +202,10 @@ export default function App() {
     setMouseY(ev.clientY);
 
     if (dragging) {
-      if (anchorPointIndex != null && secondaryPoint != null) {
+      if (anchorPointIndex != null && secondaryPoint != null && activeLine != null) {
         if (inputMode == STRAIGHTEDGE) {
           const anchorPoint = points[anchorPointIndex];
-          setActiveLine([activeLine[0].clone(), projectToLine(mouseCoords, anchorPoint, secondaryPoint)]);
+          setActiveLine(new LineData(activeLine.start, projectToLine(mouseCoords, anchorPoint, secondaryPoint)));
         } else if (inputMode == COMPASS) {
           console.log('drawing arcs');
         }
