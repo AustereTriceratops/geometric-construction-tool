@@ -142,7 +142,7 @@ export default function App() {
   }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY]);
 
 
-  const onClick = (event: MouseEvent<HTMLDivElement>) => {
+  const clickBackground = (event: MouseEvent<HTMLDivElement>) => {
     const currentTime = new Date().getTime();
     if (currentTime - time > 150) return;
 
@@ -153,6 +153,8 @@ export default function App() {
 
   const clickPoint = (index: number) => {
     return (ev: MouseEvent<HTMLDivElement>) => {
+      ev.stopPropagation();
+      
       if (inputMode == ERASE) {
         deletePoint(index);
       } else if (inputMode == STRAIGHTEDGE || inputMode == COMPASS) {
@@ -198,7 +200,6 @@ export default function App() {
       // NOT GOOD
       // clicking background must be treated completely separately from clicking points
       // setSecondaryPoint(mouseCoords.clone());
-      console.log('mouseup');
     }
   };
 
@@ -236,12 +237,12 @@ export default function App() {
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
       <MainScene
-        onClick={onClick}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         onPointerMove={onPointerMove}
         onScroll={onScroll}
         clickPoint={clickPoint}
+        clickBackground={clickBackground}
 
         scale={scale}
         aspect={aspect}

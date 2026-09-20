@@ -13,12 +13,12 @@ import Background from './meshes/Background';
 
 
 interface MainSceneProps {
-    onClick: (ev: MouseEvent<HTMLDivElement>) => void;
     onPointerDown: (ev: MouseEvent<HTMLDivElement>) => void;
     onPointerUp: () => void;
     onPointerMove: (ev: MouseEvent<HTMLDivElement>) => void;
     onScroll: (ev: WheelEvent<HTMLDivElement>) => void;
     clickPoint: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
+    clickBackground: (ev: MouseEvent<HTMLDivElement>) => void;
 
     scale: number;
     aspect: number;
@@ -39,9 +39,9 @@ interface MainSceneProps {
 
 const MainScene = (props: MainSceneProps) => {
     const {
-        onClick, onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint,
+        onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickBackground,
         scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
-        mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines
+        mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines,
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -52,17 +52,20 @@ const MainScene = (props: MainSceneProps) => {
         return new THREE.Vector2();
     }, [points, anchorPointIndex, secondaryPoint]);
 
-    // TODO: the preview line logic needs some cleanup
+    // TODO: the preview line/circle logic needs some cleanup
     return (
         <Canvas
-            onClick={onClick}
             onPointerDown={onPointerDown}
             onPointerUp={onPointerUp}
             onPointerMove={onPointerMove}
             onWheel={onScroll}
             style={{cursor: (secondaryInputStep == READY) ? 'crosshair' : 'default'}}
         >
-            <Background color='#e8ddcf' position={[cameraOffsetX, cameraOffsetY]}/>
+            <Background
+                color='#eadbc7'
+                position={[cameraOffsetX, cameraOffsetY, 0]}
+                clickBackground={clickBackground}
+            />
             <color attach="background" args={['#000']}/>
     
             <OrthographicCamera

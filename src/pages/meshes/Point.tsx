@@ -15,7 +15,7 @@ function Point(props : PointProps) {
     <group>
         <mesh
             visible={false}
-            position={[p.x, p.y, 0]}
+            position={[p.x, p.y, 1]}
             onPointerEnter={() => setHighlighted(true)}
             onPointerLeave={() => setHighlighted(false)}
             onClick={clickPoint}

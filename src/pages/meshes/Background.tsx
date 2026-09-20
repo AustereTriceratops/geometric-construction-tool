@@ -1,15 +1,17 @@
+import { MouseEvent } from 'react';
 import * as THREE from 'three';
 
 interface BackgroundProps {
     color: string;
-    position: [number, number];
+    position: [number, number, number];
+    clickBackground: (ev: MouseEvent<HTMLDivElement>) => void;
 }
 
 const Background = (props: BackgroundProps) => {
-    const {color, position} = props;
+    const {color, position, clickBackground} = props;
 
     return (
-        <mesh position={[position[0], position[1], 0]}>
+        <mesh position={position} onClick={clickBackground}>
             <boxGeometry args={[160, 160, 0]}/>
             <meshBasicMaterial color={color}/>
         </mesh>
