@@ -34,7 +34,7 @@ const PreviewCircle = (props: PreviewCircleProps) => {
         }
 
         return result;
-    }, [center, radius]);
+    }, [center, angle, radius]);
 
     return (
         <Line

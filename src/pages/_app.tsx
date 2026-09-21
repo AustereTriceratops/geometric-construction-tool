@@ -10,6 +10,7 @@ import {
 import { projectToLine } from './utils';
 import ConstructionState from '@/pages/api/ConstructionState';
 import LineData from '@/pages/api/LineData';
+import ArcData from '@/pages/api/ArcData';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
@@ -24,7 +25,6 @@ export default function App() {
   const resetSecondaryInputStep = () => {
     setAnchorPointIndex(null);
     setSecondaryPoint(null);
-    // setActiveLine([]);
   }
 
   // TODO: figure out how to use this with the compass tool
@@ -97,6 +97,11 @@ export default function App() {
   const [activeLine, setActiveLine] = useState<LineData | null>(null);
 
 
+  /// ===== ARCS =====
+  const [arcs, setArcs] = useState<ArcData[]>([]);
+  const [activeArc, setActiveArc] = useState<ArcData | null>(null);
+
+
   /// ===== HISTORY =====
   const [history, setHistory] = useState<ConstructionState[]>([new ConstructionState(points)]);
   
@@ -108,6 +113,7 @@ export default function App() {
 
     setPoints(lastState.points);
     setLines(lastState.lines);
+    setArcs(lastState.arcs);
     setHistory(history.slice(0, len - 1));
   };
 
@@ -154,7 +160,7 @@ export default function App() {
   const clickPoint = (index: number) => {
     return (ev: MouseEvent<HTMLDivElement>) => {
       ev.stopPropagation();
-      
+
       if (inputMode == ERASE) {
         deletePoint(index);
       } else if (inputMode == STRAIGHTEDGE || inputMode == COMPASS) {
@@ -169,8 +175,8 @@ export default function App() {
 
   const onPointerDown = (ev: MouseEvent<HTMLDivElement>) => {
     if (ev.button == 0 || ev.button == 1) {
-      setDragging(true);
       setTime(new Date().getTime());
+      setDragging(true);
 
       if (
         inputMode == STRAIGHTEDGE && secondaryInputStep == READY &&
@@ -179,27 +185,32 @@ export default function App() {
         const anchorPoint = points[anchorPointIndex];
         const startPoint = projectToLine(mouseCoords, anchorPoint, secondaryPoint);
         setActiveLine(new LineData(startPoint, startPoint));
+      } else if (inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null) {
+        const center = points[anchorPointIndex];
+        const radius = center.distanceTo(secondaryPoint);
+        const mouseAngle = Math.atan2(mouseCoords.y, mouseCoords.x);
+        setActiveArc(new ArcData(center, radius, mouseAngle, mouseAngle));
       }
-    } else if (ev.button == 2) {
-      resetSecondaryInputStep();
     }
   };
 
   const onPointerUp = () => {
     setDragging(false);
 
-    if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY) {
-      if (activeLine != null) {
-        const newLines = lines.concat([activeLine]);
+    if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY && activeLine != null) {
+      const newLines = lines.concat([activeLine]);
 
-        setLines(newLines);
-        setActiveLine(null);
-        setHistory(history.concat([new ConstructionState(points, newLines)]));
+      setLines(newLines);
+      setActiveLine(null);
+      setHistory(history.concat([new ConstructionState(points, newLines, arcs)]));
+    } else if (inputMode == COMPASS && secondaryInputStep == READY && activeArc != null) {
+      if (activeArc.endAngle != activeArc.startAngle) {
+        const newArcs = arcs.concat([activeArc]);
+
+        setArcs(newArcs);
+        setActiveArc(null);
+        setHistory(history.concat([new ConstructionState(points, lines, newArcs)]));
       }
-    } else if (inputMode == COMPASS && secondaryInputStep == ONE_SEL) {
-      // NOT GOOD
-      // clicking background must be treated completely separately from clicking points
-      // setSecondaryPoint(mouseCoords.clone());
     }
   };
 
@@ -208,13 +219,16 @@ export default function App() {
     setMouseY(ev.clientY);
 
     if (dragging) {
-      if (anchorPointIndex != null && secondaryPoint != null && activeLine != null) {
-        if (inputMode == STRAIGHTEDGE) {
-          const anchorPoint = points[anchorPointIndex];
-          setActiveLine(new LineData(activeLine.start, projectToLine(mouseCoords, anchorPoint, secondaryPoint)));
-        } else if (inputMode == COMPASS) {
-          console.log('drawing arcs');
-        }
+      if (
+        inputMode == STRAIGHTEDGE && anchorPointIndex != null && secondaryPoint != null && activeLine != null
+      ) {
+        const anchorPoint = points[anchorPointIndex];
+        setActiveLine(new LineData(activeLine.start, projectToLine(mouseCoords, anchorPoint, secondaryPoint)));
+      } else if (
+        inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null && activeArc != null
+      ) {
+        const mouseAngle = Math.atan2(mouseCoords.y, mouseCoords.x);
+        setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, mouseAngle));
       } else {
         setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
         setCameraOffsetY(cameraOffsetY + 2*scale*ev.movementY/height);
@@ -258,6 +272,8 @@ export default function App() {
 
         lines={lines}
         activeLine={activeLine}
+        arcs={arcs}
+        activeArc={activeArc}
       />
 
       <Controls

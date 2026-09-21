@@ -6,9 +6,11 @@ import { MouseEvent, WheelEvent, useMemo } from 'react';
 import Point from '@/pages/meshes/Point';
 import PreviewLine from '@/pages/meshes/PreviewLine';
 import PreviewCircle from '@/pages/meshes/PreviewCircle';
+import Arc from '@/pages/meshes/Arc';
 import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
 import { extrapolateByMidpoint, midpoint } from './utils';
 import LineData from './api/LineData';
+import ArcData from './api/ArcData';
 import Background from './meshes/Background';
 
 
@@ -35,13 +37,15 @@ interface MainSceneProps {
 
     lines: LineData[];
     activeLine: LineData | null;
+    arcs: ArcData[];
+    activeArc: ArcData | null;
 }
 
 const MainScene = (props: MainSceneProps) => {
     const {
         onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickBackground,
         scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
-        mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines,
+        mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -62,7 +66,7 @@ const MainScene = (props: MainSceneProps) => {
             style={{cursor: (secondaryInputStep == READY) ? 'crosshair' : 'default'}}
         >
             <Background
-                color='#eadbc7'
+                color='#e9d6bd'
                 position={[cameraOffsetX, cameraOffsetY, 0]}
                 clickBackground={clickBackground}
             />
@@ -95,6 +99,12 @@ const MainScene = (props: MainSceneProps) => {
                     points={[l.start, l.end]}
                     lineWidth={2}
                     color="black"
+                />
+            ))}
+            {arcs.map((a, i) => (
+                <Arc
+                    key={i}
+                    arcData={a}
                 />
             ))}
             {points.map((p, i) => (

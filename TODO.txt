@@ -37,7 +37,7 @@
 + (X) edit history for lines
 + edit history for arcs
 + (X) set up ortho camera for tighter control of rendering
-+ create a plane mesh to act as the background
++ (X) create a plane mesh to act as the background
 + code for finding intersections between lines and arcs (any combination)
 + (X) move entire canvas out of _app and into a separate scene component
 
