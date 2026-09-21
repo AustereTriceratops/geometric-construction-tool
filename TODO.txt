@@ -22,7 +22,7 @@
     + (X) dotted preview circle
     + state machine:
         + (X) select first point
-        + either point or background canvas must be selected next
+        + (X) either point or background canvas must be selected next
         + (X) the user can then draw along
         + user can "unset" the anchor point while keeping the length of the compass fixed
 + colliders for lines
@@ -33,6 +33,7 @@
     + (X) Points converted to Vector2
     + (X) Lines to [Vector2, Vector2]
     + (X) Arcs to {center, radius, startAngle, endAngle}
+    + Add a dedicated Point dataclass 
 + (X) move sidebar to separate component
 + (X) move sidebar buttons to separate component
 + (X) edit history for lines
@@ -43,6 +44,7 @@
 + (X) move entire canvas out of _app and into a separate scene component
 + 'fuse' together overlapping lines or arcs
 + track "winding number" for arcs
++ gather exports together
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up

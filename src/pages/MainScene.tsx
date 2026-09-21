@@ -3,14 +3,15 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from 'three';
 import { MouseEvent, WheelEvent, useMemo } from 'react';
 
-import Point from '@/pages/meshes/Point';
-import PreviewLine from '@/pages/meshes/PreviewLine';
-import PreviewCircle from '@/pages/meshes/PreviewCircle';
-import Arc from '@/pages/meshes/Arc';
-import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
-import { extrapolateByMidpoint, midpoint } from './utils';
+import PointData from './api/PointData';
 import LineData from './api/LineData';
 import ArcData from './api/ArcData';
+import Point from '@/pages/meshes/Point';
+import Arc from '@/pages/meshes/Arc';
+import PreviewLine from '@/pages/meshes/PreviewLine';
+import PreviewCircle from '@/pages/meshes/PreviewCircle';
+import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
+import { extrapolateByMidpoint, midpoint } from './utils';
 import Background from './meshes/Background';
 
 
@@ -31,9 +32,9 @@ interface MainSceneProps {
     secondaryInputStep: SecondaryInputStep;
     mouseCoords: THREE.Vector2;
 
-    points: THREE.Vector2[];
+    points: PointData[];
     anchorPointIndex: number | null;
-    secondaryPoint: THREE.Vector2 | null;
+    secondaryPoint: PointData | null;
 
     lines: LineData[];
     activeLine: LineData | null;
@@ -50,7 +51,7 @@ const MainScene = (props: MainSceneProps) => {
 
     const mp = useMemo<THREE.Vector2>(() => {
         if (anchorPointIndex != null && secondaryPoint != null) {
-            return midpoint(points[anchorPointIndex], secondaryPoint);
+            return midpoint(points[anchorPointIndex].point, secondaryPoint.point);
         }
 
         return new THREE.Vector2();
@@ -108,13 +109,13 @@ const MainScene = (props: MainSceneProps) => {
                 <Arc key={i} arcData={a}/>
             ))}
             {points.map((p, i) => (
-                <Point key={i} p={p} clickPoint={clickPoint(i)}/>
+                <Point key={i} p={p.point} clickPoint={clickPoint(i)}/>
             ))}
     
             {(inputMode == STRAIGHTEDGE && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
                 ?
                 <PreviewLine
-                    p_start={points[anchorPointIndex]}
+                    p_start={points[anchorPointIndex].point}
                     p_end={mouseCoords}
                 />
                 : (
@@ -125,15 +126,15 @@ const MainScene = (props: MainSceneProps) => {
                 ) 
                     ?
                     <PreviewLine
-                        p_start={extrapolateByMidpoint(points[anchorPointIndex], mp, 10)}
-                        p_end={extrapolateByMidpoint(secondaryPoint, mp, 10)}
+                        p_start={extrapolateByMidpoint(points[anchorPointIndex].point, mp, 10)}
+                        p_end={extrapolateByMidpoint(secondaryPoint.point, mp, 10)}
                     />
                     : null
             }
             {(inputMode == COMPASS && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
                 ?
                 <PreviewCircle
-                    center={points[anchorPointIndex]}
+                    center={points[anchorPointIndex].point}
                     radial={mouseCoords}
                 />
                 : (
@@ -144,8 +145,8 @@ const MainScene = (props: MainSceneProps) => {
                 ) 
                     ?
                     <PreviewCircle
-                        center={points[anchorPointIndex]}
-                        radial={secondaryPoint}
+                        center={points[anchorPointIndex].point}
+                        radial={secondaryPoint.point}
                     />
                     : null
             }

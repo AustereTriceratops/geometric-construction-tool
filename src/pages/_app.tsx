@@ -11,6 +11,7 @@ import { projectToLine } from './utils';
 import ConstructionState from '@/pages/api/ConstructionState';
 import LineData from '@/pages/api/LineData';
 import ArcData from '@/pages/api/ArcData';
+import PointData from '@/pages/api/PointData';
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
@@ -20,7 +21,7 @@ export default function App() {
   const [inputMode, setInputMode] = useState<InputMode>(ADD);
 
   const [anchorPointIndex, setAnchorPointIndex] = useState<number | null>(null);
-  const [secondaryPoint, setSecondaryPoint] = useState<THREE.Vector2 | null>(null);
+  const [secondaryPoint, setSecondaryPoint] = useState<PointData | null>(null);
 
   const resetSecondaryInputStep = () => {
     setAnchorPointIndex(null);
@@ -45,10 +46,11 @@ export default function App() {
     // then we'd like to keep our selected points
     if (inputMode == newMode) {
       resetSecondaryInputStep();
-    } else if (!(
-      (inputMode == STRAIGHTEDGE || inputMode == COMPASS) &&
-      (newMode == STRAIGHTEDGE || newMode == COMPASS)
-    )) {
+    } else if (inputMode == COMPASS && newMode == STRAIGHTEDGE) {
+      if (secondaryPoint != null && secondaryPoint.isArbitrary) {
+        setSecondaryPoint(null);
+      }
+    } else if (!(newMode == STRAIGHTEDGE || newMode == COMPASS)) {
       resetSecondaryInputStep();
     }
     setInputMode(newMode);
@@ -71,11 +73,13 @@ export default function App() {
   const [cameraOffsetY, setCameraOffsetY] = useState(0);
 
   /// ===== POINTS =====
-  const [points, setPoints] = useState<THREE.Vector2[]>(
-    [new THREE.Vector2(0, 0), new THREE.Vector2(1.2, 2), new THREE.Vector2(-2, -0.6)]
-  );
+  const [points, setPoints] = useState<PointData[]>([
+      new PointData(new THREE.Vector2(0, 0)),
+      new PointData(new THREE.Vector2(1.2, 2)),
+      new PointData(new THREE.Vector2(-2, -0.6))
+  ]);
 
-  const addPoint = (p: THREE.Vector2) => {
+  const addPoint = (p: PointData) => {
     const newPoint = p.clone();
     const newPoints = points.concat([newPoint]);
     const newHistory = history.concat(new ConstructionState(newPoints));
@@ -153,8 +157,10 @@ export default function App() {
     if (currentTime - time > 150) return;
 
     if (inputMode == ADD) {
-      addPoint(mouseCoords);
-    }
+      addPoint(new PointData(mouseCoords));
+    } else if (inputMode == COMPASS && secondaryInputStep == ONE_SEL) {
+        setSecondaryPoint(new PointData(mouseCoords, true));
+      }
   };
 
   const clickPoint = (index: number) => {
@@ -183,14 +189,14 @@ export default function App() {
         anchorPointIndex != null && secondaryPoint != null
       ) {
         const anchorPoint = points[anchorPointIndex];
-        const startPoint = projectToLine(mouseCoords, anchorPoint, secondaryPoint);
+        const startPoint = projectToLine(mouseCoords, anchorPoint.point, secondaryPoint.point);
         setActiveLine(new LineData(startPoint, startPoint));
       } else if (inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null) {
         const center = points[anchorPointIndex];
-        const radius = center.distanceTo(secondaryPoint);
-        const diff = mouseCoords.clone().sub(center);
+        const radius = center.point.distanceTo(secondaryPoint.point);
+        const diff = mouseCoords.clone().sub(center.point);
         const mouseAngle = Math.atan2(diff.y, diff.x);
-        setActiveArc(new ArcData(center, radius, mouseAngle, mouseAngle));
+        setActiveArc(new ArcData(center.point, radius, mouseAngle, mouseAngle));
       }
     }
   };
@@ -224,7 +230,7 @@ export default function App() {
         inputMode == STRAIGHTEDGE && anchorPointIndex != null && secondaryPoint != null && activeLine != null
       ) {
         const anchorPoint = points[anchorPointIndex];
-        setActiveLine(new LineData(activeLine.start, projectToLine(mouseCoords, anchorPoint, secondaryPoint)));
+        setActiveLine(new LineData(activeLine.start, projectToLine(mouseCoords, anchorPoint.point, secondaryPoint.point)));
       } else if (
         inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null && activeArc != null
       ) {
