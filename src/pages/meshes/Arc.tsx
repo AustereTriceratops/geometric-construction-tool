@@ -25,7 +25,6 @@ const Arc = (props: ArcProps) => {
             result.push(p);
         }
 
-        console.log(result.length);
         return result;
     }, [center, radius, startAngle, endAngle]);
 

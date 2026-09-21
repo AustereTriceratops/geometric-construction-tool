@@ -85,8 +85,11 @@ const MainScene = (props: MainSceneProps) => {
             <Line
                 dashed
                 points={[
-                    new THREE.Vector3(-30, -30, 1), new THREE.Vector3(-30, 30, 1), new THREE.Vector3(30, 30, 1),
-                    new THREE.Vector3(30, -30, 1), new THREE.Vector3(-30, -30, 1)
+                    new THREE.Vector3(-30, -30, 1),
+                    new THREE.Vector3(-30, 30, 1),
+                    new THREE.Vector3(30, 30, 1),
+                    new THREE.Vector3(30, -30, 1),
+                    new THREE.Vector3(-30, -30, 1)
                 ]}
                 lineWidth={5}
                 color="#99b8ff"
@@ -102,10 +105,7 @@ const MainScene = (props: MainSceneProps) => {
                 />
             ))}
             {arcs.map((a, i) => (
-                <Arc
-                    key={i}
-                    arcData={a}
-                />
+                <Arc key={i} arcData={a}/>
             ))}
             {points.map((p, i) => (
                 <Point key={i} p={p} clickPoint={clickPoint(i)}/>
@@ -159,7 +159,8 @@ const MainScene = (props: MainSceneProps) => {
                 />
                 :
                 null
-            } 
+            }
+            {(activeArc != null) ? <Arc arcData={activeArc}/> : null}
         </Canvas>
     )
 }

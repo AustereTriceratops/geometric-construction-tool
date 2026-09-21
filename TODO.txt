@@ -8,6 +8,7 @@
 + (X) zoom in and out of the canvas
 + (X) change cursor when drawing
 + (X) dotted straightedge line should extend beyond the anchoring points
++ Add a mark on the prview line/arc to denote where the user would start drawing
 
 
 #== features
@@ -22,7 +23,7 @@
     + state machine:
         + (X) select first point
         + either point or background canvas must be selected next
-        + the user can then draw along
+        + (X) the user can then draw along
         + user can "unset" the anchor point while keeping the length of the compass fixed
 + colliders for lines
 + colliders for arcs
@@ -31,15 +32,17 @@
 + data classes for Points, Lines, Arcs
     + (X) Points converted to Vector2
     + (X) Lines to [Vector2, Vector2]
-    + Arcs to {center, radius, startAngle, endAngle}
+    + (X) Arcs to {center, radius, startAngle, endAngle}
 + (X) move sidebar to separate component
 + (X) move sidebar buttons to separate component
 + (X) edit history for lines
-+ edit history for arcs
++ (X) edit history for arcs
 + (X) set up ortho camera for tighter control of rendering
 + (X) create a plane mesh to act as the background
 + code for finding intersections between lines and arcs (any combination)
 + (X) move entire canvas out of _app and into a separate scene component
++ 'fuse' together overlapping lines or arcs
++ track "winding number" for arcs
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up

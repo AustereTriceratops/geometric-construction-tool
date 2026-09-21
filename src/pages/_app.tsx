@@ -188,7 +188,8 @@ export default function App() {
       } else if (inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null) {
         const center = points[anchorPointIndex];
         const radius = center.distanceTo(secondaryPoint);
-        const mouseAngle = Math.atan2(mouseCoords.y, mouseCoords.x);
+        const diff = mouseCoords.clone().sub(center);
+        const mouseAngle = Math.atan2(diff.y, diff.x);
         setActiveArc(new ArcData(center, radius, mouseAngle, mouseAngle));
       }
     }
@@ -227,7 +228,8 @@ export default function App() {
       } else if (
         inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null && activeArc != null
       ) {
-        const mouseAngle = Math.atan2(mouseCoords.y, mouseCoords.x);
+        const diff = mouseCoords.clone().sub(activeArc.center);
+        const mouseAngle = Math.atan2(diff.y, diff.x);
         setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, mouseAngle));
       } else {
         setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
