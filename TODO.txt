@@ -51,7 +51,7 @@
 + 'fuse' together overlapping lines or arcs
 + (X) track "winding number" for arcs
 + gather exports together
-+ change cameraOffset to vector2
++ (X) change cameraOffset to vector2
 + unit testing
 + docstrings
 

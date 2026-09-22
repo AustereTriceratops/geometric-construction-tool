@@ -25,8 +25,7 @@ interface MainSceneProps {
 
     scale: number;
     aspect: number;
-    cameraOffsetX: number;
-    cameraOffsetY: number;
+    cameraOffset: THREE.Vector2;
 
     inputMode: InputMode;
     secondaryInputStep: SecondaryInputStep;
@@ -45,7 +44,7 @@ interface MainSceneProps {
 const MainScene = (props: MainSceneProps) => {
     const {
         onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickBackground,
-        scale, aspect, cameraOffsetX, cameraOffsetY, inputMode, secondaryInputStep,
+        scale, aspect, cameraOffset, inputMode, secondaryInputStep,
         mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc
     } = props;
 
@@ -69,7 +68,7 @@ const MainScene = (props: MainSceneProps) => {
         >
             <Background
                 color='#e9d6bd'
-                position={[cameraOffsetX, cameraOffsetY, 0]}
+                position={[cameraOffset.x, cameraOffset.x, 0]}
                 clickBackground={clickBackground}
             />
             <color attach="background" args={['#000']}/>
@@ -77,7 +76,7 @@ const MainScene = (props: MainSceneProps) => {
             <OrthographicCamera
                 makeDefault
                 zoom={1/scale}
-                position={[cameraOffsetX, cameraOffsetY, 10]}
+                position={[cameraOffset.x, cameraOffset.y, 10]}
                 left={-aspect}
                 right={aspect}
                 top={1}

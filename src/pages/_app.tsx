@@ -70,8 +70,7 @@ export default function App() {
 
   /// ===== CAMERA =====
   const [scale, setScale] = useState(5);
-  const [cameraOffsetX, setCameraOffsetX] = useState(0);
-  const [cameraOffsetY, setCameraOffsetY] = useState(0);
+  const [cameraOffset, setCameraOffset] = useState(new THREE.Vector2());
 
   /// ===== POINTS =====
   const [points, setPoints] = useState<PointData[]>([
@@ -147,15 +146,15 @@ export default function App() {
     y = 2*y - 1;
 
     // transform to scene space
-    x = scale * x + cameraOffsetX;
-    y = -scale * y + cameraOffsetY;
+    x = scale * x + cameraOffset.x;
+    y = -scale * y + cameraOffset.y;
 
     return new THREE.Vector2(x, y);
   };
 
   const mouseCoords = useMemo(() => {
     return findMouseCoords(mouseX, mouseY);
-  }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY]);
+  }, [mouseX, mouseY, width, height, aspect, scale, cameraOffset]);
 
 
   const clickBackground = (event: MouseEvent<HTMLDivElement>) => {
@@ -271,8 +270,9 @@ export default function App() {
 
         setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, newEndAngle));
       } else {
-        setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
-        setCameraOffsetY(cameraOffsetY + 2*scale*ev.movementY/height);
+        const newCameraOffsetX = cameraOffset.x - 2*aspect*scale*ev.movementX/width;
+        const newCameraOffsetY = cameraOffset.y + 2*scale*ev.movementY/height;
+        setCameraOffset(new THREE.Vector2(newCameraOffsetX, newCameraOffsetY));
       }
     }
 
@@ -286,8 +286,9 @@ export default function App() {
     const dScale = newScale - scale;
     
     setScale(newScale);
-    setCameraOffsetX(cameraOffsetX - (mouseCoords.x - cameraOffsetX) * dScale/scale);
-    setCameraOffsetY(cameraOffsetY - (mouseCoords.y - cameraOffsetY) * dScale/scale);
+    const newCameraOffsetX = cameraOffset.x - (mouseCoords.x - cameraOffset.x) * dScale/scale;
+    const newCameraOffsetY = cameraOffset.y - (mouseCoords.y - cameraOffset.y) * dScale/scale;
+    setCameraOffset(new THREE.Vector2(newCameraOffsetX, newCameraOffsetY));
   };
 
   return (
@@ -302,8 +303,7 @@ export default function App() {
 
         scale={scale}
         aspect={aspect}
-        cameraOffsetX={cameraOffsetX}
-        cameraOffsetY={cameraOffsetY}
+        cameraOffset={cameraOffset}
 
         points={points}
         inputMode={inputMode}
