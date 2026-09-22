@@ -34,3 +34,16 @@ export function projectToLine(x: THREE.Vector2, a: THREE.Vector2, b: THREE.Vecto
     const relativeCoords = x.clone().sub(a);
     return project(relativeCoords, diff).add(a);
 }
+
+// returns the angle between vectors a and b, 
+// with a positive angle meaning b is positioned counterclockwise to x
+export function angleBetween(a: THREE.Vector2, b: THREE.Vector2) {
+  // rotate a and b such that a becomes the positive x axis
+  // this is effectively just complex division
+  const a_mag = a.lengthSq();
+
+  const b_rotated = new THREE.Vector2(a.x*b.x + a.y*b.y, a.x*b.y - a.y*b.x);
+  b_rotated.divideScalar(a_mag);
+
+  return Math.atan2(b_rotated.y, b_rotated.x);
+}

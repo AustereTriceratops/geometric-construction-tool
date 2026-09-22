@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { projectToLine } from './utils';
+import { projectToLine, angleBetween } from './utils';
 import ConstructionState from '@/pages/api/ConstructionState';
 import LineData from '@/pages/api/LineData';
 import ArcData from '@/pages/api/ArcData';
@@ -22,6 +22,7 @@ export default function App() {
 
   const [anchorPointIndex, setAnchorPointIndex] = useState<number | null>(null);
   const [secondaryPoint, setSecondaryPoint] = useState<PointData | null>(null);
+  const [compassRadius, setCompassRadius] = useState<number | null>(null);
 
   const resetSecondaryInputStep = () => {
     setAnchorPointIndex(null);
@@ -133,9 +134,8 @@ export default function App() {
   const [mouseY, setMouseY] = useState(0);
   const [time, setTime] = useState(new Date().getTime());
 
-  // TODO: maybe this should just be a function instead of a memo
   // returns the mouse coordinates in terms of the scene's coordinate space
-  const mouseCoords = useMemo<THREE.Vector2>(() => {
+  const findMouseCoords = (mouseX: number, mouseY: number) => {
     // both in [0, 1]
     let x = mouseX/width;
     let y = mouseY/height;
@@ -149,6 +149,10 @@ export default function App() {
     y = -scale * y + cameraOffsetY;
 
     return new THREE.Vector2(x, y);
+  };
+
+  const mouseCoords = useMemo(() => {
+    return findMouseCoords(mouseX, mouseY);
   }, [mouseX, mouseY, width, height, aspect, scale, cameraOffsetX, cameraOffsetY]);
 
 
@@ -222,8 +226,8 @@ export default function App() {
   };
 
   const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {
-    setMouseX(ev.clientX);
-    setMouseY(ev.clientY);
+    const newMouseX = ev.clientX;
+    const newMouseY = ev.clientY;
 
     if (dragging) {
       if (
@@ -235,25 +239,32 @@ export default function App() {
         inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null && activeArc != null
       ) {
         const diff = mouseCoords.clone().sub(activeArc.center);
-        const mouseAngle = Math.atan2(diff.y, diff.x);
-        setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, mouseAngle));
+
+        const newMouseCoords = findMouseCoords(newMouseX, newMouseY);
+        const newDiff = newMouseCoords.clone().sub(activeArc.center);
+
+        const d_angle = angleBetween(diff, newDiff);
+        const newEndAngle = activeArc.endAngle + d_angle;
+
+        setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, newEndAngle));
       } else {
         setCameraOffsetX(cameraOffsetX - 2*aspect*scale*ev.movementX/width);
         setCameraOffsetY(cameraOffsetY + 2*scale*ev.movementY/height);
       }
     }
+
+    setMouseX(newMouseX);
+    setMouseY(newMouseY);
   };
 
   const onScroll = (ev: React.WheelEvent<HTMLDivElement>) => {
     const increment = 0.002 * scale * ev.deltaY;
     const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale + increment));
     const dScale = newScale - scale;
+    
     setScale(newScale);
-
-    const biasX = mouseX/width;
-    const biasY = mouseY/height;
-    setCameraOffsetX(cameraOffsetX - (2.0 * biasX - 1) * dScale);
-    setCameraOffsetY(cameraOffsetY + (2.0 * biasY - 1) * dScale);
+    setCameraOffsetX(cameraOffsetX - (mouseCoords.x - cameraOffsetX) * dScale/scale);
+    setCameraOffsetY(cameraOffsetY - (mouseCoords.y - cameraOffsetY) * dScale/scale);
   };
 
   return (

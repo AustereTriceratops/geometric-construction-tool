@@ -1,14 +1,16 @@
 #== UI/UX
 + (X) outline buttons to denote the active input mode
-+ side-buttons to display the state of the straightedge and compass modes
++ (X) side-buttons to display the state of the straightedge and compass modes
     + (X) straightedge
-    + compass
+    + (X) compass
 + (X) tags that show the name of the tool upon mouseover
 + (X) click+dragging the canvas around
 + (X) zoom in and out of the canvas
 + (X) change cursor when drawing
 + (X) dotted straightedge line should extend beyond the anchoring points
 + Add a mark on the prview line/arc to denote where the user would start drawing
++ right-click drag to pan canvas
++ while drawing with the compass and straightedge tools, allow user to click a point to reset with new anchor point
 
 
 #== features
@@ -29,11 +31,11 @@
 + colliders for arcs
 
 #== Codebase
-+ data classes for Points, Lines, Arcs
++ (X) data classes for Points, Lines, Arcs
     + (X) Points converted to Vector2
     + (X) Lines to [Vector2, Vector2]
     + (X) Arcs to {center, radius, startAngle, endAngle}
-    + Add a dedicated Point dataclass 
+    + (X) Add a dedicated Point dataclass 
 + (X) move sidebar to separate component
 + (X) move sidebar buttons to separate component
 + (X) edit history for lines
@@ -43,8 +45,9 @@
 + code for finding intersections between lines and arcs (any combination)
 + (X) move entire canvas out of _app and into a separate scene component
 + 'fuse' together overlapping lines or arcs
-+ track "winding number" for arcs
++ (X) track "winding number" for arcs
 + gather exports together
++ change cameraOffset to vector2
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up
