@@ -9,7 +9,7 @@
 + (X) change cursor when drawing
 + (X) dotted straightedge line should extend beyond the anchoring points
 + Add a mark on the prview line/arc to denote where the user would start drawing
-+ hollow cricle or crosshair follows pointer while placing straightedge/compass points?
++ (X) hollow cricle or crosshair follows pointer while placing straightedge/compass points?
 + (X) right-click drag to pan canvas when drawing
 + (X) while drawing with the compass and straightedge tools, allow user to click a point to reset with new anchor point
 + info icon in corner for controls
@@ -32,6 +32,7 @@
         + user can "unset" the anchor point while keeping the length of the compass fixed
 + colliders for lines
 + colliders for arcs
++ have compass and straightedge tools snap to nearby points
 
 #== Codebase
 + (X) data classes for Points, Lines, Arcs

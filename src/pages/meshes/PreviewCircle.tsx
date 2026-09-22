@@ -25,7 +25,7 @@ const PreviewCircle = (props: PreviewCircleProps) => {
         const result = [];
 
         for (let i = 0; i < n_segments + 1; i++) {
-            const offset = Math.PI + 2*Math.PI*i/n_segments;
+            const offset = 2*Math.PI*(0.98*i/n_segments + 0.01);
             const x = radius * Math.cos(angle + offset);
             const y = radius * Math.sin(angle + offset);
             const p = new THREE.Vector2(x, y).add(center);
@@ -37,13 +37,23 @@ const PreviewCircle = (props: PreviewCircleProps) => {
     }, [center, angle, radius]);
 
     return (
-        <Line
-            dashed
-            points={points}
-            lineWidth={2}
-            color="#888"
-            dashScale={10}
-        />
+        <group>
+            <Line
+                dashed
+                points={points}
+                lineWidth={2}
+                color="#888"
+                dashScale={10}
+            />
+            <mesh position={[radial.x, radial.y, 0]}>
+                <circleGeometry args={[0.05, 10]}/>
+                <meshBasicMaterial color={'#888'}/>
+            </mesh>
+            <mesh position={[radial.x, radial.y, 0]}>
+                <circleGeometry args={[0.03, 10]}/>
+                <meshBasicMaterial color={'#fff'}/>
+            </mesh>
+        </group>
     )
 }
 
