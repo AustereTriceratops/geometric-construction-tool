@@ -81,7 +81,7 @@ export default function App() {
   const addPoint = (p: PointData) => {
     const newPoint = p.clone();
     const newPoints = points.concat([newPoint]);
-    const newHistory = history.concat(new ConstructionState(newPoints));
+    const newHistory = history.concat(new ConstructionState(newPoints, lines, arcs));
 
     setPoints(newPoints);
     setHistory(newHistory);
@@ -91,7 +91,7 @@ export default function App() {
     const newPoints = points.filter((p, i) => i != index);
 
     setPoints(newPoints);
-    setHistory(history.concat(new ConstructionState(newPoints)));
+    setHistory(history.concat(new ConstructionState(newPoints, lines, arcs)));
   };
 
 
