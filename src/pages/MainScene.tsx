@@ -64,6 +64,7 @@ const MainScene = (props: MainSceneProps) => {
             onPointerUp={onPointerUp}
             onPointerMove={onPointerMove}
             onWheel={onScroll}
+            onContextMenu={(ev) => ev.preventDefault()}
             style={{cursor: (secondaryInputStep == READY) ? 'crosshair' : 'default'}}
         >
             <Background

@@ -130,6 +130,8 @@ export default function App() {
 
   /// ===== EVENTS =====
   const [dragging, setDragging] = useState(false);
+  const [leftMB, setLeftMB] = useState(false);
+  const [rightMB, setRightMB] = useState(false);
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
   const [time, setTime] = useState(new Date().getTime());
@@ -163,8 +165,8 @@ export default function App() {
     if (inputMode == ADD) {
       addPoint(new PointData(mouseCoords));
     } else if (inputMode == COMPASS && secondaryInputStep == ONE_SEL) {
-        setSecondaryPoint(new PointData(mouseCoords, true));
-      }
+      setSecondaryPoint(new PointData(mouseCoords, true));
+    }
   };
 
   const clickPoint = (index: number) => {
@@ -178,16 +180,19 @@ export default function App() {
           setAnchorPointIndex(index);
         } else if (secondaryInputStep == ONE_SEL) {
           setSecondaryPoint(points[index].clone());
+        } else if (secondaryInputStep == READY) {
+          setAnchorPointIndex(index)
+          setSecondaryPoint(null);
         }
       }
     }
   };
 
   const onPointerDown = (ev: MouseEvent<HTMLDivElement>) => {
-    if (ev.button == 0 || ev.button == 1) {
-      setTime(new Date().getTime());
-      setDragging(true);
+    setTime(new Date().getTime());
+    setDragging(true);
 
+    if (ev.button == 0) {
       if (
         inputMode == STRAIGHTEDGE && secondaryInputStep == READY &&
         anchorPointIndex != null && secondaryPoint != null
@@ -202,27 +207,45 @@ export default function App() {
         const mouseAngle = Math.atan2(diff.y, diff.x);
         setActiveArc(new ArcData(center.point, radius, mouseAngle, mouseAngle));
       }
+
+      setLeftMB(true);
+      setRightMB(false);
+    } else if (ev.button = 2) {
+      ev.preventDefault();
+
+      setRightMB(true);
+      setLeftMB(false);
     }
   };
 
   const onPointerUp = () => {
-    setDragging(false);
+    if (leftMB) {
+      if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY && activeLine != null) {
+        const newLines = lines.concat([activeLine]);
+  
+        setLines(newLines);
+        setActiveLine(null);
+        setHistory(history.concat([new ConstructionState(points, newLines, arcs)]));
+      } else if (inputMode == COMPASS && secondaryInputStep == READY && activeArc != null) {
+        if (activeArc.endAngle != activeArc.startAngle) {
+          const newArcs = arcs.concat([activeArc]);
+  
+          setArcs(newArcs);
+          setActiveArc(null);
+          setHistory(history.concat([new ConstructionState(points, lines, newArcs)]));
+        }
+      }
+    } else if (rightMB) {
+      const currentTime = new Date().getTime();
 
-    if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY && activeLine != null) {
-      const newLines = lines.concat([activeLine]);
-
-      setLines(newLines);
-      setActiveLine(null);
-      setHistory(history.concat([new ConstructionState(points, newLines, arcs)]));
-    } else if (inputMode == COMPASS && secondaryInputStep == READY && activeArc != null) {
-      if (activeArc.endAngle != activeArc.startAngle) {
-        const newArcs = arcs.concat([activeArc]);
-
-        setArcs(newArcs);
-        setActiveArc(null);
-        setHistory(history.concat([new ConstructionState(points, lines, newArcs)]));
+      if (currentTime - time < 150 && secondaryInputStep == ONE_SEL) {
+        setAnchorPointIndex(null);
       }
     }
+
+    setDragging(false);
+    setLeftMB(false);
+    setRightMB(false);
   };
 
   const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {
