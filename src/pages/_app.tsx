@@ -114,15 +114,19 @@ export default function App() {
 
     const lastState = history[len - 2];
 
-    setPoints(lastState.points);
-    setLines(lastState.lines);
-    setArcs(lastState.arcs);
+    setPoints(lastState.points.map((p) => p.clone()));
+    setLines(lastState.lines.map((l) => l.clone()));
+    setArcs(lastState.arcs.map((a) => a.clone()));
     setHistory(history.slice(0, len - 1));
+    resetSecondaryInputStep();
   };
 
   const clear = () => {
     setPoints([]);
+    setLines([]);
+    setArcs([]);
     setHistory(history.concat([new ConstructionState()]));
+    resetSecondaryInputStep();
   };
 
 

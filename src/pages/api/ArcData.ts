@@ -12,6 +12,10 @@ class ArcData {
         this.startAngle = startAngle;
         this.endAngle = endAngle;
     }
+
+    clone() {
+        return new ArcData(this.center, this.radius, this.startAngle, this.endAngle);
+    }
 }
 
 export default ArcData;

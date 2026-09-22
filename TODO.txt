@@ -59,3 +59,4 @@
 + (X) Dragging results in placing a point when the mouse comes up
 + (X) Should hide secondary input state buttons when tool is not selected
 + hitting "undo" when multiple lines and arcs are present erases all of them (during drawing phase)
++ (X) crash when place a new point -> use compass/straightedge/click undo button during ONE_SEL
