@@ -74,9 +74,8 @@ export default function App() {
 
   /// ===== POINTS =====
   const [points, setPoints] = useState<PointData[]>([
-      new PointData(new THREE.Vector2(0, 0)),
-      new PointData(new THREE.Vector2(1.2, 2)),
-      new PointData(new THREE.Vector2(-2, -0.6))
+      new PointData(new THREE.Vector2(-2, 0)),
+      new PointData(new THREE.Vector2(2, 0)),
   ]);
 
   const addPoint = (p: PointData) => {
