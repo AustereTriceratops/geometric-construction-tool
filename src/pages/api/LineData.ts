@@ -12,6 +12,13 @@ class LineData {
     clone() {
         return new LineData(this.start, this.end);
     }
+
+    equals(line: LineData) {
+        return (
+            this.start.equals(line.start) && this.end.equals(line.end) || 
+            this.start.equals(line.end) && this.end.equals(line.start)
+        )
+    }
 }
 
 export default LineData;

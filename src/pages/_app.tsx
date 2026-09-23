@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { projectToLine, angleBetween } from './utils';
+import { projectToLine, angleBetween } from './api/utils';
 import ConstructionState from '@/pages/api/ConstructionState';
 import LineData from '@/pages/api/LineData';
 import ArcData from '@/pages/api/ArcData';

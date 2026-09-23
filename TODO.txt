@@ -13,7 +13,8 @@
 + (X) right-click drag to pan canvas when drawing
 + (X) while drawing with the compass and straightedge tools, allow user to click a point to reset with new anchor point
 + info icon in corner for controls
-+ (X) right-click to reset compass and straightedge while choosing secondary point
++ (X) right-click to reset compass and straightedge while choosing secondary point 
+    + also when drawing
 
 
 #== features
@@ -33,6 +34,7 @@
 + colliders for lines
 + colliders for arcs
 + have compass and straightedge tools snap to nearby points
++ 
 
 #== Codebase
 + (X) data classes for Points, Lines, Arcs
@@ -55,6 +57,7 @@
 + (X) set up unit testing
 + docstrings
 + highlighted objects should be stored in the app state
++ set up property-based testing
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up

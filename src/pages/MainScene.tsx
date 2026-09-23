@@ -11,7 +11,7 @@ import Arc from '@/pages/meshes/Arc';
 import PreviewLine from '@/pages/meshes/PreviewLine';
 import PreviewCircle from '@/pages/meshes/PreviewCircle';
 import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
-import { extrapolateByMidpoint, midpoint } from './utils';
+import { extrapolateByMidpoint, midpoint } from './api/utils';
 import Background from './meshes/Background';
 
 
