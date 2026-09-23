@@ -34,7 +34,10 @@
 + colliders for lines
 + colliders for arcs
 + have compass and straightedge tools snap to nearby points
-+ 
++ recoloring
+    + points
+    + lines
+    + arcs
 
 #== Codebase
 + (X) data classes for Points, Lines, Arcs
@@ -50,7 +53,8 @@
 + (X) create a plane mesh to act as the background
 + code for finding intersections between lines and arcs (any combination)
 + (X) move entire canvas out of _app and into a separate scene component
-+ 'fuse' together overlapping lines or arcs
++ merge together overlapping lines
++ merge together overlapping arcs
 + (X) track "winding number" for arcs
 + gather exports together
 + (X) change cameraOffset to vector2
