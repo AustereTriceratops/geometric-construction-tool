@@ -83,32 +83,23 @@ export function mergeLines(a: LineData, b: LineData): LineData | null {
 
     const a_start_component = projectionComponent(a.start, b.start, b.end);
     const a_end_component = projectionComponent(a.end, b.start, b.end);
-    const b_end_component = b.start.distanceTo(b.end);
+    
+    const a_min = Math.min(a_start_component, a_end_component);
+    const a_len = Math.abs(a_end_component - a_start_component);
+    const b_len = b.start.distanceTo(b.end);
 
-    if (a_start_component <= 0 && a_end_component > 0) {
-        if (a_end_component > b_end_component) {
-            return a.clone();
-        } else {
-            return new LineData(a.start, b.end);
-        }
-    } else if (a_end_component <= 0 && a_start_component > 0) {
-        if (a_start_component > b_end_component) {
-            return a.clone();
-        } else {
-            return new LineData(a.end, b.end);
-        }
-    } else if (a_start_component <= b_end_component && a_end_component > b_end_component) {
-        if (a_start_component <= 0) {
-            return a.clone();
-        } else {
-            return new LineData(b.start, a.end);
-        }
-    } else if (a_end_component <= b_end_component && a_start_component > b_end_component) {
-        if (a_end_component <= 0) {
-            return a.clone();
-        } else {
-            return new LineData(b.start, a.start);
-        }
+    if (a_min + a_len >= 0 && a_min + a_len <= b_len && a_min <= 0) {
+        const pA = (a_min == a_start_component) ? a.start : a.end;
+        return new LineData(pA, b.end);
+    } else if (a_min + a_len >= b_len && a_min <= 0) {
+        // a completely overlaps b
+        return a.clone();
+    } else if (a_min + a_len >= b_len && a_min >= 0 && a_min <= b_len) {
+        const pA = (a_min == a_start_component) ? a.end : a.start;
+        return new LineData(b.start, pA);
+    } else if (a_min + a_len <= b_len && a_min >= 0) {
+        //b completely overlaps a
+        return b.clone();
     }
 
     return result
