@@ -234,7 +234,17 @@ export default function App() {
           setSecondaryPoint(points[index].clone());
         } else if (secondaryInputStep == READY) {
           setAnchorPointIndex(index)
-          setSecondaryPoint(null);
+
+          if (inputMode == COMPASS) {
+            if (anchorPointIndex != null && secondaryPoint != null) {
+              const radius = points[anchorPointIndex].point.distanceTo(secondaryPoint.point);
+              const newAnchor = points[index].point;
+              const newSecondaryPoint = newAnchor.clone().add(new THREE.Vector2(radius, 0));
+              setSecondaryPoint(new PointData(newSecondaryPoint));
+            }
+          } else {
+            setSecondaryPoint(null);
+          }
         }
       }
     }
@@ -282,8 +292,12 @@ export default function App() {
     } else if (rightMB) {
       const currentTime = new Date().getTime();
 
-      if (currentTime - time < 150 && secondaryInputStep == ONE_SEL) {
-        setAnchorPointIndex(null);
+      if (currentTime - time < 150) {
+        if (secondaryInputStep == ONE_SEL) {
+          setAnchorPointIndex(null);
+        } else if (secondaryInputStep == READY) {
+          setSecondaryPoint(null);
+        }
       }
     }
 

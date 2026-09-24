@@ -14,7 +14,8 @@
 + (X) while drawing with the compass and straightedge tools, allow user to click a point to reset with new anchor point
 + info icon in corner for controls
 + (X) right-click to reset compass and straightedge while choosing secondary point 
-    + also when drawing
+    + (X) also when drawing
++ (X) changing base anchor point for a compass while in drawing mode should preserve length
 
 
 #== features
@@ -26,11 +27,11 @@
         + (X) the user can then draw along
 + compass
     + (X) dotted preview circle
-    + state machine:
+    + (X) state machine:
         + (X) select first point
         + (X) either point or background canvas must be selected next
         + (X) the user can then draw along
-        + user can "unset" the anchor point while keeping the length of the compass fixed
+        + (X) user can "unset" the anchor point while keeping the length of the compass fixed
 + colliders for lines
 + colliders for arcs
 + have compass and straightedge tools snap to nearby points
@@ -53,7 +54,7 @@
 + (X) create a plane mesh to act as the background
 + code for finding intersections between lines and arcs (any combination)
 + (X) move entire canvas out of _app and into a separate scene component
-+ merge together overlapping lines
++ (X) merge together overlapping lines
 + merge together overlapping arcs
 + (X) track "winding number" for arcs
 + gather exports together
