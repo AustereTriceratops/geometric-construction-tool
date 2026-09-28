@@ -22,6 +22,7 @@ interface MainSceneProps {
     onPointerMove: (ev: MouseEvent<HTMLDivElement>) => void;
     onScroll: (ev: WheelEvent<HTMLDivElement>) => void;
     clickPoint: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
+    clickLine: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
     clickBackground: (ev: MouseEvent<HTMLDivElement>) => void;
 
     scale: number;
@@ -44,7 +45,7 @@ interface MainSceneProps {
 
 const MainScene = (props: MainSceneProps) => {
     const {
-        onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickBackground,
+        onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickLine, clickBackground,
         scale, aspect, cameraOffset, inputMode, secondaryInputStep,
         mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc
     } = props;
@@ -99,13 +100,13 @@ const MainScene = (props: MainSceneProps) => {
             />
 
             {lines.map((l, i) => (
-                <LineSegment key={i} start={l.start} end={l.end}/>
+                <LineSegment key={i} start={l.start} end={l.end} onClick={clickLine(i)}/>
             ))}
             {arcs.map((a, i) => (
                 <Arc key={i} arcData={a}/>
             ))}
             {points.map((p, i) => (
-                <Point key={i} p={p.point} clickPoint={clickPoint(i)}/>
+                <Point key={i} p={p.point} onClick={clickPoint(i)}/>
             ))}
     
             {(inputMode == STRAIGHTEDGE && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
@@ -148,7 +149,7 @@ const MainScene = (props: MainSceneProps) => {
             }
 
             {(activeLine != null)
-                ? <LineSegment start={activeLine.start} end={activeLine.end}/>
+                ? <LineSegment start={activeLine.start} end={activeLine.end} onClick={(ev) => {}}/>
                 : null
             }
             {(activeArc != null) ? <Arc arcData={activeArc}/> : null}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, MouseEvent } from 'react';
 import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -7,10 +7,11 @@ import { midpoint } from '../api/utils';
 interface LineSegmentProps {
     start: THREE.Vector2;
     end: THREE.Vector2;
+    onClick: (ev: MouseEvent<HTMLDivElement>) => void
 }
 
 const LineSegment = (props: LineSegmentProps) => {
-    const {start, end} = props;
+    const {start, end, onClick} = props;
 
     const [highlighted, setHighlighted] = useState(false);
 
@@ -37,10 +38,7 @@ const LineSegment = (props: LineSegmentProps) => {
                 rotation={angle}
                 onPointerEnter={() => setHighlighted(true)}
                 onPointerLeave={() => setHighlighted(false)}
-                onClick={(ev) => {
-                    ev.stopPropagation();
-                    console.log(mp);
-                }}
+                onClick={onClick}
             >
                 <planeGeometry args={[len, 0.1]}/>
                 <meshBasicMaterial color={'#4a82bb'}/>

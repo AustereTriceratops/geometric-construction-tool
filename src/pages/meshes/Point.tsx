@@ -3,11 +3,11 @@ import * as THREE from 'three';
 
 interface PointProps {
   p: THREE.Vector2;
-  clickPoint: (ev : MouseEvent<HTMLDivElement> ) => void;
+  onClick: (ev : MouseEvent<HTMLDivElement> ) => void;
 }
 
 function Point(props : PointProps) {
-  const {p, clickPoint} = props;
+  const {p, onClick} = props;
 
   const [highlighted, setHighlighted] = useState(false);
 
@@ -18,7 +18,7 @@ function Point(props : PointProps) {
             position={[p.x, p.y, 1]}
             onPointerEnter={() => setHighlighted(true)}
             onPointerLeave={() => setHighlighted(false)}
-            onClick={clickPoint}
+            onClick={onClick}
         >
             <circleGeometry args={[0.08, 12]}/>
             <meshBasicMaterial color={'#4a82bb'}/>

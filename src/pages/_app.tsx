@@ -140,6 +140,13 @@ export default function App() {
     setActiveLine(null);
     setHistory(history.concat([new ConstructionState(points, newLines, arcs)]));
   }
+
+  const deleteLine = (index: number) => {
+    const newLines = lines.filter((p, i) => i != index);
+
+    setLines(newLines);
+    setHistory(history.concat(new ConstructionState(points, newLines, arcs)));
+  }
   
 
   /// ===== ARCS =====
@@ -250,6 +257,14 @@ export default function App() {
     }
   };
 
+  const clickLine = (index: number) => {
+    return (ev: MouseEvent<HTMLDivElement>) => {
+      if (inputMode == ERASE) {
+        deleteLine(index);
+      }
+    }
+  }
+
   const onPointerDown = (ev: MouseEvent<HTMLDivElement>) => {
     setTime(new Date().getTime());
     setDragging(true);
@@ -358,6 +373,7 @@ export default function App() {
         onPointerMove={onPointerMove}
         onScroll={onScroll}
         clickPoint={clickPoint}
+        clickLine={clickLine}
         clickBackground={clickBackground}
 
         scale={scale}

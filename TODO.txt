@@ -32,14 +32,14 @@
         + (X) either point or background canvas must be selected next
         + (X) the user can then draw along
         + (X) user can "unset" the anchor point while keeping the length of the compass fixed
-+ colliders for lines
++ (X) colliders for lines
 + colliders for arcs
 + have compass and straightedge tools snap to nearby points
 + recoloring
     + points
     + lines
     + arcs
-+ erasing lines
++ (X) erasing lines
 + erasing arcs
 
 #== Codebase
