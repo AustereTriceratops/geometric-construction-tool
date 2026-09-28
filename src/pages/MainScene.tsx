@@ -7,6 +7,7 @@ import PointData from './api/PointData';
 import LineData from './api/LineData';
 import ArcData from './api/ArcData';
 import Point from '@/pages/meshes/Point';
+import LineSegment from '@/pages/meshes/LineSegment';
 import Arc from '@/pages/meshes/Arc';
 import PreviewLine from '@/pages/meshes/PreviewLine';
 import PreviewCircle from '@/pages/meshes/PreviewCircle';
@@ -98,12 +99,7 @@ const MainScene = (props: MainSceneProps) => {
             />
 
             {lines.map((l, i) => (
-                <Line
-                    key={i}
-                    points={[l.start, l.end]}
-                    lineWidth={2}
-                    color="black"
-                />
+                <LineSegment key={i} start={l.start} end={l.end}/>
             ))}
             {arcs.map((a, i) => (
                 <Arc key={i} arcData={a}/>
@@ -152,14 +148,8 @@ const MainScene = (props: MainSceneProps) => {
             }
 
             {(activeLine != null)
-                ?
-                <Line
-                    points={[activeLine.start, activeLine.end]}
-                    lineWidth={2}
-                    color="#666"
-                />
-                :
-                null
+                ? <LineSegment start={activeLine.start} end={activeLine.end}/>
+                : null
             }
             {(activeArc != null) ? <Arc arcData={activeArc}/> : null}
         </Canvas>

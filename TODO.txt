@@ -39,6 +39,8 @@
     + points
     + lines
     + arcs
++ erasing lines
++ erasing arcs
 
 #== Codebase
 + (X) data classes for Points, Lines, Arcs
