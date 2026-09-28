@@ -39,6 +39,10 @@ interface MainSceneProps {
 
     lines: LineData[];
     activeLine: LineData | null;
+    highlightedLines: number[];
+    highlightLine: (index: number) => void;
+    unHighlightLine: (index: number) => void;
+
     arcs: ArcData[];
     activeArc: ArcData | null;
 }
@@ -46,8 +50,9 @@ interface MainSceneProps {
 const MainScene = (props: MainSceneProps) => {
     const {
         onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickLine, clickBackground,
-        scale, aspect, cameraOffset, inputMode, secondaryInputStep,
-        mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc
+        highlightLine, unHighlightLine, scale, aspect, cameraOffset, inputMode, secondaryInputStep,
+        mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc,
+        highlightedLines
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -100,7 +105,15 @@ const MainScene = (props: MainSceneProps) => {
             />
 
             {lines.map((l, i) => (
-                <LineSegment key={i} start={l.start} end={l.end} onClick={clickLine(i)}/>
+                <LineSegment
+                    key={i}
+                    highlighted={(highlightedLines.includes(i))}
+                    start={l.start}
+                    end={l.end}
+                    onClick={clickLine(i)}
+                    onPointerEnter={() => highlightLine(i)}
+                    onPointerLeave={() => unHighlightLine(i)}
+                />
             ))}
             {arcs.map((a, i) => (
                 <Arc key={i} arcData={a}/>
@@ -149,7 +162,13 @@ const MainScene = (props: MainSceneProps) => {
             }
 
             {(activeLine != null)
-                ? <LineSegment start={activeLine.start} end={activeLine.end} onClick={(ev) => {}}/>
+                ? <LineSegment
+                    start={activeLine.start}
+                    end={activeLine.end}
+                    onClick={() => {}}
+                    onPointerEnter={() => {}}
+                    onPointerLeave={() => {}}
+                />
                 : null
             }
             {(activeArc != null) ? <Arc arcData={activeArc}/> : null}

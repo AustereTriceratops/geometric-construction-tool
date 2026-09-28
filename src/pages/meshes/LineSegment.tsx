@@ -7,13 +7,14 @@ import { midpoint } from '../api/utils';
 interface LineSegmentProps {
     start: THREE.Vector2;
     end: THREE.Vector2;
-    onClick: (ev: MouseEvent<HTMLDivElement>) => void
+    highlighted: Boolean;
+    onClick: (ev: MouseEvent<HTMLDivElement>) => void;
+    onPointerEnter: () => void;
+    onPointerLeave: () => void;
 }
 
 const LineSegment = (props: LineSegmentProps) => {
-    const {start, end, onClick} = props;
-
-    const [highlighted, setHighlighted] = useState(false);
+    const {start, end, highlighted, onClick, onPointerEnter, onPointerLeave} = props;
 
     const mp = useMemo(() => {
         return midpoint(start, end);
@@ -36,8 +37,8 @@ const LineSegment = (props: LineSegmentProps) => {
                 visible={false}
                 position={[mp.x, mp.y, 1]}
                 rotation={angle}
-                onPointerEnter={() => setHighlighted(true)}
-                onPointerLeave={() => setHighlighted(false)}
+                onPointerEnter={onPointerEnter}
+                onPointerLeave={onPointerLeave}
                 onClick={onClick}
             >
                 <planeGeometry args={[len, 0.1]}/>

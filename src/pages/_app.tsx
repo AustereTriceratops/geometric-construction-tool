@@ -57,6 +57,9 @@ export default function App() {
     setInputMode(newMode);
   }
 
+  /// ===== HIGHLIGHTING =====
+  const [highlightedLines, setHighlightedLines] = useState<number[]>([])
+
   /// ===== CANVAS =====
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -146,6 +149,16 @@ export default function App() {
 
     setLines(newLines);
     setHistory(history.concat(new ConstructionState(points, newLines, arcs)));
+  }
+
+  const highlightLine = (index: number) => {
+    const newHL = [...highlightedLines, index];
+    setHighlightedLines(newHL);
+  }
+
+  const unHighlightLine = (index: number) => {
+    const newHL = highlightedLines.filter((n) => n != index);
+    setHighlightedLines(newHL);
   }
   
 
@@ -389,6 +402,9 @@ export default function App() {
 
         lines={lines}
         activeLine={activeLine}
+        highlightedLines={highlightedLines}
+        highlightLine={highlightLine}
+        unHighlightLine={unHighlightLine}
         arcs={arcs}
         activeArc={activeArc}
       />
