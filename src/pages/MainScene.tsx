@@ -36,6 +36,8 @@ interface MainSceneProps {
     points: PointData[];
     anchorPointIndex: number | null;
     secondaryPoint: PointData | null;
+    highlightedPoint: number | null;
+    setHighlightedPoint: (index: number | null) => void;
 
     lines: LineData[];
     activeLine: LineData | null;
@@ -52,7 +54,7 @@ const MainScene = (props: MainSceneProps) => {
         onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickLine, clickBackground,
         highlightLine, unHighlightLine, scale, aspect, cameraOffset, inputMode, secondaryInputStep,
         mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc,
-        highlightedLines
+        highlightedLines, highlightedPoint, setHighlightedPoint
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -119,7 +121,14 @@ const MainScene = (props: MainSceneProps) => {
                 <Arc key={i} arcData={a}/>
             ))}
             {points.map((p, i) => (
-                <Point key={i} p={p.point} onClick={clickPoint(i)}/>
+                <Point
+                    key={i}
+                    p={p.point}
+                    highlighted={highlightedPoint == i}
+                    onClick={clickPoint(i)}
+                    onPointerEnter={() => setHighlightedPoint(i)}
+                    onPointerLeave={() => setHighlightedPoint(null)}
+                />
             ))}
     
             {(inputMode == STRAIGHTEDGE && secondaryInputStep == ONE_SEL && anchorPointIndex != null) 
@@ -165,6 +174,7 @@ const MainScene = (props: MainSceneProps) => {
                 ? <LineSegment
                     start={activeLine.start}
                     end={activeLine.end}
+                    highlighted={false}
                     onClick={() => {}}
                     onPointerEnter={() => {}}
                     onPointerLeave={() => {}}

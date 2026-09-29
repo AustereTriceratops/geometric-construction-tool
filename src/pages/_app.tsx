@@ -58,6 +58,7 @@ export default function App() {
   }
 
   /// ===== HIGHLIGHTING =====
+  const [highlightedPoint, setHighlightedPoint] = useState<number | null>(null);
   const [highlightedLines, setHighlightedLines] = useState<number[]>([])
 
   /// ===== CANVAS =====
@@ -393,18 +394,22 @@ export default function App() {
         aspect={aspect}
         cameraOffset={cameraOffset}
 
-        points={points}
         inputMode={inputMode}
-        anchorPointIndex={anchorPointIndex}
-        secondaryPoint={secondaryPoint}
         secondaryInputStep={secondaryInputStep}
         mouseCoords={mouseCoords}
+        
+        points={points}
+        anchorPointIndex={anchorPointIndex}
+        secondaryPoint={secondaryPoint}
+        highlightedPoint={highlightedPoint}
+        setHighlightedPoint={setHighlightedPoint}
 
         lines={lines}
         activeLine={activeLine}
         highlightedLines={highlightedLines}
         highlightLine={highlightLine}
         unHighlightLine={unHighlightLine}
+
         arcs={arcs}
         activeArc={activeArc}
       />

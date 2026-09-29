@@ -3,21 +3,30 @@ import * as THREE from 'three';
 
 interface PointProps {
   p: THREE.Vector2;
+  highlighted: Boolean;
   onClick: (ev : MouseEvent<HTMLDivElement> ) => void;
+  onPointerEnter: () => void;
+  onPointerLeave: () => void;
 }
 
 function Point(props : PointProps) {
-  const {p, onClick} = props;
-
-  const [highlighted, setHighlighted] = useState(false);
+  const {p, highlighted, onClick, onPointerEnter, onPointerLeave} = props;
 
   return (
     <group>
         <mesh
             visible={false}
-            position={[p.x, p.y, 1]}
-            onPointerEnter={() => setHighlighted(true)}
-            onPointerLeave={() => setHighlighted(false)}
+            position={[p.x, p.y, 0]}
+            onPointerMove={
+              (highlighted) 
+                ? () => {}
+                : (ev: MouseEvent<HTMLDivElement>) => {
+                  ev.stopPropagation();
+                  onPointerEnter();
+                }
+            }
+            onPointerEnter={onPointerEnter}
+            onPointerLeave={onPointerLeave}
             onClick={onClick}
         >
             <circleGeometry args={[0.08, 12]}/>

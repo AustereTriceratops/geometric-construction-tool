@@ -63,7 +63,7 @@
 + (X) change cameraOffset to vector2
 + (X) set up unit testing
 + docstrings
-+ highlighted objects should be stored in the app state
++ (X) highlighted objects should be stored in the app state
 + set up property-based testing
 
 #== Bugs
