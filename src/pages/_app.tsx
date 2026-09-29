@@ -205,9 +205,17 @@ export default function App() {
   const [dragging, setDragging] = useState(false);
   const [leftMB, setLeftMB] = useState(false);
   const [rightMB, setRightMB] = useState(false);
-  const [mouseX, setMouseX] = useState(0);
-  const [mouseY, setMouseY] = useState(0);
+  const [mouseCoords, setMouseCoords] = useState<THREE.Vector2>(new THREE.Vector2());
   const [time, setTime] = useState(new Date().getTime());
+
+  const snapMouse = (p: THREE.Vector2): THREE.Vector2 => {
+    if (secondaryInputStep == ONE_SEL && highlightedPoint != null) {
+      const point = points[highlightedPoint].point;
+      return point.clone();
+    }
+
+    return p.clone();
+  }
 
   // returns the mouse coordinates in terms of the scene's coordinate space
   const findMouseCoords = (mouseX: number, mouseY: number) => {
@@ -226,11 +234,6 @@ export default function App() {
     return new THREE.Vector2(x, y);
   };
 
-  const mouseCoords = useMemo(() => {
-    return findMouseCoords(mouseX, mouseY);
-  }, [mouseX, mouseY, width, height, aspect, scale, cameraOffset]);
-
-
   const clickBackground = (event: MouseEvent<HTMLDivElement>) => {
     const currentTime = new Date().getTime();
     if (currentTime - time > 150) return;
@@ -245,6 +248,7 @@ export default function App() {
   const clickPoint = (index: number) => {
     return (ev: MouseEvent<HTMLDivElement>) => {
       ev.stopPropagation();
+      console.log('clickpoint')
 
       if (inputMode == ERASE) {
         deletePoint(index);
@@ -275,6 +279,14 @@ export default function App() {
     return (ev: MouseEvent<HTMLDivElement>) => {
       if (inputMode == ERASE) {
         deleteLine(index);
+      } else if (inputMode == ADD) {
+        ev.stopPropagation();
+
+        if (highlightedPoint == null) {
+          const line = lines[index];
+          const snappedCoords = projectToLine(mouseCoords, line.start, line.end);
+          addPoint(new PointData(snappedCoords));
+        }
       }
     }
   }
@@ -336,8 +348,8 @@ export default function App() {
   };
 
   const onPointerMove = (ev: MouseEvent<HTMLDivElement>) => {
-    const newMouseX = ev.clientX;
-    const newMouseY = ev.clientY;
+    let newMouseCoords = findMouseCoords(ev.clientX, ev.clientY);
+    newMouseCoords = snapMouse(newMouseCoords);
 
     if (dragging) {
       if (
@@ -349,8 +361,6 @@ export default function App() {
         inputMode == COMPASS && anchorPointIndex != null && secondaryPoint != null && activeArc != null
       ) {
         const diff = mouseCoords.clone().sub(activeArc.center);
-
-        const newMouseCoords = findMouseCoords(newMouseX, newMouseY);
         const newDiff = newMouseCoords.clone().sub(activeArc.center);
 
         const d_angle = angleBetween(diff, newDiff);
@@ -364,8 +374,7 @@ export default function App() {
       }
     }
 
-    setMouseX(newMouseX);
-    setMouseY(newMouseY);
+    setMouseCoords(newMouseCoords);
   };
 
   const onScroll = (ev: React.WheelEvent<HTMLDivElement>) => {

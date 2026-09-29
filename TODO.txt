@@ -19,13 +19,13 @@
 
 
 #== features
-+ straightedge
++ (X) straightedge
     + (X) dotted preview line
     + (X) state machine:
         + (X) select first point
         + (X) select second point
         + (X) the user can then draw along
-+ compass
++ (X) compass
     + (X) dotted preview circle
     + (X) state machine:
         + (X) select first point
@@ -34,13 +34,14 @@
         + (X) user can "unset" the anchor point while keeping the length of the compass fixed
 + (X) colliders for lines
 + colliders for arcs
-+ have compass and straightedge tools snap to nearby points
++ (X) have compass and straightedge tools snap to nearby points
 + recoloring
     + points
     + lines
     + arcs
 + (X) erasing lines
 + erasing arcs
++ (X) placing points snapped to a line
 
 #== Codebase
 + (X) data classes for Points, Lines, Arcs
