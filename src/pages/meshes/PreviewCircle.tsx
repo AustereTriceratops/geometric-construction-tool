@@ -10,17 +10,18 @@ interface PreviewCircleProps {
 const PreviewCircle = (props: PreviewCircleProps) => {
     const {center, radial} = props;
 
-    const n_segments = 64;
-
+    
     const radius = useMemo(() => {
         return center.distanceTo(radial);
     }, [center, radial]);
-
+    
     const angle = useMemo(() => {
         const diff = radial.clone().sub(center);
         return Math.atan2(diff.y, diff.x);
     }, [center, radial]);
-
+    
+    const n_segments = Math.ceil(30*radius);
+    
     const points = useMemo(() => {
         const result = [];
 

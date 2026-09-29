@@ -213,7 +213,6 @@ export default function App() {
   const clickPoint = (index: number) => {
     return (ev: MouseEvent<HTMLDivElement>) => {
       ev.stopPropagation();
-      console.log('clickpoint')
 
       if (inputMode == ERASE) {
         deletePoint(index);
@@ -273,7 +272,7 @@ export default function App() {
         const radius = center.point.distanceTo(secondaryPoint.point);
         const diff = mouseCoords.clone().sub(center.point);
         const mouseAngle = Math.atan2(diff.y, diff.x);
-        setActiveArc(new ArcData(center.point, radius, mouseAngle, 0.01));
+        setActiveArc(new ArcData(center.point, radius, mouseAngle, 0));
       }
 
       setLeftMB(true);
@@ -291,7 +290,7 @@ export default function App() {
       if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY && activeLine != null) {
         addLine(activeLine);
       } else if (inputMode == COMPASS && secondaryInputStep == READY && activeArc != null) {
-        if (activeArc.endAngle != activeArc.startAngle) {
+        if (activeArc.dTheta != 0) {
           addArc(activeArc);
         }
       }
