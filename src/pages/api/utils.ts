@@ -104,3 +104,43 @@ export function mergeLines(a: LineData, b: LineData): LineData | null {
 
     return result
 }
+
+export function mergeNewLine(lines: LineData[], newLine: LineData) {
+    // TODO: this could be made a lot faster by abstracting lines further into
+    // carrying info about the "original" segment, and just checking if lines
+    // share that segment to immediately know that they are colinear
+    let noMerge = true;
+    const newLines: LineData[] = [];
+    let updatedIndex: number | null = null;
+
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i];
+
+      // see if the new line overlaps with any existing lines
+      const c = mergeLines(l, newLine);
+
+      if (c == null) {
+        newLines.push(l);
+      } else {
+        noMerge = false;
+
+        if (updatedIndex == null) {
+          updatedIndex = i;
+          newLines.push(c);
+        } else {
+          const d = mergeLines(newLines[updatedIndex], c);
+
+          // this will always be true, but typechecker requires a check
+          if (d != null) {
+            newLines[updatedIndex] = d;
+          }
+        }
+      }
+    }
+
+    if (noMerge) {
+      newLines.push(newLine);
+    }
+
+    return newLines;
+}

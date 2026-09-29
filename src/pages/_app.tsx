@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { projectToLine, angleBetween, mergeLines } from './api/utils';
+import { projectToLine, angleBetween, mergeNewLine } from './api/utils';
 import ConstructionState from '@/pages/api/ConstructionState';
 import LineData from '@/pages/api/LineData';
 import ArcData from '@/pages/api/ArcData';
@@ -29,7 +29,6 @@ export default function App() {
     setSecondaryPoint(null);
   }
 
-  // TODO: figure out how to use this with the compass tool
   const secondaryInputStep = useMemo<SecondaryInputStep>(() => {
     if (anchorPointIndex == null) {
       return NO_SEL;
@@ -103,42 +102,8 @@ export default function App() {
   const [lines, setLines] = useState<LineData[]>([]);
   const [activeLine, setActiveLine] = useState<LineData | null>(null);
 
-  const addLine = (line: LineData) => { 
-    // TODO: move most of this to utils
-    // TODO: this could be made a lot faster by abstracting lines further into
-    // carrying info about the "original" segment, and just checking if lines
-    // share that segment to immediately know that they are colinear
-    let noMerge = true;
-    const newLines: LineData[] = [];
-    let updatedIndex: number | null = null;
-
-    for (let i = 0; i < lines.length; i++) {
-      const l = lines[i];
-
-      const c = mergeLines(l, line);
-
-      if (c == null) {
-        newLines.push(l);
-      } else {
-        noMerge = false;
-
-        if (updatedIndex == null) {
-          updatedIndex = i;
-          newLines.push(c);
-        } else {
-          const d = mergeLines(newLines[updatedIndex], c);
-
-          // this will always be true, but typechecker requires a check
-          if (d != null) {
-            newLines[updatedIndex] = d;
-          }
-        }
-      }
-    }
-
-    if (noMerge) {
-      newLines.push(line);
-    }
+  const addLine = (newLine: LineData) => {
+    const newLines = mergeNewLine(lines, newLine);
   
     setLines(newLines);
     setActiveLine(null);
