@@ -10,14 +10,14 @@ interface ArcProps {
 
 const Arc = (props: ArcProps) => {
     const { arcData } = props;
-    const { center, radius, startAngle, endAngle } = arcData;
+    const { center, radius, startAngle, dTheta } = arcData;
 
     const points = useMemo(() => {
-        const n_segments = 1 + Math.ceil(30 * radius * Math.abs(endAngle - startAngle) / Math.PI);
+        const n_segments = 1 + Math.ceil(30 * radius * Math.abs(dTheta) / Math.PI);
         const result = [];
 
         for (let i = 0; i < n_segments; i++) {
-            const offset = (endAngle - startAngle) * i / n_segments;
+            const offset = dTheta * i / n_segments;
             const x = radius * Math.cos(startAngle + offset);
             const y = radius * Math.sin(startAngle + offset);
             const p = new THREE.Vector2(x, y).add(center);
@@ -26,7 +26,7 @@ const Arc = (props: ArcProps) => {
         }
 
         return result;
-    }, [center, radius, startAngle, endAngle]);
+    }, [center, radius, startAngle, dTheta]);
 
 
     return (

@@ -308,7 +308,7 @@ export default function App() {
         const radius = center.point.distanceTo(secondaryPoint.point);
         const diff = mouseCoords.clone().sub(center.point);
         const mouseAngle = Math.atan2(diff.y, diff.x);
-        setActiveArc(new ArcData(center.point, radius, mouseAngle, mouseAngle));
+        setActiveArc(new ArcData(center.point, radius, mouseAngle, 0.01));
       }
 
       setLeftMB(true);
@@ -364,9 +364,9 @@ export default function App() {
         const newDiff = newMouseCoords.clone().sub(activeArc.center);
 
         const d_angle = angleBetween(diff, newDiff);
-        const newEndAngle = activeArc.endAngle + d_angle;
+        const newDTheta = activeArc.dTheta + d_angle;
 
-        setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, newEndAngle));
+        setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, newDTheta));
       } else {
         const newCameraOffsetX = cameraOffset.x - 2*aspect*scale*ev.movementX/width;
         const newCameraOffsetY = cameraOffset.y + 2*scale*ev.movementY/height;

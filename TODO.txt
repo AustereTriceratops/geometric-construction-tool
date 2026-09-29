@@ -42,6 +42,7 @@
 + (X) erasing lines
 + erasing arcs
 + (X) placing points snapped to a line
++ placing points snapped to an arc
 
 #== Codebase
 + (X) data classes for Points, Lines, Arcs

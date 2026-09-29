@@ -4,17 +4,17 @@ class ArcData {
     center: THREE.Vector2;
     radius: number;
     startAngle: number;
-    endAngle: number;
+    dTheta: number;
 
-    constructor(center: THREE.Vector2, radius: number, startAngle: number, endAngle: number) {
+    constructor(center: THREE.Vector2, radius: number, startAngle: number, dTheta: number) {
         this.center = center.clone();
         this.radius = radius;
         this.startAngle = startAngle;
-        this.endAngle = endAngle;
+        this.dTheta = dTheta;
     }
 
     clone() {
-        return new ArcData(this.center, this.radius, this.startAngle, this.endAngle);
+        return new ArcData(this.center, this.radius, this.startAngle, this.dTheta);
     }
 }
 
