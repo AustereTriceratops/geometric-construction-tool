@@ -156,26 +156,45 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
     if (!a.center.equals(b.center)) return result;
     if (a.radius != b.radius) return result;
     
-    let a_min = a.startAngle % (2*Math.PI);
-    let b_min = b.startAngle % (2*Math.PI);
-    let a_max = a_min + a.dTheta;
-    let b_max = b_min + b.dTheta;
+    // dTheta may be positive or negative, so normalize the start to the "true" start
+    let a_start = Math.min(a.startAngle, a.startAngle + a.dTheta);
+    let b_start = Math.min(b.startAngle, b.startAngle + b.dTheta);
 
-    const b_bump = (a_max >= 2*Math.PI) ? 2*Math.PI : 0;
-    const a_bump = (b_max >= 2*Math.PI) ? 2*Math.PI : 0;
+    // reduce start mod 2pi
+    a_start = a_start % (2*Math.PI);
+    b_start = b_start % (2*Math.PI);
 
-    a_min = a_min + a_bump;
-    a_max = a_max + a_bump;
-    b_min = b_min + b_bump;
-    b_max = b_max + b_bump;
+    console.log(`a_start: ${a_start}`);
+    console.log(`b_start: ${b_start}`);
+    
+    // true endpoint
+    let a_end = a_start + Math.abs(a.dTheta);
+    let b_end = b_start + Math.abs(b.dTheta);
 
-    if (a_min <= b_min && a_max >= b_min && a_max <= b_max) {
-        return new ArcData(a.center, a.radius, a_min, b_max - a_min);
-    } else if (a_min <= b_min && a_max > b_max) {
+    console.log(`a_end: ${a_end}`);
+    console.log(`b_end: ${b_end}`);
+    
+    // const first_point = Math.min(a_start, b_start);
+    // first point must have the other arc's starting point in its span
+    
+    const b_bump = ( (a_end >= 2*Math.PI)) ? 2*Math.PI : 0;
+    const a_bump = ( (b_end >= 2*Math.PI)) ? 2*Math.PI : 0;
+    
+    console.log(`a_bump: ${a_bump}`);
+    console.log(`b_bump: ${b_bump}`);
+
+    a_start = a_start + a_bump;
+    a_end = a_end + a_bump;
+    b_start = b_start + b_bump;
+    b_end = b_end + b_bump;
+
+    if (a_start <= b_start && a_end >= b_start && a_end <= b_end) {
+        return new ArcData(a.center, a.radius, a_start, b_end - a_start);
+    } else if (a_start <= b_start && a_end > b_end) {
         return a.clone();
-    } else if (b_min <= a_min && b_max >= a_min && b_max <= a_max) {
-        return new ArcData(b.center, b.radius, b_min, a_max - b_min);
-    } else if (b_min <= a_min && b_max > a_max) {
+    } else if (b_start <= a_start && b_end >= a_start && b_end <= a_end) {
+        return new ArcData(b.center, b.radius, b_start, a_end - b_start);
+    } else if (b_start <= a_start && b_end > a_end) {
         return b.clone()
     }
 

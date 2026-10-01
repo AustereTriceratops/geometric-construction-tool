@@ -247,24 +247,31 @@ test('test merging staggered overlapping arcs', () => {
     let c = mergeArcs(a, b);
     expect(c.equals(expected)).toBeTruthy();
 
-    a = new ArcData(center, radius, start_a, span_a);
-    b = new ArcData(center, radius, start_b, span_b);
     c = mergeArcs(b, a);
     expect(c.equals(expected)).toBeTruthy();
 
     expected = new ArcData(center, radius, start_a + 5, 1.5);
 
-    // a = new ArcData(center, radius, start_a + 5, span_a);
-    // b = new ArcData(center, radius, start_b + 5, span_b);
-    // c = mergeArcs(a, b);
-    // console.log(c)
-    // expect(c.equals(expected)).toBeTruthy();
+    a = new ArcData(center, radius, start_a + 5, span_a);
+    b = new ArcData(center, radius, start_b + 5, span_b);
+    c = mergeArcs(a, b);
+    expect(c.equals(expected)).toBeTruthy();
     
-    // a = new ArcData(center, radius, start_a + 5, span_a);
-    // b = new ArcData(center, radius, start_b + 5, span_b);
-    // c = mergeArcs(b, a);
-    // console.log(c)
-    // expect(c.equals(expected)).toBeTruthy();
+    c = mergeArcs(b, a);
+    expect(c.equals(expected)).toBeTruthy();
+
+    start_a = 2*Math.PI - 0.2;
+    start_b = 0.3;
+    a = new ArcData(center, radius, start_a, span_a);
+    b = new ArcData(center, radius, start_b, span_b);
+    expected = new ArcData(center, radius, start_a, 1.7);
+
+    c = mergeArcs(a, b);
+    console.log(c)
+    expect(c.equals(expected)).toBeTruthy();
+    
+    c = mergeArcs(b, a);
+    expect(c.equals(expected)).toBeTruthy();
 });
 
 test('test marging arcs with negative spans', () => {
@@ -272,13 +279,16 @@ test('test marging arcs with negative spans', () => {
     let radius = 4;
     let start_a = 3.4;
     let start_b = 0.8;
-    let span_a = -3;
+    let span_a = -2;
     let span_b = 2;
 
-    let expected = new ArcData(center, radius, start_a, 1.5);
+    let expected = new ArcData(center, radius, start_b, 2.6);
 
     let a = new ArcData(center, radius, start_a, span_a);
     let b = new ArcData(center, radius, start_b, span_b);
     let c = mergeArcs(a, b);
+    expect(c.equals(expected)).toBeTruthy();
+
+    c = mergeArcs(b, a);
     expect(c.equals(expected)).toBeTruthy();
 })
