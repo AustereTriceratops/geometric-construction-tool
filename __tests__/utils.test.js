@@ -1,8 +1,9 @@
 import {expect, test} from '@jest/globals';
 import * as THREE from 'three';
 
-import { colinear, project, mergeLines } from '../src/pages/api/utils';
+import { colinear, project, mergeLines, mergeArcs } from '../src/pages/api/utils';
 import LineData from '../src/pages/api/LineData';
+import ArcData from '../src/pages/api/ArcData';
 
 // TODO: property-based testing
 test('test projection', () => {
@@ -90,8 +91,8 @@ test('test merging lines is commutative', () => {
 
     let a = new LineData(p1, p2);
     let b = new LineData(p3, p4);
-    c = mergeLines(a, b);
-    d = mergeLines(b, a);
+    let c = mergeLines(a, b);
+    let d = mergeLines(b, a);
 
     expect(c != null & d != null).toBeTruthy();
     expect(c.equals(d)).toBeTruthy();
@@ -132,7 +133,7 @@ test('test merging staggered overlapping lines', () => {
     let a = new LineData(p1, p2);
     let b = new LineData(p3, p4);
 
-    c = mergeLines(a, b);
+    let c = mergeLines(a, b);
 
     expect(c != null).toBeTruthy;
     expect(c.equals(expected)).toBeTruthy();
@@ -166,9 +167,9 @@ test('test merging completely overlapping lines', () => {
     let p4 = new THREE.Vector2(0, 0.5)
     let expected = new LineData(p3, p2);
 
-    a = new LineData(p3, p2);
-    b = new LineData(p1, p4);
-    c = mergeLines(a, b);
+    let a = new LineData(p3, p2);
+    let b = new LineData(p1, p4);
+    let c = mergeLines(a, b);
 
     expect(c != null).toBeTruthy;
     expect(c.equals(expected)).toBeTruthy();
@@ -227,5 +228,57 @@ test('test merging completely overlapping lines', () => {
     c = mergeLines(a, b);
 
     expect(c != null).toBeTruthy;
+    expect(c.equals(expected)).toBeTruthy();
+});
+
+
+test('test merging staggered overlapping arcs', () => {
+    let center = new THREE.Vector2(1, -3);
+    let radius = 2.12;
+    let start_a = 0.2;
+    let start_b = 2*Math.PI + 0.5
+    let span_a = 1.0
+    let span_b = 1.2
+
+    let expected = new ArcData(center, radius, start_a, 1.5);
+
+    let a = new ArcData(center, radius, start_a, span_a);
+    let b = new ArcData(center, radius, start_b, span_b);
+    let c = mergeArcs(a, b);
+    expect(c.equals(expected)).toBeTruthy();
+
+    a = new ArcData(center, radius, start_a, span_a);
+    b = new ArcData(center, radius, start_b, span_b);
+    c = mergeArcs(b, a);
+    expect(c.equals(expected)).toBeTruthy();
+
+    expected = new ArcData(center, radius, start_a + 5, 1.5);
+
+    // a = new ArcData(center, radius, start_a + 5, span_a);
+    // b = new ArcData(center, radius, start_b + 5, span_b);
+    // c = mergeArcs(a, b);
+    // console.log(c)
+    // expect(c.equals(expected)).toBeTruthy();
+    
+    // a = new ArcData(center, radius, start_a + 5, span_a);
+    // b = new ArcData(center, radius, start_b + 5, span_b);
+    // c = mergeArcs(b, a);
+    // console.log(c)
+    // expect(c.equals(expected)).toBeTruthy();
+});
+
+test('test marging arcs with negative spans', () => {
+    let center = new THREE.Vector2(2, 0.4);
+    let radius = 4;
+    let start_a = 3.4;
+    let start_b = 0.8;
+    let span_a = -3;
+    let span_b = 2;
+
+    let expected = new ArcData(center, radius, start_a, 1.5);
+
+    let a = new ArcData(center, radius, start_a, span_a);
+    let b = new ArcData(center, radius, start_b, span_b);
+    let c = mergeArcs(a, b);
     expect(c.equals(expected)).toBeTruthy();
 })

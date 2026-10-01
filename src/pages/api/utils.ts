@@ -1,5 +1,10 @@
 import * as THREE from 'three';
 import LineData from './LineData';
+import ArcData from './ArcData';
+
+export function floatEqual(a: number, b: number, cutoff: number = 1e-6): Boolean {
+    return (Math.abs(a - b) < cutoff)? true : false
+}
 
 // midpoint between two vectors a and b
 export function midpoint(a: THREE.Vector2, b: THREE.Vector2): THREE.Vector2 {
@@ -102,7 +107,7 @@ export function mergeLines(a: LineData, b: LineData): LineData | null {
         return b.clone();
     }
 
-    return result
+    return result;
 }
 
 export function mergeNewLine(lines: LineData[], newLine: LineData) {
@@ -143,4 +148,36 @@ export function mergeNewLine(lines: LineData[], newLine: LineData) {
     }
 
     return newLines;
+}
+
+export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
+    let result = null;
+
+    if (!a.center.equals(b.center)) return result;
+    if (a.radius != b.radius) return result;
+    
+    let a_min = a.startAngle % (2*Math.PI);
+    let b_min = b.startAngle % (2*Math.PI);
+    let a_max = a_min + a.dTheta;
+    let b_max = b_min + b.dTheta;
+
+    const b_bump = (a_max >= 2*Math.PI) ? 2*Math.PI : 0;
+    const a_bump = (b_max >= 2*Math.PI) ? 2*Math.PI : 0;
+
+    a_min = a_min + a_bump;
+    a_max = a_max + a_bump;
+    b_min = b_min + b_bump;
+    b_max = b_max + b_bump;
+
+    if (a_min <= b_min && a_max >= b_min && a_max <= b_max) {
+        return new ArcData(a.center, a.radius, a_min, b_max - a_min);
+    } else if (a_min <= b_min && a_max > b_max) {
+        return a.clone();
+    } else if (b_min <= a_min && b_max >= a_min && b_max <= a_max) {
+        return new ArcData(b.center, b.radius, b_min, a_max - b_min);
+    } else if (b_min <= a_min && b_max > a_max) {
+        return b.clone()
+    }
+
+    return result;
 }
