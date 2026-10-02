@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { Line } from "@react-three/drei";
 import * as THREE from 'three';
 
+import { TAU } from "../api/constants";
+
 interface PreviewCircleProps {
    center: THREE.Vector2;
    radial: THREE.Vector2;
@@ -26,7 +28,7 @@ const PreviewCircle = (props: PreviewCircleProps) => {
         const result = [];
 
         for (let i = 0; i < n_segments + 1; i++) {
-            const offset = 2*Math.PI*(0.98*i/n_segments + 0.01);
+            const offset = TAU*(0.98*i/n_segments + 0.01);
             const x = radius * Math.cos(angle + offset);
             const y = radius * Math.sin(angle + offset);
             const p = new THREE.Vector2(x, y).add(center);

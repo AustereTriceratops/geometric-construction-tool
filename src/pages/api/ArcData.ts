@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import { floatEqual } from './utils';
+import { TAU } from './constants';
 
 class ArcData {
     center: THREE.Vector2;
@@ -23,8 +24,8 @@ class ArcData {
         const equal_spans = floatEqual(this.dTheta, other.dTheta);
         const neg_equal_spans = floatEqual(this.dTheta, -other.dTheta);
 
-        const start_eq_start = floatEqual(this.startAngle % (2*Math.PI), other.startAngle % (2*Math.PI));
-        const start_eq_end = floatEqual(this.startAngle % (2*Math.PI), (other.startAngle + other.dTheta) % (2*Math.PI));
+        const start_eq_start = floatEqual(this.startAngle % TAU, other.startAngle % TAU);
+        const start_eq_end = floatEqual(this.startAngle % TAU, (other.startAngle + other.dTheta) % TAU);
 
         return (
             this.center.equals(other.center) && this.radius == other.radius &&

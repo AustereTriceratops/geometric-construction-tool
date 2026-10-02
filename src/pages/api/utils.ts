@@ -163,8 +163,8 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
     let b_start = Math.min(b.startAngle, b.startAngle + b.dTheta);
 
     // reduce start mod 2pi
-    a_start = a_start % (2*Math.PI);
-    b_start = b_start % (2*Math.PI);
+    a_start = a_start % TAU;
+    b_start = b_start % TAU;
     // a_start and b_start are now in [0, 2pi)
     
     // true endpoint
@@ -172,8 +172,8 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
     let b_end = b_start + Math.abs(b.dTheta);
 
     // first point must have the other arc's starting point in its span
-    const b_bump = ((a_end >= 2*Math.PI) && (b_start <= (a_end % TAU)) && b_start < a_start) ? 2*Math.PI : 0;
-    const a_bump = ((b_end >= 2*Math.PI) && (a_start <= (b_end % TAU)) && a_start < b_start) ? 2*Math.PI : 0;
+    const b_bump = ((a_end >= TAU) && (b_start <= (a_end % TAU)) && b_start < a_start) ? TAU : 0;
+    const a_bump = ((b_end >= TAU) && (a_start <= (b_end % TAU)) && a_start < b_start) ? TAU : 0;
 
     a_start = a_start + a_bump;
     a_end = a_end + a_bump;
