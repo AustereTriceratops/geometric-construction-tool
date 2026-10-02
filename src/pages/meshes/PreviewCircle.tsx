@@ -49,11 +49,11 @@ const PreviewCircle = (props: PreviewCircleProps) => {
                 dashScale={10}
             />
             <mesh position={[radial.x, radial.y, 0]}>
-                <circleGeometry args={[0.05, 10]}/>
+                <circleGeometry args={[0.05, 16]}/>
                 <meshBasicMaterial color={'#888'}/>
             </mesh>
             <mesh position={[radial.x, radial.y, 0]}>
-                <circleGeometry args={[0.03, 10]}/>
+                <circleGeometry args={[0.03, 16]}/>
                 <meshBasicMaterial color={'#fff'}/>
             </mesh>
         </group>

@@ -130,6 +130,7 @@ const MainScene = (props: MainSceneProps) => {
                 <Point
                     key={i}
                     p={p.point}
+                    scale={scale}
                     highlighted={highlightedPoint == i}
                     onClick={clickPoint(i)}
                     onPointerEnter={() => setHighlightedPoint(i)}

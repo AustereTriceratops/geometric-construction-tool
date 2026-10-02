@@ -19,8 +19,8 @@
 + click+drag should also cancel point placement if the cursor is moving fast
 + preview line's length should be uniform
 + (X) Undo button should not reset secondary input
-+ points should scale with zoom
-+ icons that follow the cursor
++ (X) points should scale with zoom
++ icons that follow the cursor when drawing or adding points
 
 
 #== features
