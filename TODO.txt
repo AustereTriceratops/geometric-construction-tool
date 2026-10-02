@@ -8,14 +8,14 @@
 + (X) zoom in and out of the canvas
 + (X) change cursor when drawing
 + (X) dotted straightedge line should extend beyond the anchoring points
-+ Add a mark on the preview line/arc to denote where the user would start drawing
 + (X) hollow cricle or crosshair follows pointer while placing straightedge/compass points?
 + (X) right-click drag to pan canvas when drawing
 + (X) while drawing with the compass and straightedge tools, allow user to click a point to reset with new anchor point
-+ info icon in corner for controls
 + (X) right-click to reset compass and straightedge while choosing secondary point 
     + (X) also when drawing
 + (X) changing base anchor point for a compass while in drawing mode should preserve length
++ Add a mark on the preview line/arc to denote where the user would start drawing
++ info icon in corner for controls
 
 
 #== features
@@ -33,15 +33,15 @@
         + (X) the user can then draw along
         + (X) user can "unset" the anchor point while keeping the length of the compass fixed
 + (X) colliders for lines
-+ colliders for arcs
 + (X) have compass and straightedge tools snap to nearby points
++ (X) erasing lines
++ (X) placing points snapped to a line
++ colliders for arcs
 + recoloring
     + points
     + lines
     + arcs
-+ (X) erasing lines
 + erasing arcs
-+ (X) placing points snapped to a line
 + placing points snapped to an arc
 
 #== Codebase
@@ -56,17 +56,21 @@
 + (X) edit history for arcs
 + (X) set up ortho camera for tighter control of rendering
 + (X) create a plane mesh to act as the background
-+ code for finding intersections between lines and arcs (any combination)
 + (X) move entire canvas out of _app and into a separate scene component
 + (X) merge together overlapping lines
-+ merge together overlapping arcs
++ (X) merge together overlapping arcs
 + (X) track "winding number" for arcs
-+ gather exports together
 + (X) change cameraOffset to vector2
 + (X) set up unit testing
-+ docstrings
 + (X) highlighted objects should be stored in the app state
++ code for finding intersections between lines and arcs (any combination)
+    + lines and lines
+    + lines and arcs
+    + arcs and arcs
++ gather exports together
++ docstrings
 + set up property-based testing
++ move all colors to constants
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up

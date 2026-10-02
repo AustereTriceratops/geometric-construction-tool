@@ -58,7 +58,8 @@ export default function App() {
 
   /// ===== HIGHLIGHTING =====
   const [highlightedPoint, setHighlightedPoint] = useState<number | null>(null);
-  const [highlightedLines, setHighlightedLines] = useState<number[]>([])
+  const [highlightedLines, setHighlightedLines] = useState<number[]>([]);
+  const [highlightedArcs, setHighlightedArcs] = useState<number[]>([]);
 
   /// ===== CANVAS =====
   const [width, setWidth] = useState(0);
@@ -138,6 +139,16 @@ export default function App() {
     setArcs(newArcs);
     setActiveArc(null);
     setHistory(history.concat([new ConstructionState(points, lines, newArcs)]));
+  }
+
+  const highlightArc = (index: number) => {
+    const newHA = [...highlightedArcs, index];
+    setHighlightedArcs(newHA);
+  }
+
+  const unHighlightArc = (index: number) => {
+    const newHA = highlightedArcs.filter((n) => n != index);
+    setHighlightedArcs(newHA);
   }
 
 
@@ -385,6 +396,9 @@ export default function App() {
 
         arcs={arcs}
         activeArc={activeArc}
+        highlightedArcs={highlightedArcs}
+        highlightArc={highlightArc}
+        unHighlightArc={unHighlightArc}
       />
 
       <Controls

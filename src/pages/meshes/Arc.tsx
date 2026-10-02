@@ -6,10 +6,14 @@ import ArcData from "../api/ArcData";
 
 interface ArcProps {
     arcData: ArcData;
+
+    highlighted: Boolean;
+    onPointerEnter: () => void;
+    onPointerLeave: () => void;
 }
 
 const Arc = (props: ArcProps) => {
-    const { arcData } = props;
+    const { arcData, highlighted, onPointerEnter, onPointerLeave } = props;
     const { center, radius, startAngle, dTheta } = arcData;
 
     const points = useMemo(() => {
@@ -30,11 +34,26 @@ const Arc = (props: ArcProps) => {
 
 
     return (
-        <Line
-            points={points}
-            lineWidth={2}
-            color="black"
-        />
+        <group>
+            <mesh
+                position={[center.x, center.y, 1]}
+            >
+                <ringGeometry args={[ // TODO: clean this up
+                    radius - 0.05, // inner radius
+                    radius + 0.05, // outer radius
+                    3 * Math.ceil(radius * Math.abs(dTheta)), // theta segments
+                    1, // phi segments
+                    Math.min(startAngle, startAngle + dTheta),
+                    Math.abs(dTheta)
+                ]}/>
+                <meshBasicMaterial color={'#4a82bb'}/>
+            </mesh>
+            <Line
+                points={points}
+                lineWidth={2}
+                color="black"
+            />
+        </group>
     )
 }
 

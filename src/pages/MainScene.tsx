@@ -47,6 +47,9 @@ interface MainSceneProps {
 
     arcs: ArcData[];
     activeArc: ArcData | null;
+    highlightedArcs: number[];
+    highlightArc: (index: number) => void;
+    unHighlightArc: (index: number) => void;
 }
 
 const MainScene = (props: MainSceneProps) => {
@@ -54,7 +57,8 @@ const MainScene = (props: MainSceneProps) => {
         onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickLine, clickBackground,
         highlightLine, unHighlightLine, scale, aspect, cameraOffset, inputMode, secondaryInputStep,
         mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc,
-        highlightedLines, highlightedPoint, setHighlightedPoint
+        highlightedLines, highlightedPoint, setHighlightedPoint, highlightedArcs, highlightArc,
+        unHighlightArc
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -109,16 +113,23 @@ const MainScene = (props: MainSceneProps) => {
             {lines.map((l, i) => (
                 <LineSegment
                     key={i}
-                    highlighted={(highlightedLines.includes(i))}
                     start={l.start}
                     end={l.end}
                     onClick={clickLine(i)}
+                    highlighted={(highlightedLines.includes(i))}
                     onPointerEnter={() => highlightLine(i)}
                     onPointerLeave={() => unHighlightLine(i)}
                 />
             ))}
             {arcs.map((a, i) => (
-                <Arc key={i} arcData={a}/>
+                <Arc
+                    key={i}
+                    arcData={a}
+
+                    highlighted={(highlightedArcs.includes(i))}
+                    onPointerEnter={() => highlightArc(i)}
+                    onPointerLeave={() => unHighlightArc(i)}
+                />
             ))}
             {points.map((p, i) => (
                 <Point
@@ -181,7 +192,14 @@ const MainScene = (props: MainSceneProps) => {
                 />
                 : null
             }
-            {(activeArc != null) ? <Arc arcData={activeArc}/> : null}
+            {(activeArc != null) 
+                ? <Arc
+                    arcData={activeArc}
+                    highlighted={false}
+                    onPointerEnter={() => {}}
+                    onPointerLeave={() => {}}
+                /> 
+                : null}
         </Canvas>
     )
 }
