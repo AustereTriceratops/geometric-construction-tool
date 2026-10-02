@@ -192,3 +192,40 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
 
     return result;
 }
+
+export function mergeNewArc(arcs: ArcData[], newArc: ArcData) {
+    let noMerge = true;
+    const newArcs: ArcData[] = [];
+    let updatedIndex: number | null = null;
+
+    for (let i = 0; i < arcs.length; i++) {
+      const a = arcs[i];
+
+      // see if the new line overlaps with any existing lines
+      const c = mergeArcs(a, newArc);
+
+      if (c == null) {
+        newArcs.push(a);
+      } else {
+        noMerge = false;
+
+        if (updatedIndex == null) {
+          updatedIndex = i;
+          newArcs.push(c);
+        } else {
+          const d = mergeArcs(newArcs[updatedIndex], c);
+
+          // this will always be true, but typechecker requires a check
+          if (d != null) {
+            newArcs[updatedIndex] = d;
+          }
+        }
+      }
+    }
+
+    if (noMerge) {
+      newArcs.push(newArc);
+    }
+
+    return newArcs;
+}

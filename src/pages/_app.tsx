@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { projectToLine, angleBetween, mergeNewLine } from './api/utils';
+import { projectToLine, angleBetween, mergeNewLine, mergeNewArc } from './api/utils';
 import { PointData, LineData, ArcData, ConstructionState} from './api'
 
 const MAX_SCALE = 40;
@@ -130,8 +130,9 @@ export default function App() {
   const [arcs, setArcs] = useState<ArcData[]>([]);
   const [activeArc, setActiveArc] = useState<ArcData | null>(null);
   
-  const addArc = (arc: ArcData) => {
-    const newArcs = arcs.concat([arc]);
+  const addArc = (newArc: ArcData) => {
+    console.log(newArc);
+    const newArcs = mergeNewArc(arcs, newArc)
   
     setArcs(newArcs);
     setActiveArc(null);

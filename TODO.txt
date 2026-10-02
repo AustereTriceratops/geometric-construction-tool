@@ -18,6 +18,7 @@
 + info icon in corner for controls
 + click+drag should also cancel point placement if the cursor is moving fast
 + preview line's length should be uniform
++ Undo button should not reset secondary input
 
 
 #== features
@@ -79,3 +80,6 @@
 + (X) Should hide secondary input state buttons when tool is not selected
 + (X) hitting "undo" when multiple lines and arcs are present erases all of them (during drawing phase)
 + (X) crash when place a new point -> use compass/straightedge/click undo button during ONE_SEL
++ These two arc don't merge: 
+    {dTheta: -1.2800862568790479, startAngle: 0.8966316295799157}
+    {dTheta: 3.0586228263090236, startAngle: 2.9443684812320012}
