@@ -20,12 +20,15 @@ class ArcData {
     }
 
     equals(other: ArcData) {
+        const equal_spans = floatEqual(this.dTheta, other.dTheta);
+        const neg_equal_spans = floatEqual(this.dTheta, -other.dTheta);
+
+        const start_eq_start = floatEqual(this.startAngle % (2*Math.PI), other.startAngle % (2*Math.PI));
+        const start_eq_end = floatEqual(this.startAngle % (2*Math.PI), (other.startAngle + other.dTheta) % (2*Math.PI));
+
         return (
             this.center.equals(other.center) && this.radius == other.radius &&
-            (
-                (this.startAngle % (2*Math.PI) == other.startAngle % (2*Math.PI) && floatEqual(this.dTheta, other.dTheta)) ||
-                (this.startAngle % (2*Math.PI) == (other.startAngle + other.dTheta) % (2*Math.PI) && floatEqual(this.dTheta, -other.dTheta))
-            )
+            ((start_eq_start && equal_spans) || (start_eq_end && neg_equal_spans))
         );
     }
 }

@@ -1,6 +1,8 @@
 import * as THREE from 'three';
+
 import LineData from './LineData';
 import ArcData from './ArcData';
+import { TAU } from './constants';
 
 export function floatEqual(a: number, b: number, cutoff: number = 1e-6): Boolean {
     return (Math.abs(a - b) < cutoff)? true : false
@@ -163,25 +165,15 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
     // reduce start mod 2pi
     a_start = a_start % (2*Math.PI);
     b_start = b_start % (2*Math.PI);
-
-    console.log(`a_start: ${a_start}`);
-    console.log(`b_start: ${b_start}`);
+    // a_start and b_start are now in [0, 2pi)
     
     // true endpoint
     let a_end = a_start + Math.abs(a.dTheta);
     let b_end = b_start + Math.abs(b.dTheta);
 
-    console.log(`a_end: ${a_end}`);
-    console.log(`b_end: ${b_end}`);
-    
-    // const first_point = Math.min(a_start, b_start);
     // first point must have the other arc's starting point in its span
-    
-    const b_bump = ( (a_end >= 2*Math.PI)) ? 2*Math.PI : 0;
-    const a_bump = ( (b_end >= 2*Math.PI)) ? 2*Math.PI : 0;
-    
-    console.log(`a_bump: ${a_bump}`);
-    console.log(`b_bump: ${b_bump}`);
+    const b_bump = ((a_end >= 2*Math.PI) && (b_start <= (a_end % TAU)) && b_start < a_start) ? 2*Math.PI : 0;
+    const a_bump = ((b_end >= 2*Math.PI) && (a_start <= (b_end % TAU)) && a_start < b_start) ? 2*Math.PI : 0;
 
     a_start = a_start + a_bump;
     a_end = a_end + a_bump;

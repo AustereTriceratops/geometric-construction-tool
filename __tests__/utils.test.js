@@ -267,14 +267,45 @@ test('test merging staggered overlapping arcs', () => {
     expected = new ArcData(center, radius, start_a, 1.7);
 
     c = mergeArcs(a, b);
-    console.log(c)
     expect(c.equals(expected)).toBeTruthy();
     
     c = mergeArcs(b, a);
     expect(c.equals(expected)).toBeTruthy();
 });
 
-test('test marging arcs with negative spans', () => {
+test('test merging completely overlapping arcs', () => {
+    let center = new THREE.Vector2(-1, 1);
+    let radius = 4;
+
+    let a = new ArcData(center, radius, 4, 0.2);
+    let b = new ArcData(center, radius, 3.9, 1);
+
+    let c = mergeArcs(a, b);
+    expect(c.equals(b)).toBeTruthy();
+
+    c = mergeArcs(b, a);
+    expect(c.equals(b)).toBeTruthy();
+
+    a = new ArcData(center, radius, 6, 0.4);
+    b = new ArcData(center, radius, 5.8, 1);
+
+    c = mergeArcs(a, b);
+    expect(c.equals(b)).toBeTruthy();
+
+    c = mergeArcs(b, a);
+    expect(c.equals(b)).toBeTruthy();
+
+    a = new ArcData(center, radius, 6, 2);
+    b = new ArcData(center, radius, 0, 1);
+
+    c = mergeArcs(a, b);
+    expect(c.equals(a)).toBeTruthy();
+
+    c = mergeArcs(b, a);
+    expect(c.equals(a)).toBeTruthy();
+});
+
+test('test merging arcs with negative spans', () => {
     let center = new THREE.Vector2(2, 0.4);
     let radius = 4;
     let start_a = 3.4;
@@ -289,6 +320,13 @@ test('test marging arcs with negative spans', () => {
     let c = mergeArcs(a, b);
     expect(c.equals(expected)).toBeTruthy();
 
-    c = mergeArcs(b, a);
+    a = new ArcData(center, radius, start_a, span_a);
+    b = new ArcData(center, radius, start_b + span_b, -span_b);
+    c = mergeArcs(a, b);
+    expect(c.equals(expected)).toBeTruthy();
+
+    a = new ArcData(center, radius, start_a + span_a, -span_a);
+    b = new ArcData(center, radius, start_b + span_b, -span_b);
+    c = mergeArcs(a, b);
     expect(c.equals(expected)).toBeTruthy();
 })
