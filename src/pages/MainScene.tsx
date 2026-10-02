@@ -3,17 +3,10 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from 'three';
 import { MouseEvent, WheelEvent, useMemo } from 'react';
 
-import PointData from './api/PointData';
-import LineData from './api/LineData';
-import ArcData from './api/ArcData';
-import Point from '@/pages/meshes/Point';
-import LineSegment from '@/pages/meshes/LineSegment';
-import Arc from '@/pages/meshes/Arc';
-import PreviewLine from '@/pages/meshes/PreviewLine';
-import PreviewCircle from '@/pages/meshes/PreviewCircle';
-import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "@/pages/constants";
+import { PointData, LineData, ArcData} from './api'
+import { PreviewLine, PreviewCircle, Point, LineSegment, Arc, Background } from './meshes';
+import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "./constants";
 import { extrapolateByMidpoint, midpoint } from './api/utils';
-import Background from './meshes/Background';
 
 
 interface MainSceneProps {

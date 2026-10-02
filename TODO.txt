@@ -17,6 +17,7 @@
 + Add a mark on the preview line/arc to denote where the user would start drawing
 + info icon in corner for controls
 + click+drag should also cancel point placement if the cursor is moving fast
++ preview line's length should be uniform
 
 
 #== features
@@ -68,7 +69,7 @@
     + lines and lines
     + lines and arcs
     + arcs and arcs
-+ gather exports together
++ (X) gather exports together
 + docstrings
 + set up property-based testing
 + move all colors to constants

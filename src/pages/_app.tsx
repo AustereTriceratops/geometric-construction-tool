@@ -8,10 +8,7 @@ import {
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
 import { projectToLine, angleBetween, mergeNewLine } from './api/utils';
-import ConstructionState from '@/pages/api/ConstructionState';
-import LineData from '@/pages/api/LineData';
-import ArcData from '@/pages/api/ArcData';
-import PointData from '@/pages/api/PointData';
+import { PointData, LineData, ArcData, ConstructionState} from './api'
 
 const MAX_SCALE = 40;
 const MIN_SCALE = 0.2;
