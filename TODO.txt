@@ -18,7 +18,8 @@
 + info icon in corner for controls
 + click+drag should also cancel point placement if the cursor is moving fast
 + preview line's length should be uniform
-+ Undo button should not reset secondary input
++ (X) Undo button should not reset secondary input
++ points should scale with zoom
 
 
 #== features
@@ -65,7 +66,7 @@
 + (X) change cameraOffset to vector2
 + (X) set up unit testing
 + (X) highlighted objects should be stored in the app state
-+ merge together overlapping arcs
++ (X) merge together overlapping arcs
 + code for finding intersections between lines and arcs (any combination)
     + lines and lines
     + lines and arcs

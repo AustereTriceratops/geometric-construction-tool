@@ -170,7 +170,10 @@ export default function App() {
     setLines(lastState.lines.map((l) => l.clone()));
     setArcs(lastState.arcs.map((a) => a.clone()));
     setHistory(history.slice(0, len - 1));
-    resetSecondaryInputStep();
+
+    if (lastState.points.length != history[len - 1].points.length) {
+      resetSecondaryInputStep();
+    }
   };
 
   const clear = () => {
