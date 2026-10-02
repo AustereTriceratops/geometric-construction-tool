@@ -20,6 +20,7 @@
 + preview line's length should be uniform
 + (X) Undo button should not reset secondary input
 + points should scale with zoom
++ icons that follow the cursor
 
 
 #== features
@@ -81,6 +82,6 @@
 + (X) Should hide secondary input state buttons when tool is not selected
 + (X) hitting "undo" when multiple lines and arcs are present erases all of them (during drawing phase)
 + (X) crash when place a new point -> use compass/straightedge/click undo button during ONE_SEL
-+ These two arc don't merge: 
++ (X) These two arc don't merge: 
     {dTheta: -1.2800862568790479, startAngle: 0.8966316295799157}
     {dTheta: 3.0586228263090236, startAngle: 2.9443684812320012}

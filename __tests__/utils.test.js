@@ -271,6 +271,16 @@ test('test merging staggered overlapping arcs', () => {
     
     c = mergeArcs(b, a);
     expect(c.equals(expected)).toBeTruthy();
+
+    a = new ArcData(center, radius, 0.8, -1.3);
+    b = new ArcData(center, radius, 2.9, 3.1);
+    expected = new ArcData(center, radius, 2.9, 4.1831853);
+
+    c = mergeArcs(a, b);
+    expect(c.equals(expected)).toBeTruthy();
+    
+    c = mergeArcs(b, a);
+    expect(c.equals(expected)).toBeTruthy();
 });
 
 test('test merging completely overlapping arcs', () => {

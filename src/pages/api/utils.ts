@@ -8,6 +8,10 @@ export function floatEqual(a: number, b: number, cutoff: number = 1e-6): Boolean
     return (Math.abs(a - b) < cutoff)? true : false
 }
 
+export function modulo(a: number, b: number): number {
+    return ((a % b) + b) % b;
+}
+
 // midpoint between two vectors a and b
 export function midpoint(a: THREE.Vector2, b: THREE.Vector2): THREE.Vector2 {
     return a.clone().add(b).divideScalar(2);
@@ -161,10 +165,10 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
     // dTheta may be positive or negative, so normalize the start to the "true" start
     let a_start = Math.min(a.startAngle, a.startAngle + a.dTheta);
     let b_start = Math.min(b.startAngle, b.startAngle + b.dTheta);
-
+    
     // reduce start mod 2pi
-    a_start = a_start % TAU;
-    b_start = b_start % TAU;
+    a_start = modulo(a_start, TAU);
+    b_start = modulo(b_start, TAU);
     // a_start and b_start are now in [0, 2pi)
     
     // true endpoint
@@ -172,8 +176,8 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
     let b_end = b_start + Math.abs(b.dTheta);
 
     // first point must have the other arc's starting point in its span
-    const b_bump = ((a_end >= TAU) && (b_start <= (a_end % TAU)) && b_start < a_start) ? TAU : 0;
-    const a_bump = ((b_end >= TAU) && (a_start <= (b_end % TAU)) && a_start < b_start) ? TAU : 0;
+    const b_bump = ((a_end >= TAU) && (b_start <= modulo(a_end, TAU)) && b_start < a_start) ? TAU : 0;
+    const a_bump = ((b_end >= TAU) && (a_start <= modulo(b_end, TAU)) && a_start < b_start) ? TAU : 0;
 
     a_start = a_start + a_bump;
     a_end = a_end + a_bump;
