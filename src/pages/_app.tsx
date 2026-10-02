@@ -141,6 +141,13 @@ export default function App() {
     setHistory(history.concat([new ConstructionState(points, lines, newArcs)]));
   }
 
+  const deleteArc = (index: number) => {
+    const newArcs = arcs.filter((p, i) => i != index);
+
+    setArcs(newArcs);
+    setHistory(history.concat(new ConstructionState(points, lines, newArcs)));
+  }
+
   const highlightArc = (index: number) => {
     const newHA = [...highlightedArcs, index];
     setHighlightedArcs(newHA);
@@ -266,6 +273,22 @@ export default function App() {
     }
   }
 
+  const clickArc = (index: number) => {
+    return (ev: MouseEvent<HTMLDivElement>) => {
+      if (inputMode == ERASE) {
+        deleteArc(index);
+      } else if (inputMode == ADD) {
+        ev.stopPropagation();
+
+        if (highlightedPoint == null) {
+          // const arc = arcs[index];
+          // const snappedCoords = projectToArc(mouseCoords, arc);
+          // addPoint(new PointData(snappedCoords));
+        }
+      }
+    }
+  }
+
   const onPointerDown = (ev: MouseEvent<HTMLDivElement>) => {
     setTime(new Date().getTime());
     setDragging(true);
@@ -370,14 +393,12 @@ export default function App() {
         onPointerUp={onPointerUp}
         onPointerMove={onPointerMove}
         onScroll={onScroll}
-        clickPoint={clickPoint}
-        clickLine={clickLine}
         clickBackground={clickBackground}
-
+        
         scale={scale}
         aspect={aspect}
         cameraOffset={cameraOffset}
-
+        
         inputMode={inputMode}
         secondaryInputStep={secondaryInputStep}
         mouseCoords={mouseCoords}
@@ -387,18 +408,21 @@ export default function App() {
         secondaryPoint={secondaryPoint}
         highlightedPoint={highlightedPoint}
         setHighlightedPoint={setHighlightedPoint}
-
+        clickPoint={clickPoint}
+        
         lines={lines}
         activeLine={activeLine}
         highlightedLines={highlightedLines}
         highlightLine={highlightLine}
         unHighlightLine={unHighlightLine}
+        clickLine={clickLine}
 
         arcs={arcs}
         activeArc={activeArc}
         highlightedArcs={highlightedArcs}
         highlightArc={highlightArc}
         unHighlightArc={unHighlightArc}
+        clickArc={clickArc}
       />
 
       <Controls

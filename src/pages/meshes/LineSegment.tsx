@@ -8,9 +8,9 @@ interface LineSegmentProps {
     start: THREE.Vector2;
     end: THREE.Vector2;
     highlighted: Boolean;
-    onClick: (ev: MouseEvent<HTMLDivElement>) => void;
     onPointerEnter: () => void;
     onPointerLeave: () => void;
+    onClick: (ev: MouseEvent<HTMLDivElement>) => void;
 }
 
 const LineSegment = (props: LineSegmentProps) => {
@@ -47,7 +47,7 @@ const LineSegment = (props: LineSegmentProps) => {
             <Line
                 points={[start, end]}
                 lineWidth={2}
-                color={(highlighted) ? "#888" : "#666"}
+                color={(highlighted) ? "#888" : "black"}
             />
 
         </group>

@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { Line } from "@react-three/drei";
-import { useMemo } from 'react';
+import { useMemo, MouseEvent } from 'react';
 
 import ArcData from "../api/ArcData";
 
@@ -10,10 +10,11 @@ interface ArcProps {
     highlighted: Boolean;
     onPointerEnter: () => void;
     onPointerLeave: () => void;
+    onClick: (ev: MouseEvent<HTMLDivElement>) => void;
 }
 
 const Arc = (props: ArcProps) => {
-    const { arcData, highlighted, onPointerEnter, onPointerLeave } = props;
+    const { arcData, highlighted, onPointerEnter, onPointerLeave, onClick } = props;
     const { center, radius, startAngle, dTheta } = arcData;
 
     const points = useMemo(() => {
@@ -36,7 +37,11 @@ const Arc = (props: ArcProps) => {
     return (
         <group>
             <mesh
+                visible={false}
                 position={[center.x, center.y, 1]}
+                onPointerEnter={onPointerEnter}
+                onPointerLeave={onPointerLeave}
+                onClick={onClick}
             >
                 <ringGeometry args={[ // TODO: clean this up
                     radius - 0.05, // inner radius
@@ -51,7 +56,7 @@ const Arc = (props: ArcProps) => {
             <Line
                 points={points}
                 lineWidth={2}
-                color="black"
+                color={(highlighted) ? "#888" : "black"}
             />
         </group>
     )

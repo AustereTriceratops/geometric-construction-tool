@@ -16,6 +16,7 @@
 + (X) changing base anchor point for a compass while in drawing mode should preserve length
 + Add a mark on the preview line/arc to denote where the user would start drawing
 + info icon in corner for controls
++ click+drag should also cancel point placement if the cursor is moving fast
 
 
 #== features
@@ -36,12 +37,12 @@
 + (X) have compass and straightedge tools snap to nearby points
 + (X) erasing lines
 + (X) placing points snapped to a line
-+ colliders for arcs
++ (X) colliders for arcs
 + recoloring
     + points
     + lines
     + arcs
-+ erasing arcs
++ (X) erasing arcs
 + placing points snapped to an arc
 
 #== Codebase
@@ -58,11 +59,11 @@
 + (X) create a plane mesh to act as the background
 + (X) move entire canvas out of _app and into a separate scene component
 + (X) merge together overlapping lines
-+ (X) merge together overlapping arcs
 + (X) track "winding number" for arcs
 + (X) change cameraOffset to vector2
 + (X) set up unit testing
 + (X) highlighted objects should be stored in the app state
++ merge together overlapping arcs
 + code for finding intersections between lines and arcs (any combination)
     + lines and lines
     + lines and arcs

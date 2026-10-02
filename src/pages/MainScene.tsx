@@ -21,35 +21,36 @@ interface MainSceneProps {
     onPointerUp: () => void;
     onPointerMove: (ev: MouseEvent<HTMLDivElement>) => void;
     onScroll: (ev: WheelEvent<HTMLDivElement>) => void;
-    clickPoint: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
-    clickLine: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
     clickBackground: (ev: MouseEvent<HTMLDivElement>) => void;
-
+    
     scale: number;
     aspect: number;
     cameraOffset: THREE.Vector2;
-
+    
     inputMode: InputMode;
     secondaryInputStep: SecondaryInputStep;
     mouseCoords: THREE.Vector2;
-
+    
     points: PointData[];
     anchorPointIndex: number | null;
     secondaryPoint: PointData | null;
     highlightedPoint: number | null;
     setHighlightedPoint: (index: number | null) => void;
-
+    clickPoint: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
+    
     lines: LineData[];
     activeLine: LineData | null;
     highlightedLines: number[];
     highlightLine: (index: number) => void;
     unHighlightLine: (index: number) => void;
+    clickLine: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
 
     arcs: ArcData[];
     activeArc: ArcData | null;
     highlightedArcs: number[];
     highlightArc: (index: number) => void;
     unHighlightArc: (index: number) => void;
+    clickArc: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
 }
 
 const MainScene = (props: MainSceneProps) => {
@@ -58,7 +59,7 @@ const MainScene = (props: MainSceneProps) => {
         highlightLine, unHighlightLine, scale, aspect, cameraOffset, inputMode, secondaryInputStep,
         mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc,
         highlightedLines, highlightedPoint, setHighlightedPoint, highlightedArcs, highlightArc,
-        unHighlightArc
+        unHighlightArc, clickArc
     } = props;
 
     const mp = useMemo<THREE.Vector2>(() => {
@@ -125,10 +126,11 @@ const MainScene = (props: MainSceneProps) => {
                 <Arc
                     key={i}
                     arcData={a}
-
                     highlighted={(highlightedArcs.includes(i))}
+
                     onPointerEnter={() => highlightArc(i)}
                     onPointerLeave={() => unHighlightArc(i)}
+                    onClick={clickArc(i)}
                 />
             ))}
             {points.map((p, i) => (
@@ -186,9 +188,9 @@ const MainScene = (props: MainSceneProps) => {
                     start={activeLine.start}
                     end={activeLine.end}
                     highlighted={false}
-                    onClick={() => {}}
                     onPointerEnter={() => {}}
                     onPointerLeave={() => {}}
+                    onClick={() => {}}
                 />
                 : null
             }
@@ -198,6 +200,7 @@ const MainScene = (props: MainSceneProps) => {
                     highlighted={false}
                     onPointerEnter={() => {}}
                     onPointerLeave={() => {}}
+                    onClick={() => {}}
                 /> 
                 : null}
         </Canvas>
