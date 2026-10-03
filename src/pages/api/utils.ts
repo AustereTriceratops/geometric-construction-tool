@@ -32,6 +32,13 @@ export function extrapolateByMidpoint(v: THREE.Vector2, mp: THREE.Vector2, fac: 
     return v.clone().sub(mp).multiplyScalar(fac).add(mp);
 }
 
+export function extrapolateByMidpointFixed(v: THREE.Vector2, mp: THREE.Vector2, length: number): THREE.Vector2 {
+    const vec = v.clone().sub(mp)
+    const dist = vec.length()
+    
+    return vec.multiplyScalar(length/dist).add(mp);
+}
+
 // project vector a onto vector b
 // (A \dot B) * B / |B|^2, or equivalently
 // (A \dot B_unit) * B_unit
@@ -232,4 +239,12 @@ export function mergeNewArc(arcs: ArcData[], newArc: ArcData) {
     }
 
     return newArcs;
+}
+
+export function projectToArc(coords: THREE.Vector2, arc: ArcData): THREE.Vector2 {
+    const {center, radius} = arc;
+    const diff = coords.clone().sub(center);
+    const angle = Math.atan2(diff.y, diff.x);
+
+    return new THREE.Vector2(radius * Math.cos(angle), radius * Math.sin(angle)).add(center);
 }

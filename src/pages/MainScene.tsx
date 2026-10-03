@@ -6,7 +6,7 @@ import { MouseEvent, WheelEvent, useMemo } from 'react';
 import { PointData, LineData, ArcData} from './api'
 import { PreviewLine, PreviewCircle, Point, LineSegment, Arc, Background } from './meshes';
 import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "./constants";
-import { extrapolateByMidpoint, midpoint } from './api/utils';
+import { extrapolateByMidpointFixed, midpoint } from './api/utils';
 
 
 interface MainSceneProps {
@@ -152,8 +152,8 @@ const MainScene = (props: MainSceneProps) => {
                 ) 
                     ?
                     <PreviewLine
-                        p_start={extrapolateByMidpoint(points[anchorPointIndex].point, mp, 10)}
-                        p_end={extrapolateByMidpoint(secondaryPoint.point, mp, 10)}
+                        p_start={extrapolateByMidpointFixed(points[anchorPointIndex].point, mp, 100)}
+                        p_end={extrapolateByMidpointFixed(secondaryPoint.point, mp, 100)}
                     />
                     : null
             }

@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { projectToLine, angleBetween, mergeNewLine, mergeNewArc } from './api/utils';
+import { projectToLine, projectToArc, angleBetween, mergeNewLine, mergeNewArc } from './api/utils';
 import { PointData, LineData, ArcData, ConstructionState} from './api'
 
 const MAX_SCALE = 40;
@@ -282,9 +282,9 @@ export default function App() {
         ev.stopPropagation();
 
         if (highlightedPoint == null) {
-          // const arc = arcs[index];
-          // const snappedCoords = projectToArc(mouseCoords, arc);
-          // addPoint(new PointData(snappedCoords));
+          const arc = arcs[index];
+          const snappedCoords = projectToArc(mouseCoords, arc);
+          addPoint(new PointData(snappedCoords));
         }
       }
     }
