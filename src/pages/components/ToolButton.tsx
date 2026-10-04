@@ -2,7 +2,7 @@ import { MouseEvent, ReactNode, useState } from "react";
 import { Roboto } from 'next/font/google';
 
 import ButtonIcon from "./ButtonIcon";
-import { STRAIGHTEDGE, COMPASS, SecondaryInputStep, READY, ONE_SEL } from "../constants";
+import { STRAIGHTEDGE, COMPASS, SecondaryInputStep, READY, ONE_SEL, COLORS } from "../constants";
 
 
 const roboto = Roboto({
@@ -63,14 +63,14 @@ const ToolButton = (props: ToolButtonProps) => {
                             width: '20px',
                             height: '20px',
                             borderRadius: '6px',
-                            backgroundColor: (secondaryInputStep == READY) ? '#7fa629' : ((secondaryInputStep == ONE_SEL) ? '#6db4ff' : '#ebc958')
+                            backgroundColor: (secondaryInputStep == READY) ? COLORS.GREEN : ((secondaryInputStep == ONE_SEL) ? COLORS.BLUE : COLORS.YELLOW)
                         }}></div>
                         <div style={{
                             visibility: (selected)? 'visible' : 'hidden',
                             width: '20px',
                             height: '20px',
                             borderRadius: '6px',
-                            backgroundColor: (secondaryInputStep == READY ) ? '#7fa629' : ((secondaryInputStep == ONE_SEL) ? '#ebc958' : '#ffffff00')
+                            backgroundColor: (secondaryInputStep == READY ) ? COLORS.GREEN : ((secondaryInputStep == ONE_SEL) ? COLORS.YELLOW : COLORS.TRANSPARENT)
                         }}></div>
                     </div>
                 </div>
@@ -92,14 +92,14 @@ const ToolButton = (props: ToolButtonProps) => {
                                 width: '20px',
                                 height: '20px',
                                 borderRadius: '6px',
-                                backgroundColor: (secondaryInputStep == READY) ? '#7fa629' : ((secondaryInputStep == ONE_SEL) ? '#6db4ff' : '#ebc958')
+                                backgroundColor: (secondaryInputStep == READY) ? COLORS.GREEN : ((secondaryInputStep == ONE_SEL) ? COLORS.BLUE : COLORS.YELLOW)
                             }}></div>
                             <div style={{
                                 visibility: (selected)? 'visible' : 'hidden',
                                 width: '20px',
                                 height: '20px',
                                 borderRadius: '6px',
-                                backgroundColor: (secondaryInputStep == READY ) ? '#7fa629' : ((secondaryInputStep == ONE_SEL) ? '#ebc958' : '#ffffff00')
+                                backgroundColor: (secondaryInputStep == READY ) ? COLORS.GREEN : ((secondaryInputStep == ONE_SEL) ? COLORS.YELLOW : COLORS.TRANSPARENT)
                             }}></div>
                         </div>
                     </div>

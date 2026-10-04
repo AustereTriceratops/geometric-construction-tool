@@ -3,6 +3,7 @@ import { Line } from "@react-three/drei";
 import * as THREE from 'three';
 
 import { TAU } from "../api/constants";
+import { COLORS } from "../constants";
 
 interface PreviewCircleProps {
    center: THREE.Vector2;
@@ -50,11 +51,11 @@ const PreviewCircle = (props: PreviewCircleProps) => {
             />
             <mesh position={[radial.x, radial.y, 0]}>
                 <circleGeometry args={[0.05, 16]}/>
-                <meshBasicMaterial color={'#888'}/>
+                <meshBasicMaterial color={COLORS.OBJECT_HIGHLIGHT}/>
             </mesh>
             <mesh position={[radial.x, radial.y, 0]}>
                 <circleGeometry args={[0.03, 16]}/>
-                <meshBasicMaterial color={'#fff'}/>
+                <meshBasicMaterial color={'white'}/>
             </mesh>
         </group>
     )

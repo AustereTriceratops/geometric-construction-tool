@@ -74,11 +74,11 @@ const MainScene = (props: MainSceneProps) => {
             style={{cursor: (secondaryInputStep == READY) ? 'crosshair' : 'default'}}
         >
             <Background
-                color='#e9d6bd'
+                color={COLORS.BACKGROUND}
                 position={[cameraOffset.x, cameraOffset.x, 0]}
                 clickBackground={clickBackground}
             />
-            <color attach="background" args={['#000']}/>
+            <color attach="background" args={['black']}/>
     
             <OrthographicCamera
                 makeDefault

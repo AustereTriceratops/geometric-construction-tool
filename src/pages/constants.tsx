@@ -8,3 +8,15 @@ export const NO_SEL = 'no_sel';
 export const ONE_SEL = 'one_sel';
 export const READY = 'ready';
 export type SecondaryInputStep = 'no_sel' | 'one_sel' | 'ready';
+
+export const COLORS = {
+    BACKGROUND: '#e9d6bd',
+    OBJECT_HIGHLIGHT: "#888",
+    BUTTON: '#bbbbbb',
+    BUTTON_SELECTED: "#626a72",
+    TRANSPARENT: "#ffffff00",
+
+    GREEN: '#7fa629',
+    BLUE: '#6db4ff',
+    YELLOW: '#ebc958'
+}

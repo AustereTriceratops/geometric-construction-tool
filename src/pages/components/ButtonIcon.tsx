@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { COLORS } from "../constants";
 
 interface ButtonIconProps {
     onClick: () => void;
@@ -20,7 +21,7 @@ const ButtonIcon = (props: ButtonIconProps) => {
             style={{
                 display: 'flex',
                 flexDirection: 'row',
-                backgroundColor: (selected) ? '#626a72' : ((hovered) ? '#888888' : '#bbbbbb'),
+                backgroundColor: (selected) ? COLORS.BUTTON_SELECTED : ((hovered) ? COLORS.OBJECT_HIGHLIGHT : '#bbbbbb'),
                 fontSize: '48px',
                 width:'fit-content',
                 justifyContent: 'center',
@@ -29,7 +30,7 @@ const ButtonIcon = (props: ButtonIconProps) => {
                 padding: '8px',
                 borderRadius: '12px',
                 borderStyle: 'solid',
-                borderColor: (selected) ? '#ffffff' : '#ffffff00',
+                borderColor: (selected) ? '#ffffff' : COLORS.TRANSPARENT,
             }}
         >
             {children}
