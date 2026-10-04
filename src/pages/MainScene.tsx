@@ -5,7 +5,7 @@ import { MouseEvent, WheelEvent, useMemo } from 'react';
 
 import { PointData, LineData, ArcData} from './api'
 import { PreviewLine, PreviewCircle, Point, LineSegment, Arc, Background } from './meshes';
-import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY } from "./constants";
+import { InputMode, SecondaryInputStep, COMPASS, STRAIGHTEDGE, ONE_SEL, READY, COLORS } from "./constants";
 import { extrapolateByMidpointFixed, midpoint } from './api/utils';
 
 
