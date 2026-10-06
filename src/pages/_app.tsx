@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { projectToLine, projectToArc, angleBetween, mergeNewLine, mergeNewArc } from './api/utils';
+import { projectToLine, angleBetween, mergeNewLine, mergeNewArc, findLineAndArcIntersection } from './api/utils';
 import { PointData, LineData, ArcData, ConstructionState} from './api'
 
 const MAX_SCALE = 40;
@@ -53,10 +53,6 @@ export default function App() {
     setInputMode(newMode);
   }
 
-  /// ===== HIGHLIGHTING =====
-  const [highlightedPoint, setHighlightedPoint] = useState<number | null>(null);
-  const [highlightedLines, setHighlightedLines] = useState<number[]>([]);
-  const [highlightedArcs, setHighlightedArcs] = useState<number[]>([]);
 
   /// ===== CANVAS =====
   const [width, setWidth] = useState(0);
@@ -78,6 +74,7 @@ export default function App() {
       new PointData(new THREE.Vector2(-2, 0)),
       new PointData(new THREE.Vector2(2, 0)),
   ]);
+  const [highlightedPoint, setHighlightedPoint] = useState<number | null>(null);
 
   const addPoint = (p: PointData) => {
     const newPoint = p.clone();
@@ -99,10 +96,12 @@ export default function App() {
   /// ===== LINES =====
   const [lines, setLines] = useState<LineData[]>([]);
   const [activeLine, setActiveLine] = useState<LineData | null>(null);
+  const [highlightedLineIndices, setHighlightedLineIndices] = useState<number[]>([]);
 
   const addLine = (newLine: LineData) => {
     const newLines = mergeNewLine(lines, newLine);
   
+    // TODO: should also recalculate highlightedLineIndices
     setLines(newLines);
     setActiveLine(null);
     setHistory(history.concat([new ConstructionState(points, newLines, arcs)]));
@@ -116,19 +115,24 @@ export default function App() {
   }
 
   const highlightLine = (index: number) => {
-    const newHL = [...highlightedLines, index];
-    setHighlightedLines(newHL);
+    const newHL = [...highlightedLineIndices, index];
+    setHighlightedLineIndices(newHL);
+  }
+  
+  const unHighlightLine = (index: number) => {
+    const newHL = highlightedLineIndices.filter((n) => n != index);
+    setHighlightedLineIndices(newHL);
   }
 
-  const unHighlightLine = (index: number) => {
-    const newHL = highlightedLines.filter((n) => n != index);
-    setHighlightedLines(newHL);
-  }
+  const highlightedLines = useMemo(() => {
+    return lines.filter((l, i) => highlightedLineIndices.includes(i));
+  }, [lines, highlightedLineIndices])
   
 
   /// ===== ARCS =====
   const [arcs, setArcs] = useState<ArcData[]>([]);
   const [activeArc, setActiveArc] = useState<ArcData | null>(null);
+  const [highlightedArcIndices, setHighlightedArcIndices] = useState<number[]>([]);
   
   const addArc = (newArc: ArcData) => {
     console.log(newArc);
@@ -147,14 +151,18 @@ export default function App() {
   }
 
   const highlightArc = (index: number) => {
-    const newHA = [...highlightedArcs, index];
-    setHighlightedArcs(newHA);
+    const newHA = [...highlightedArcIndices, index];
+    setHighlightedArcIndices(newHA);
   }
 
   const unHighlightArc = (index: number) => {
-    const newHA = highlightedArcs.filter((n) => n != index);
-    setHighlightedArcs(newHA);
+    const newHA = highlightedArcIndices.filter((n) => n != index);
+    setHighlightedArcIndices(newHA);
   }
+
+  const highlightedArcs = useMemo(() => {
+    return arcs.filter((a, i) => highlightedArcIndices.includes(i));
+  }, [arcs, highlightedArcIndices]);
 
 
   /// ===== HISTORY =====
@@ -266,9 +274,8 @@ export default function App() {
         ev.stopPropagation();
 
         if (highlightedPoint == null) {
-          const line = lines[index];
-          const snappedCoords = projectToLine(mouseCoords, line.start, line.end);
-          addPoint(new PointData(snappedCoords));
+          const newPoint = findLineAndArcIntersection(mouseCoords, highlightedLines, highlightedArcs);
+          addPoint(new PointData(newPoint));
         }
       }
     }
@@ -282,9 +289,8 @@ export default function App() {
         ev.stopPropagation();
 
         if (highlightedPoint == null) {
-          const arc = arcs[index];
-          const snappedCoords = projectToArc(mouseCoords, arc);
-          addPoint(new PointData(snappedCoords));
+          const newPoint = findLineAndArcIntersection(mouseCoords, highlightedLines, highlightedArcs)
+          addPoint(new PointData(newPoint));
         }
       }
     }
@@ -413,14 +419,14 @@ export default function App() {
         
         lines={lines}
         activeLine={activeLine}
-        highlightedLines={highlightedLines}
+        highlightedLineIndices={highlightedLineIndices}
         highlightLine={highlightLine}
         unHighlightLine={unHighlightLine}
         clickLine={clickLine}
 
         arcs={arcs}
         activeArc={activeArc}
-        highlightedArcs={highlightedArcs}
+        highlightedArcIndices={highlightedArcIndices}
         highlightArc={highlightArc}
         unHighlightArc={unHighlightArc}
         clickArc={clickArc}

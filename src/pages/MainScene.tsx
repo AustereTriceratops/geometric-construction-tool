@@ -33,14 +33,14 @@ interface MainSceneProps {
     
     lines: LineData[];
     activeLine: LineData | null;
-    highlightedLines: number[];
+    highlightedLineIndices: number[];
     highlightLine: (index: number) => void;
     unHighlightLine: (index: number) => void;
     clickLine: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
 
     arcs: ArcData[];
     activeArc: ArcData | null;
-    highlightedArcs: number[];
+    highlightedArcIndices: number[];
     highlightArc: (index: number) => void;
     unHighlightArc: (index: number) => void;
     clickArc: (index: number) => (ev: MouseEvent<HTMLDivElement>) => void;
@@ -51,7 +51,7 @@ const MainScene = (props: MainSceneProps) => {
         onPointerDown, onPointerUp, onPointerMove, onScroll, clickPoint, clickLine, clickBackground,
         highlightLine, unHighlightLine, scale, aspect, cameraOffset, inputMode, secondaryInputStep,
         mouseCoords, points, anchorPointIndex, secondaryPoint, activeLine, lines, arcs, activeArc,
-        highlightedLines, highlightedPoint, setHighlightedPoint, highlightedArcs, highlightArc,
+        highlightedLineIndices, highlightedPoint, setHighlightedPoint, highlightedArcIndices, highlightArc,
         unHighlightArc, clickArc
     } = props;
 
@@ -110,7 +110,7 @@ const MainScene = (props: MainSceneProps) => {
                     start={l.start}
                     end={l.end}
                     onClick={clickLine(i)}
-                    highlighted={(highlightedLines.includes(i))}
+                    highlighted={(highlightedLineIndices.includes(i))}
                     onPointerEnter={() => highlightLine(i)}
                     onPointerLeave={() => unHighlightLine(i)}
                 />
@@ -119,7 +119,7 @@ const MainScene = (props: MainSceneProps) => {
                 <Arc
                     key={i}
                     arcData={a}
-                    highlighted={(highlightedArcs.includes(i))}
+                    highlighted={(highlightedArcIndices.includes(i))}
 
                     onPointerEnter={() => highlightArc(i)}
                     onPointerLeave={() => unHighlightArc(i)}

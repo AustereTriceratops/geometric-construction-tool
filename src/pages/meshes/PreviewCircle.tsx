@@ -46,7 +46,7 @@ const PreviewCircle = (props: PreviewCircleProps) => {
                 dashed
                 points={points}
                 lineWidth={2}
-                color="#888"
+                color={COLORS.OBJECT_HIGHLIGHT}
                 dashScale={10}
             />
             <mesh position={[radial.x, radial.y, 0]}>

@@ -21,6 +21,7 @@
 + (X) Undo button should not reset secondary input
 + (X) points should scale with zoom
 + icons that follow the cursor when drawing or adding points
++ colliders don't scale with zoom
 
 
 #== features
@@ -75,7 +76,7 @@
 + (X) gather exports together
 + docstrings
 + set up property-based testing
-+ move all colors to constants
++ (X) move all colors to constants
 
 #== Bugs
 + (X) Dragging results in placing a point when the mouse comes up

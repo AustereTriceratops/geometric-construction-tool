@@ -248,3 +248,17 @@ export function projectToArc(coords: THREE.Vector2, arc: ArcData): THREE.Vector2
 
     return new THREE.Vector2(radius * Math.cos(angle), radius * Math.sin(angle)).add(center);
 }
+
+export function findLineAndArcIntersection(coords: THREE.Vector2, lines: LineData[], arcs: ArcData[]): THREE.Vector2 {
+    if (lines.length == 0 && arcs.length == 0) {
+        return new THREE.Vector2();
+    } else if (lines.length == 1 && arcs.length == 0) {
+        const line = lines[0];
+        return projectToLine(coords, line.start, line.end);
+    } else if (lines.length == 0 && arcs.length == 1) {
+        const arc = arcs[0];
+        return projectToArc(coords, arc);
+    }
+
+    return new THREE.Vector2();
+  }
