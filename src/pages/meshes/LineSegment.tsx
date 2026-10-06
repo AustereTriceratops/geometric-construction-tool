@@ -9,13 +9,15 @@ interface LineSegmentProps {
     start: THREE.Vector2;
     end: THREE.Vector2;
     highlighted: Boolean;
+    scale: number;
+
     onPointerEnter: () => void;
     onPointerLeave: () => void;
     onClick: (ev: MouseEvent<HTMLDivElement>) => void;
 }
 
 const LineSegment = (props: LineSegmentProps) => {
-    const {start, end, highlighted, onClick, onPointerEnter, onPointerLeave} = props;
+    const {start, end, highlighted, scale, onClick, onPointerEnter, onPointerLeave} = props;
 
     const mp = useMemo(() => {
         return midpoint(start, end);
@@ -42,7 +44,7 @@ const LineSegment = (props: LineSegmentProps) => {
                 onPointerLeave={onPointerLeave}
                 onClick={onClick}
             >
-                <planeGeometry args={[len, 0.1]}/>
+                <planeGeometry args={[len, 0.04*scale]}/>
                 <meshBasicMaterial color={COLORS.DEBUG}/>
             </mesh>
             <Line

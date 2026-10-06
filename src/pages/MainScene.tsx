@@ -109,6 +109,7 @@ const MainScene = (props: MainSceneProps) => {
                     key={i}
                     start={l.start}
                     end={l.end}
+                    scale={scale}
                     onClick={clickLine(i)}
                     highlighted={(highlightedLineIndices.includes(i))}
                     onPointerEnter={() => highlightLine(i)}
@@ -119,6 +120,7 @@ const MainScene = (props: MainSceneProps) => {
                 <Arc
                     key={i}
                     arcData={a}
+                    scale={scale}
                     highlighted={(highlightedArcIndices.includes(i))}
 
                     onPointerEnter={() => highlightArc(i)}
@@ -182,6 +184,7 @@ const MainScene = (props: MainSceneProps) => {
                     start={activeLine.start}
                     end={activeLine.end}
                     highlighted={false}
+                    scale={scale}
                     onPointerEnter={() => {}}
                     onPointerLeave={() => {}}
                     onClick={() => {}}
@@ -192,6 +195,7 @@ const MainScene = (props: MainSceneProps) => {
                 ? <Arc
                     arcData={activeArc}
                     highlighted={false}
+                    scale={scale}
                     onPointerEnter={() => {}}
                     onPointerLeave={() => {}}
                     onClick={() => {}}

@@ -7,15 +7,16 @@ import { COLORS } from '../constants';
 
 interface ArcProps {
     arcData: ArcData;
-
     highlighted: Boolean;
+    scale: number;
+
     onPointerEnter: () => void;
     onPointerLeave: () => void;
     onClick: (ev: MouseEvent<HTMLDivElement>) => void;
 }
 
 const Arc = (props: ArcProps) => {
-    const { arcData, highlighted, onPointerEnter, onPointerLeave, onClick } = props;
+    const { arcData, highlighted, scale, onPointerEnter, onPointerLeave, onClick } = props;
     const { center, radius, startAngle, dTheta } = arcData;
 
     const points = useMemo(() => {
@@ -45,8 +46,8 @@ const Arc = (props: ArcProps) => {
                 onClick={onClick}
             >
                 <ringGeometry args={[ // TODO: clean this up
-                    radius - 0.05, // inner radius
-                    radius + 0.05, // outer radius
+                    radius - 0.02*scale, // inner radius
+                    radius + 0.02*scale, // outer radius
                     3 * Math.ceil(radius * Math.abs(dTheta)), // theta segments
                     1, // phi segments
                     Math.min(startAngle, startAngle + dTheta),
