@@ -15,7 +15,10 @@ export const COLORS = {
     BUTTON: '#bbbbbb',
     BUTTON_SELECTED: "#626a72",
     TRANSPARENT: "#ffffff00",
+    TEXT: '#555',
 
+    BORDER: "#99b8ff",
+    DEBUG: '#4a82bb',
     GREEN: '#7fa629',
     BLUE: '#6db4ff',
     YELLOW: '#ebc958'

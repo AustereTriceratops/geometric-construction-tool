@@ -21,7 +21,7 @@ const ButtonIcon = (props: ButtonIconProps) => {
             style={{
                 display: 'flex',
                 flexDirection: 'row',
-                backgroundColor: (selected) ? COLORS.BUTTON_SELECTED : ((hovered) ? COLORS.OBJECT_HIGHLIGHT : '#bbbbbb'),
+                backgroundColor: (selected) ? COLORS.BUTTON_SELECTED : ((hovered) ? COLORS.OBJECT_HIGHLIGHT : COLORS.BUTTON),
                 fontSize: '48px',
                 width:'fit-content',
                 justifyContent: 'center',
@@ -30,7 +30,7 @@ const ButtonIcon = (props: ButtonIconProps) => {
                 padding: '8px',
                 borderRadius: '12px',
                 borderStyle: 'solid',
-                borderColor: (selected) ? '#ffffff' : COLORS.TRANSPARENT,
+                borderColor: (selected) ? 'white' : COLORS.TRANSPARENT,
             }}
         >
             {children}

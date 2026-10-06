@@ -3,6 +3,7 @@ import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 
 import { midpoint } from '../api/utils';
+import { COLORS } from '../constants';
 
 interface LineSegmentProps {
     start: THREE.Vector2;
@@ -42,12 +43,12 @@ const LineSegment = (props: LineSegmentProps) => {
                 onClick={onClick}
             >
                 <planeGeometry args={[len, 0.1]}/>
-                <meshBasicMaterial color={'#4a82bb'}/>
+                <meshBasicMaterial color={COLORS.DEBUG}/>
             </mesh>
             <Line
                 points={[start, end]}
                 lineWidth={2}
-                color={(highlighted) ? "#888" : "black"}
+                color={(highlighted) ? COLORS.OBJECT_HIGHLIGHT : "black"}
             />
 
         </group>

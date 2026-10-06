@@ -3,6 +3,7 @@ import { Line } from "@react-three/drei";
 import { useMemo, MouseEvent } from 'react';
 
 import ArcData from "../api/ArcData";
+import { COLORS } from '../constants';
 
 interface ArcProps {
     arcData: ArcData;
@@ -51,12 +52,12 @@ const Arc = (props: ArcProps) => {
                     Math.min(startAngle, startAngle + dTheta),
                     Math.abs(dTheta)
                 ]}/>
-                <meshBasicMaterial color={'#4a82bb'}/>
+                <meshBasicMaterial color={COLORS.DEBUG}/>
             </mesh>
             <Line
                 points={points}
                 lineWidth={2}
-                color={(highlighted) ? "#888" : "black"}
+                color={(highlighted) ? COLORS.OBJECT_HIGHLIGHT : "black"}
             />
         </group>
     )

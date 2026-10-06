@@ -33,7 +33,7 @@ const ToolButton = (props: ToolButtonProps) => {
                 paddingTop: '4px',
                 paddingBottom: '2px',
                 paddingLeft: '5px',
-                color: '#555',
+                color: COLORS.TEXT,
                 font: 'roboto',
                 fontSize: '12px',
                 fontWeight: '700',

@@ -100,7 +100,7 @@ const MainScene = (props: MainSceneProps) => {
                     new THREE.Vector3(-30, -30, 1)
                 ]}
                 lineWidth={5}
-                color="#99b8ff"
+                color={COLORS.BORDER}
                 dashScale={0.5}
             />
 
