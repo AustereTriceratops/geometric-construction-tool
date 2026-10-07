@@ -256,9 +256,41 @@ export function findLineIntersections(arcs: ArcData[]): THREE.Vector2[] {
 }
 
 export function findArcIntersections(arcs: ArcData[]): THREE.Vector2[] {
-    if (arcs.length < 2) return [];
+    if (arcs.length < 2) {
+        return [];
+    } else {
+        const dist = arcs[0].center.distanceTo(arcs[1].center);
+        const combined_radii = arcs[0].radius + arcs[1].radius;
 
-    return [];
+        if (dist > combined_radii) { // trivially no intersection
+            return [];
+        } else if (dist == combined_radii) { // tangent arcs`
+            return [midpoint(arcs[0].center, arcs[1].center)];
+        } else {
+            const c1 = arcs[0].center;
+            const r1 = arcs[0].radius;
+            const c2 = arcs[1].center;
+            const r2 = arcs[1].radius;
+
+            const r = c1.lengthSq() - c2.lengthSq() + r2*r2 - r1*r1;
+            const p = c2.x - c1.x;
+            const q = c2.y - c1.y;
+            const s = r/(2*q) + c1.y;
+            const gamma = c1.x*c1.x + s*s - r1*r1;
+            const beta = 2*p*s/q - 2*c1.x;
+            const alpha = 1 + p*p/(q*q);
+
+            const disc = Math.sqrt(beta*beta - 4*alpha*gamma)
+
+            const x1 = (disc - beta)/(2*alpha);
+            const x2 = (-disc - beta)/(2*alpha);
+
+            const y1 = -(p*x1/q + r/(2*q));
+            const y2 = -(p*x2/q + r/(2*q));
+
+            return [new THREE.Vector2(x1, y1), new THREE.Vector2(x2, y2)];
+        }
+    }
 }
 
 export function findLineAndArcIntersections(lines: LineData[], arcs: ArcData[]): THREE.Vector2[] {

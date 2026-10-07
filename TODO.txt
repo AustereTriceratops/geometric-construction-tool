@@ -51,6 +51,7 @@
     + arcs
 + (X) erasing arcs
 + (X) placing points snapped to an arc
++ visual cue for placing points
 
 #== Codebase
 + (X) data classes for Points, Lines, Arcs
@@ -88,4 +89,4 @@
 + (X) These two arcs don't merge: 
     {dTheta: -1.2800862568790479, startAngle: 0.8966316295799157}
     {dTheta: 3.0586228263090236, startAngle: 2.9443684812320012}
-+ attempting to erase a point at an intersection will also erase the arcs/lines at that intersection
++ (X) attempting to erase a point at an intersection will also erase the arcs/lines at that intersection
