@@ -21,6 +21,8 @@
 + (X) Undo button should not reset secondary input
 + (X) points should scale with zoom
 + icons that follow the cursor when drawing or adding points
+    + a "ghost point" that follows cursor when placing point
+    + have a pencil icon follow the cursor when drawing
 + (X) colliders don't scale with zoom
 
 
@@ -86,3 +88,4 @@
 + (X) These two arcs don't merge: 
     {dTheta: -1.2800862568790479, startAngle: 0.8966316295799157}
     {dTheta: 3.0586228263090236, startAngle: 2.9443684812320012}
++ attempting to erase a point at an intersection will also erase the arcs/lines at that intersection

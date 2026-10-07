@@ -7,7 +7,7 @@ import "@/pages/app.css";
 import { 
   InputMode, ADD, ERASE, COMPASS, STRAIGHTEDGE, NO_SEL, ONE_SEL, READY, SecondaryInputStep
 } from "@/pages/constants";
-import { projectToLine, angleBetween, mergeNewLine, mergeNewArc, findLineAndArcIntersection } from './api/utils';
+import { projectToLine, angleBetween, mergeNewLine, mergeNewArc, snapCoordsToIntersection } from './api/utils';
 import { PointData, LineData, ArcData, ConstructionState} from './api'
 
 const MAX_SCALE = 40;
@@ -135,7 +135,6 @@ export default function App() {
   const [highlightedArcIndices, setHighlightedArcIndices] = useState<number[]>([]);
   
   const addArc = (newArc: ArcData) => {
-    console.log(newArc);
     const newArcs = mergeNewArc(arcs, newArc)
   
     setArcs(newArcs);
@@ -274,8 +273,8 @@ export default function App() {
         ev.stopPropagation();
 
         if (highlightedPoint == null) {
-          const newPoint = findLineAndArcIntersection(mouseCoords, highlightedLines, highlightedArcs);
-          addPoint(new PointData(newPoint));
+          const newPoint = snapCoordsToIntersection(mouseCoords, highlightedLines, highlightedArcs);
+          if (newPoint != null) addPoint(new PointData(newPoint));
         }
       }
     }
@@ -289,8 +288,9 @@ export default function App() {
         ev.stopPropagation();
 
         if (highlightedPoint == null) {
-          const newPoint = findLineAndArcIntersection(mouseCoords, highlightedLines, highlightedArcs)
-          addPoint(new PointData(newPoint));
+          const newPoint = snapCoordsToIntersection(mouseCoords, highlightedLines, highlightedArcs)
+
+          if (newPoint != null) addPoint(new PointData(newPoint));
         }
       }
     }
