@@ -19,7 +19,7 @@ function Point(props : PointProps) {
     <group>
         <mesh
             visible={false}
-            position={[p.x, p.y, 0]}
+            position={[p.x, p.y, 2]}
             onPointerMove={
               (highlighted) 
                 ? () => {}
@@ -35,7 +35,7 @@ function Point(props : PointProps) {
             <circleGeometry args={[0.018*scale, 12]}/>
             <meshBasicMaterial color={COLORS.DEBUG}/>
         </mesh>
-        <mesh position={[p.x, p.y, 0]}>
+        <mesh position={[p.x, p.y, 2]}>
             <circleGeometry args={[0.01*scale, 10]}/>
             <meshBasicMaterial color={(highlighted) ? COLORS.OBJECT_HIGHLIGHT : 'black'}/>
         </mesh>
