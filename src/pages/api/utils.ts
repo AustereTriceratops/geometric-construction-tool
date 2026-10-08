@@ -169,18 +169,13 @@ export function mergeArcs(a: ArcData, b: ArcData): ArcData | null {
     if (!a.center.equals(b.center)) return result;
     if (a.radius != b.radius) return result;
     
-    // dTheta may be positive or negative, so normalize the start to the "true" start
-    let a_start = Math.min(a.startAngle, a.startAngle + a.dTheta);
-    let b_start = Math.min(b.startAngle, b.startAngle + b.dTheta);
+    const a_reg = a.regularize();
+    const b_reg = b.regularize();
     
-    // reduce start mod 2pi
-    a_start = modulo(a_start, TAU);
-    b_start = modulo(b_start, TAU);
-    // a_start and b_start are now in [0, 2pi)
-    
-    // true endpoint
-    let a_end = a_start + Math.abs(a.dTheta);
-    let b_end = b_start + Math.abs(b.dTheta);
+    let a_start = a_reg.startAngle;
+    let b_start = b_reg.startAngle;
+    let a_end = a_start + a_reg.span;
+    let b_end = b_start + b_reg.span;
 
     // first point must have the other arc's starting point in its span
     const b_bump = ((a_end >= TAU) && (b_start <= modulo(a_end, TAU)) && b_start < a_start) ? TAU : 0;
@@ -267,6 +262,7 @@ export function findArcIntersections(arcs: ArcData[]): THREE.Vector2[] {
         } else if (dist == combined_radii) { // tangent arcs`
             return [midpoint(arcs[0].center, arcs[1].center)];
         } else {
+            // TODO: deal with case of more than 2 arcs
             const c1 = arcs[0].center;
             const r1 = arcs[0].radius;
             const c2 = arcs[1].center;
@@ -280,7 +276,7 @@ export function findArcIntersections(arcs: ArcData[]): THREE.Vector2[] {
             const beta = 2*p*s/q - 2*c1.x;
             const alpha = 1 + p*p/(q*q);
 
-            const disc = Math.sqrt(beta*beta - 4*alpha*gamma)
+            const disc = Math.sqrt(beta*beta - 4*alpha*gamma);
 
             const x1 = (disc - beta)/(2*alpha);
             const x2 = (-disc - beta)/(2*alpha);

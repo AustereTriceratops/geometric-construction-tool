@@ -331,7 +331,7 @@ export default function App() {
       if (inputMode == STRAIGHTEDGE && secondaryInputStep == READY && activeLine != null) {
         addLine(activeLine);
       } else if (inputMode == COMPASS && secondaryInputStep == READY && activeArc != null) {
-        if (activeArc.dTheta != 0) {
+        if (activeArc.span != 0) {
           addArc(activeArc);
         }
       }
@@ -369,9 +369,9 @@ export default function App() {
         const newDiff = newMouseCoords.clone().sub(activeArc.center);
 
         const d_angle = angleBetween(diff, newDiff);
-        const newDTheta = activeArc.dTheta + d_angle;
+        const newspan = activeArc.span + d_angle;
 
-        setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, newDTheta));
+        setActiveArc(new ArcData(activeArc.center, activeArc.radius, activeArc.startAngle, newspan));
       } else {
         const newCameraOffsetX = cameraOffset.x - 2*aspect*scale*ev.movementX/width;
         const newCameraOffsetY = cameraOffset.y + 2*scale*ev.movementY/height;
