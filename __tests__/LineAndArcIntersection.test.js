@@ -40,17 +40,17 @@ test('lines intersecting arcs', () => {
 });
 
 test('non-intersecting arcs', () => {
-    // let arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, Math.PI, 1);
-    // let arc_2 = new ArcData(new THREE.Vector2(3.5, -1), 3, 3, 3);
+    let arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, Math.PI, 1);
+    let arc_2 = new ArcData(new THREE.Vector2(3.5, -1), 3, 3, 3);
 
-    // let intersections = findArcIntersections([arc_1, arc_2]);
-    // expect(intersections.length == 0).toBeTruthy();
+    let intersections = findArcIntersections([arc_1, arc_2]);
+    expect(intersections.length == 0).toBeTruthy();
 
-    // arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, 0, Math.PI);
-    // arc_2 = new ArcData(new THREE.Vector2(3.5, -1), 3, 0, 1);
+    arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, 0, Math.PI);
+    arc_2 = new ArcData(new THREE.Vector2(3.5, -1), 3, 0, 1);
 
-    // intersections = findArcIntersections([arc_1, arc_2]);
-    // expect(intersections.length == 0).toBeTruthy();
+    intersections = findArcIntersections([arc_1, arc_2]);
+    expect(intersections.length == 0).toBeTruthy();
 
     arc_1 = new ArcData(new THREE.Vector2(-3, 0), 2, 0, TAU);
     arc_2 = new ArcData(new THREE.Vector2(3, 0), 2, 0, TAU);
@@ -70,6 +70,26 @@ test('non-intersecting arcs', () => {
     intersections = findArcIntersections([arc_1, arc_2]);
     expect(intersections.length == 0).toBeTruthy();
 });
+
+test('tangent arcs', () => {
+    let arc_1 = new ArcData(new THREE.Vector2(-2, -2), 2, -1, 2);
+    let arc_2 = new ArcData(new THREE.Vector2(2, -2), 2, 3, 2);
+    let mp = new THREE.Vector2(0, -2)
+
+    let intersections = findArcIntersections([arc_1, arc_2]);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(intersections[0].equals(mp));
+
+    let arc_3 = new ArcData(new THREE.Vector2(-2, -2), 2, 1, 2);
+    let arc_4 = new ArcData(new THREE.Vector2(2, -2), 2, 4, 2);
+
+    intersections = findArcIntersections([arc_1, arc_4]);
+    expect(intersections.length == 0).toBeTruthy();
+    intersections = findArcIntersections([arc_2, arc_3]);
+    expect(intersections.length == 0).toBeTruthy();
+    intersections = findArcIntersections([arc_3, arc_4]);
+    expect(intersections.length == 0).toBeTruthy();
+})
 
 test('intersecting arcs', () => {
     let arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, -0.1, 3);
