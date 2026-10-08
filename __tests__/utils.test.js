@@ -1,7 +1,7 @@
 import {expect, test} from '@jest/globals';
 import * as THREE from 'three';
 
-import { colinear, project, mergeLines, mergeArcs } from '../src/pages/api/utils';
+import { colinear, project, mergeLines, mergeArcs, closestPoint } from '../src/pages/api/utils';
 import LineData from '../src/pages/api/LineData';
 import ArcData from '../src/pages/api/ArcData';
 
@@ -81,6 +81,33 @@ test('test colinear', () => {
 
     point = new THREE.Vector2(5, 5);
     expect(colinear(point, line)).toBeFalsy();
+})
+
+test('finding closest point to given coordinates', () => {
+    let p1 = new THREE.Vector2(-5, 0);
+    let p2 = new THREE.Vector2(-3, 0);
+    let p3 = new THREE.Vector2(-2.5, 0);
+    let p4 = new THREE.Vector2(-0.5, 0);
+    let p5 = new THREE.Vector2(1, 0);
+    let p6 = new THREE.Vector2(3.5, 0);
+
+    let points = [p1, p2, p3, p4, p5, p6];
+    
+    let closest = closestPoint(new THREE.Vector2(-2.6, 60), points);
+    expect(closest.equals(p3)).toBeTruthy();
+
+    closest = closestPoint(new THREE.Vector2(5, 0), points);
+    expect(closest.equals(p6)).toBeTruthy();
+
+    closest = closestPoint(new THREE.Vector2(-3, -5), points);
+    expect(closest.equals(p2)).toBeTruthy();
+
+    // ambiguity: choose whichever close point appears first in the list
+    closest = closestPoint(new THREE.Vector2(-4, -5), points);
+    expect(closest.equals(p1)).toBeTruthy();
+
+    closest = closestPoint(new THREE.Vector2(-1.5, 1), points);
+    expect(closest.equals(p3)).toBeTruthy();
 })
 
 test('test merging lines is commutative', () => {

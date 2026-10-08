@@ -244,6 +244,22 @@ export function projectToArc(coords: THREE.Vector2, arc: ArcData): THREE.Vector2
     return new THREE.Vector2(radius * Math.cos(angle), radius * Math.sin(angle)).add(center);
 }
 
+export function closestPoint(coords: THREE.Vector2, points: THREE.Vector2[]) {
+    let minDistance = Infinity;
+    let closestPoint = points[0];
+
+    for (let i = 0; i < points.length; i++) {
+        const dist = coords.distanceTo(points[i]);
+
+        if (dist < minDistance) {
+            minDistance = dist;
+            closestPoint = points[i].clone();
+        }
+    }
+
+    return closestPoint;
+}
+
 export function findLineIntersections(arcs: ArcData[]): THREE.Vector2[] {
     if (arcs.length < 2) return [];
 
@@ -317,6 +333,9 @@ export function snapCoordsToIntersection(coords: THREE.Vector2, lines: LineData[
     } else if (lines.length == 0 && arcs.length == 1) {
         const arc = arcs[0];
         return projectToArc(coords, arc);
+    } else {
+        const intersections = findLineAndArcIntersections(lines, arcs);
+        return closestPoint(coords, intersections);
     }
 
     return null;
