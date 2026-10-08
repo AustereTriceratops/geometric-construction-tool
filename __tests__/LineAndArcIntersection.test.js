@@ -72,11 +72,10 @@ test('non-intersecting arcs', () => {
 });
 
 test('intersecting arcs', () => {
-    let arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, 0, 3);
+    let arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, -0.1, 3);
     let arc_2 = new ArcData(new THREE.Vector2(3.5, -1), 3, 3, 3);
 
     let intersections = findArcIntersections([arc_1, arc_2]);
-    console.log(intersections)
     expect(intersections.length == 2).toBeTruthy();
 
     // let intersection = snapCoordsToIntersection(new THREE.Vector2(0, 0), [], [arc_1, arc_2]);

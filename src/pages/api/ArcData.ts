@@ -48,7 +48,7 @@ class ArcData {
         const p = point.clone().sub(this.center);
         
         if (floatEqual(p.length(), this.radius)) {
-            const angle = Math.atan2(p.y, p.x);
+            const angle = modulo(Math.atan2(p.y, p.x), TAU);
 
             const arc = this.regularize();
             const start = arc.startAngle;

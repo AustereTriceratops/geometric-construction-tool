@@ -284,9 +284,16 @@ export function findArcIntersections(arcs: ArcData[]): THREE.Vector2[] {
             const y1 = -(p*x1/q + r/(2*q));
             const y2 = -(p*x2/q + r/(2*q));
 
-            return [new THREE.Vector2(x1, y1), new THREE.Vector2(x2, y2)];
+            const circleIntersections = [new THREE.Vector2(x1, y1), new THREE.Vector2(x2, y2)];
+            const arcIntersections = circleIntersections.filter((point) => arcs[0].contains(point) && arcs[1].contains(point));
+
+            return circleIntersections;
         }
     }
+}
+
+export function findIntersectionOfTwoArcs() {
+
 }
 
 export function findLineAndArcIntersections(lines: LineData[], arcs: ArcData[]): THREE.Vector2[] {

@@ -66,4 +66,14 @@ test('point within arc', () => {
     // the span is set to 0.1, the test fails from floating point error
     arc1 = new ArcData(c1, 1, 5*TAU - 0.1, 0.101);
     expect(arc1.contains(p1)).toBeTruthy();
+
+    arc_1 = new ArcData(new THREE.Vector2(1.1, -3.9), 3, -0.1, 3);
+    arc_2 = new ArcData(new THREE.Vector2(3.5, -1), 3, 3, 3);
+    p1 = new THREE.Vector2(4.099740728602468, -3.9394406029813522);
+    let p2 = new THREE.Vector2(0.5002592713975326, -0.9605593970186473);
+
+    expect(arc_1.contains(p1)).toBeTruthy();
+    expect(arc_1.contains(p2)).toBeTruthy();
+    expect(arc_2.contains(p1)).toBeTruthy();
+    expect(arc_2.contains(p2)).toBeTruthy();
 })
