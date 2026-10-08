@@ -5,7 +5,11 @@ import ArcData from './ArcData';
 import { TAU } from './constants';
 
 export function floatEqual(a: number, b: number, cutoff: number = 1e-6): Boolean {
-    return (Math.abs(a - b) < cutoff)? true : false
+    return (Math.abs(a - b) < cutoff)? true : false;
+}
+
+export function vec2Equal(a: THREE.Vector2, b: THREE.Vector2, cutoff: number = 1e-6): Boolean {
+    return (floatEqual(a.x, b.x, cutoff) && floatEqual(a.y, b.y, cutoff));
 }
 
 export function modulo(a: number, b: number): number {
@@ -33,8 +37,8 @@ export function extrapolateByMidpoint(v: THREE.Vector2, mp: THREE.Vector2, fac: 
 }
 
 export function extrapolateByMidpointFixed(v: THREE.Vector2, mp: THREE.Vector2, length: number): THREE.Vector2 {
-    const vec = v.clone().sub(mp)
-    const dist = vec.length()
+    const vec = v.clone().sub(mp);
+    const dist = vec.length();
     
     return vec.multiplyScalar(length/dist).add(mp);
 }
@@ -260,18 +264,18 @@ export function closestPoint(coords: THREE.Vector2, points: THREE.Vector2[]) {
     return closestPoint;
 }
 
-export function findLineIntersections(arcs: ArcData[]): THREE.Vector2[] {
-    if (arcs.length < 2) return [];
+// export function findLineIntersections(arcs: ArcData[]): THREE.Vector2[] {
+//     if (arcs.length < 2) return [];
 
+//     return [];
+// }
+
+export function findIntersectionOfTwoLines(line_1: LineData, line_2: LineData): THREE.Vector2[] {
     return [];
 }
 
-export function findArcIntersections(arcs: ArcData[]): THREE.Vector2[] {
-    if (arcs.length < 2) {
-        return [];
-    } else {
-        return findIntersectionOfTwoArcs(arcs[0], arcs[1]);
-    }
+export function findIntersectionOfLineAndArc(line: LineData, arc: ArcData): THREE.Vector2[] {
+    return [];
 }
 
 export function findIntersectionOfTwoArcs(arc_1: ArcData, arc_2: ArcData): THREE.Vector2[] {
@@ -289,39 +293,83 @@ export function findIntersectionOfTwoArcs(arc_1: ArcData, arc_2: ArcData): THREE
             return [];
         }
     } else {
-
         const c1 = arc_1.center;
         const r1 = arc_1.radius;
         const c2 = arc_2.center;
         const r2 = arc_2.radius;
     
-        const r = c1.lengthSq() - c2.lengthSq() + r2*r2 - r1*r1;
         const p = c2.x - c1.x;
         const q = c2.y - c1.y;
-        const s = r/(2*q) + c1.y;
-        const gamma = c1.x*c1.x + s*s - r1*r1;
-        const beta = 2*p*s/q - 2*c1.x;
-        const alpha = 1 + p*p/(q*q);
-    
-        const disc = Math.sqrt(beta*beta - 4*alpha*gamma);
-    
-        const x1 = (disc - beta)/(2*alpha);
-        const x2 = (-disc - beta)/(2*alpha);
-    
-        const y1 = -(p*x1/q + r/(2*q));
-        const y2 = -(p*x2/q + r/(2*q));
-    
-        const circleIntersections = [new THREE.Vector2(x1, y1), new THREE.Vector2(x2, y2)];
-        const arcIntersections = circleIntersections.filter((point) => arc_1.contains(point) && arc_2.contains(point));
-    
-        return arcIntersections;
+        
+        if (q == 0) {
+            const mp = midpoint(c1, c2);
+            const x = mp.x;
+
+            const d = r1*r1 - (x - c1.x)*(x - c1.x)
+
+            const y1 = c1.y + Math.sqrt(d);
+            const y2 = c1.y - Math.sqrt(d);
+
+            const circleIntersections = [new THREE.Vector2(x, y1), new THREE.Vector2(x, y2)];
+            const arcIntersections = circleIntersections.filter((point) => arc_1.contains(point) && arc_2.contains(point));
+            
+            return arcIntersections;
+        } else {
+            const r = c1.lengthSq() - c2.lengthSq() + r2*r2 - r1*r1;
+            const s = r/(2*q) + c1.y;
+            const gamma = c1.x*c1.x + s*s - r1*r1;
+            const beta = 2*p*s/q - 2*c1.x;
+            const alpha = 1 + p*p/(q*q);
+        
+            const disc = Math.sqrt(beta*beta - 4*alpha*gamma);
+        
+            const x1 = (disc - beta)/(2*alpha);
+            const x2 = (-disc - beta)/(2*alpha);
+        
+            const y1 = -(p*x1/q + r/(2*q));
+            const y2 = -(p*x2/q + r/(2*q));
+        
+            const circleIntersections = [new THREE.Vector2(x1, y1), new THREE.Vector2(x2, y2)];
+            const arcIntersections = circleIntersections.filter((point) => arc_1.contains(point) && arc_2.contains(point));
+        
+            return arcIntersections;
+        }
     }
 }
 
 export function findLineAndArcIntersections(lines: LineData[], arcs: ArcData[]): THREE.Vector2[] {
-    if (lines.length == 0 && arcs.length == 0) return [];
+    const n_lines = lines.length;
+    const n_arcs = arcs.length;
 
-    return [];
+    let intersections: THREE.Vector2[] = [];
+
+    if (n_lines + n_arcs <= 1) return intersections;
+
+    // intersecting arcs with arcs
+    for (let i = 0; i < n_arcs; i++) {
+        for (let j = i+1; j < n_arcs; j++) {
+            const arc_intersections = findIntersectionOfTwoArcs(arcs[i], arcs[j]);
+            intersections = intersections.concat(arc_intersections);
+        }
+    }
+
+    // intersecting arcs with lines
+    for (let i = 0; i < n_lines; i++) {
+        for (let j = 0; j < n_arcs; j++) {
+            const al_intersections = findIntersectionOfLineAndArc(lines[i], arcs[j]);
+            intersections = intersections.concat(al_intersections);
+        }
+    }
+
+    // intersecting lines with lines
+    for (let i = 0; i < n_lines; i++) {
+        for (let j = i+1; j < n_lines; j++) {
+            const line_intersections = findIntersectionOfTwoLines(lines[i], lines[j]);
+            intersections = intersections.concat(line_intersections);
+        }
+    }
+
+    return intersections;
 }
 
 export function snapCoordsToIntersection(coords: THREE.Vector2, lines: LineData[], arcs: ArcData[]): THREE.Vector2 | null {
@@ -337,6 +385,4 @@ export function snapCoordsToIntersection(coords: THREE.Vector2, lines: LineData[
         const intersections = findLineAndArcIntersections(lines, arcs);
         return closestPoint(coords, intersections);
     }
-
-    return null;
 }
