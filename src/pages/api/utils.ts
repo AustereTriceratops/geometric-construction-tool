@@ -275,7 +275,49 @@ export function findIntersectionOfTwoLines(line_1: LineData, line_2: LineData): 
 }
 
 export function findIntersectionOfLineAndArc(line: LineData, arc: ArcData): THREE.Vector2[] {
-    return [];
+    const dx = line.end.x - line.start.x;
+
+    if (dx == 0) {
+        return []
+    } else {
+        // y = mx + b
+        const m = (line.end.y - line.start.y)/dx;
+        const b = line.start.y - m * line.start.x;
+
+        const c = b - arc.center.y;
+        const x_0 = arc.center.x;
+        const r = arc.radius;
+
+        const alpha = 1 + m*m;
+        const beta = 2*(m*c - arc.center.x);
+        const gamma = x_0*x_0 + c*c - r*r;
+
+        const disc = beta*beta - 4*alpha*gamma;
+        
+        if (disc < 0) {
+            return [];
+        } else if (disc == 0) {
+            const x_1 = -beta/(2*alpha);
+            const y_1 = m*x_1 + b;
+
+            const p = new THREE.Vector2(x_1, y_1)
+            if (arc.contains(p)) {
+                return [p]
+            } else {
+                return []
+            }
+        } else {
+            const x_1 = (-beta + Math.sqrt(disc))/(2*alpha);
+            const x_2 = (-beta - Math.sqrt(disc))/(2*alpha);
+
+            const y_1 = m*x_1 + b;
+            const y_2 = m*x_2 + b;
+
+            const points = [new THREE.Vector2(x_1, y_1), new THREE.Vector2(x_2, y_2)];
+            return points.filter((p) => (arc.contains(p)))
+            // return points.filter((p) => (arc.contains(p) && line.contains(p)))
+        }
+    }
 }
 
 export function findIntersectionOfTwoArcs(arc_1: ArcData, arc_2: ArcData): THREE.Vector2[] {

@@ -24,6 +24,7 @@
     + a "ghost point" that follows cursor when placing point
     + have a pencil icon follow the cursor when drawing
 + (X) colliders don't scale with zoom
++ do not highlight lines or arcs when in compass or straightedge mode
 
 
 #== features
@@ -75,7 +76,7 @@
 + code for finding intersections between lines and arcs (any combination)
     + lines and lines
     + lines and arcs
-    + arcs and arcs
+    + (X) arcs and arcs
 + (X) gather exports together
 + docstrings
 + set up property-based testing
