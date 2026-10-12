@@ -36,3 +36,102 @@ test('LineData inequality', () => {
     expect(b.equals(d)).toBeFalsy();
     expect(c.equals(d)).toBeFalsy();
 })
+
+
+test('test colinear', () => {
+    let line = new LineData(new THREE.Vector2(0, 0), new THREE.Vector2(5, 0));
+
+    let point = new THREE.Vector2(-4, 0);
+    expect(line.colinearTo(point)).toBeTruthy();
+
+    point = new THREE.Vector2(-4, 1);
+    expect(line.colinearTo(point)).toBeFalsy();
+
+    point = new THREE.Vector2(2, -5);
+    expect(line.colinearTo(point)).toBeFalsy();
+
+    point = new THREE.Vector2(9, 0);
+    expect(line.colinearTo(point)).toBeTruthy();
+
+    line = new LineData(new THREE.Vector2(3, -3), new THREE.Vector2(0, 4));
+
+    point = new THREE.Vector2(6, -10);
+    expect(line.colinearTo(point)).toBeTruthy();
+
+    point = new THREE.Vector2(-3, 11);
+    expect(line.colinearTo(point)).toBeTruthy();
+
+    point = new THREE.Vector2(4, 0);
+    expect(line.colinearTo(point)).toBeFalsy();
+
+    point = new THREE.Vector2(5, 5);
+    expect(line.colinearTo(point)).toBeFalsy();
+
+    line = new LineData(new THREE.Vector2(4, -3), new THREE.Vector2(1, 4));
+
+    point = new THREE.Vector2(7, -10);
+    expect(line.colinearTo(point)).toBeTruthy();
+
+    point = new THREE.Vector2(-2, 11);
+    expect(line.colinearTo(point)).toBeTruthy();
+
+    point = new THREE.Vector2(4, 0);
+    expect(line.colinearTo(point)).toBeFalsy();
+
+    point = new THREE.Vector2(5, 5);
+    expect(line.colinearTo(point)).toBeFalsy();
+});
+
+test('test line contains', () => {
+    let line = new LineData(new THREE.Vector2(0, 0), new THREE.Vector2(5, 0));
+
+    let point = new THREE.Vector2(-2, 0);
+    expect(line.contains(point)).toBeFalsy();
+
+    point = new THREE.Vector2(6, 0);
+    expect(line.contains(point)).toBeFalsy();
+
+    point = new THREE.Vector2(3, 0);
+    expect(line.contains(point)).toBeTruthy();
+
+    point = new THREE.Vector2(0, 0);
+    expect(line.contains(point)).toBeTruthy();
+
+    point = new THREE.Vector2(5, 0);
+    expect(line.contains(point)).toBeTruthy();
+
+    point = new THREE.Vector2(0, 1);
+    expect(line.contains(point)).toBeFalsy();
+
+    point = new THREE.Vector2(-1, 1);
+    expect(line.contains(point)).toBeFalsy();
+
+    point = new THREE.Vector2(1, 1);
+    expect(line.contains(point)).toBeFalsy();
+
+    point = new THREE.Vector2(1, -1);
+    expect(line.contains(point)).toBeFalsy();
+    
+    line = new LineData(new THREE.Vector2(-1, 0), new THREE.Vector2(3, 8));
+    
+    point = new THREE.Vector2(-1, -0);
+    expect(line.contains(point)).toBeTruthy();
+
+    point = new THREE.Vector2(3, 8);
+    expect(line.contains(point)).toBeTruthy();
+
+    point = new THREE.Vector2(1, 4);
+    expect(line.contains(point)).toBeTruthy();
+
+    point = new THREE.Vector2(0, 2);
+    expect(line.contains(point)).toBeTruthy();
+
+    point = new THREE.Vector2(0, 2.2);
+    expect(line.contains(point)).toBeFalsy();
+
+    point = new THREE.Vector2(-1, 5);
+    expect(line.contains(point)).toBeFalsy();
+
+    point = new THREE.Vector2(3, -3);
+    expect(line.contains(point)).toBeFalsy();
+});

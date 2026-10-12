@@ -55,7 +55,7 @@ export function project(a: THREE.Vector2, b: THREE.Vector2): THREE.Vector2 {
 
 // takes a point X and a line between A and B. Normalizes coordinates to X_ and B_ 
 // such that point A is the origin. Then, calcualte X_ \dot (B_/|B|)
-export function projectionComponent(x: THREE.Vector2, a: THREE.Vector2, b: THREE.Vector2) {
+export function projectionComponent(x: THREE.Vector2, a: THREE.Vector2, b: THREE.Vector2): number {
     const b_ = b.clone().sub(a);
     const x_ = x.clone().sub(a);
 
@@ -86,22 +86,11 @@ export function angleBetween(a: THREE.Vector2, b: THREE.Vector2) {
     return Math.atan2(b_rotated.y, b_rotated.x);
 }
 
-export function colinear(point: THREE.Vector2, line: LineData, delta=1e-6): Boolean {
-    const p_proj = projectToLine(point, line.start, line.end);
-    const diff = point.clone().sub(p_proj);
-
-    if (Math.abs(diff.x) < delta && Math.abs(diff.y) < delta) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 export function mergeLines(a: LineData, b: LineData): LineData | null {
     let result = null;
 
-    if (!colinear(a.start, b)) return result;
-    if (!colinear(a.end, b)) return result;
+    if (!b.colinearTo(a.start)) return result;
+    if (!b.colinearTo(a.end)) return result;
 
     const a_start_component = projectionComponent(a.start, b.start, b.end);
     const a_end_component = projectionComponent(a.end, b.start, b.end);
@@ -301,7 +290,7 @@ export function findIntersectionOfLineAndArc(line: LineData, arc: ArcData): THRE
             const y_1 = m*x_1 + b;
 
             const p = new THREE.Vector2(x_1, y_1)
-            if (arc.contains(p)) {
+            if (arc.contains(p) && line.contains(p)) {
                 return [p]
             } else {
                 return []
@@ -314,8 +303,7 @@ export function findIntersectionOfLineAndArc(line: LineData, arc: ArcData): THRE
             const y_2 = m*x_2 + b;
 
             const points = [new THREE.Vector2(x_1, y_1), new THREE.Vector2(x_2, y_2)];
-            return points.filter((p) => (arc.contains(p)))
-            // return points.filter((p) => (arc.contains(p) && line.contains(p)))
+            return points.filter((p) => (arc.contains(p) && line.contains(p)))
         }
     }
 }

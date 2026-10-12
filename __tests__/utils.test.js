@@ -1,7 +1,7 @@
 import {expect, test} from '@jest/globals';
 import * as THREE from 'three';
 
-import { colinear, project, mergeLines, mergeArcs, closestPoint } from '../src/pages/api/utils';
+import { project, mergeLines, mergeArcs, closestPoint } from '../src/pages/api/utils';
 import LineData from '../src/pages/api/LineData';
 import ArcData from '../src/pages/api/ArcData';
 
@@ -35,53 +35,7 @@ test('test projection', () => {
     vec = project(new THREE.Vector2(-5, 4), new THREE.Vector2(4, 5));
     expect(vec.x).toEqual(0);
     expect(vec.y).toEqual(0);
-
-    // hand-calculated examples
 });
-
-test('test colinear', () => {
-    let line = new LineData(new THREE.Vector2(0, 0), new THREE.Vector2(5, 0));
-
-    let point = new THREE.Vector2(-4, 0);
-    expect(colinear(point, line)).toBeTruthy();
-
-    point = new THREE.Vector2(-4, 1);
-    expect(colinear(point, line)).toBeFalsy();
-
-    point = new THREE.Vector2(2, -5);
-    expect(colinear(point, line)).toBeFalsy();
-
-    point = new THREE.Vector2(9, 0);
-    expect(colinear(point, line)).toBeTruthy();
-
-    line = new LineData(new THREE.Vector2(3, -3), new THREE.Vector2(0, 4));
-
-    point = new THREE.Vector2(6, -10);
-    expect(colinear(point, line)).toBeTruthy();
-
-    point = new THREE.Vector2(-3, 11);
-    expect(colinear(point, line)).toBeTruthy();
-
-    point = new THREE.Vector2(4, 0);
-    expect(colinear(point, line)).toBeFalsy();
-
-    point = new THREE.Vector2(5, 5);
-    expect(colinear(point, line)).toBeFalsy();
-
-    line = new LineData(new THREE.Vector2(4, -3), new THREE.Vector2(1, 4));
-
-    point = new THREE.Vector2(7, -10);
-    expect(colinear(point, line)).toBeTruthy();
-
-    point = new THREE.Vector2(-2, 11);
-    expect(colinear(point, line)).toBeTruthy();
-
-    point = new THREE.Vector2(4, 0);
-    expect(colinear(point, line)).toBeFalsy();
-
-    point = new THREE.Vector2(5, 5);
-    expect(colinear(point, line)).toBeFalsy();
-})
 
 test('finding closest point to given coordinates', () => {
     let p1 = new THREE.Vector2(-5, 0);

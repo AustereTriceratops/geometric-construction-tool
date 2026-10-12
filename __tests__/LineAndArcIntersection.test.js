@@ -96,8 +96,63 @@ test('lines tangent to arcs', () => {
 test('lines intersecting arcs', () => {
     let arc = new ArcData(new THREE.Vector2(1, 2), 1, 0, TAU);
     let line = new LineData(new THREE.Vector2(1, 2), new THREE.Vector2(2, 3))
-
     
+    let p = new THREE.Vector2((1.7071067, 2.7071067));
+    
+    let intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(vec2Equal(intersections[0], p));
+    
+    arc = new ArcData(new THREE.Vector2(1, 2), 1, 4, 1);
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 0).toBeTruthy();
+
+    let p1 = new THREE.Vector2(2.610115, 3.050577);
+    let p2 = new THREE.Vector2(2.143731, 0.718653);
+    arc = new ArcData(new THREE.Vector2(0.8, 2.2), 2, 0, TAU);
+    line = new LineData(new THREE.Vector2(2, 0), new THREE.Vector2(3, 5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 2).toBeTruthy();
+    
+    line = new LineData(new THREE.Vector2(2.5, 2.5), new THREE.Vector2(3, 5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(vec2Equal(intersections[0], p1))
+    
+    line = new LineData(new THREE.Vector2(2, 0), new THREE.Vector2(2.5, 2.5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(vec2Equal(intersections[0], p2))
+    
+    arc = new ArcData(new THREE.Vector2(0.8, 2.2), 2, 0, Math.PI);
+    line = new LineData(new THREE.Vector2(2, 0), new THREE.Vector2(3, 5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(vec2Equal(intersections[0], p1))
+    
+    line = new LineData(new THREE.Vector2(2.5, 2.5), new THREE.Vector2(3, 5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(vec2Equal(intersections[0], p1))
+
+    line = new LineData(new THREE.Vector2(2, 0), new THREE.Vector2(2.5, 2.5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 0).toBeTruthy();
+
+    arc = new ArcData(new THREE.Vector2(0.8, 2.2), 2, Math.PI, Math.PI);
+    line = new LineData(new THREE.Vector2(2, 0), new THREE.Vector2(3, 5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(vec2Equal(intersections[0], p2))
+    
+    line = new LineData(new THREE.Vector2(2.5, 2.5), new THREE.Vector2(3, 5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 0).toBeTruthy();
+    
+    line = new LineData(new THREE.Vector2(2, 0), new THREE.Vector2(2.5, 2.5))
+    intersections = findIntersectionOfLineAndArc(line, arc);
+    expect(intersections.length == 1).toBeTruthy();
+    expect(vec2Equal(intersections[0], p2))
 });
 
 test('non-intersecting arcs', () => {
