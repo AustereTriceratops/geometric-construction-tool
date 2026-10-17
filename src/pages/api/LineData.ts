@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { projectionComponent, projectToLine } from './utils';
+import { projectionComponent, projectToLine, vec2Equal } from './utils';
 
 class LineData {
     start: THREE.Vector2;
@@ -27,9 +27,8 @@ class LineData {
 
     colinearTo(point: THREE.Vector2, delta=1e-6): Boolean {
         const p_proj = projectToLine(point, this.start, this.end);
-        const diff = point.clone().sub(p_proj);
     
-        if (Math.abs(diff.x) < delta && Math.abs(diff.y) < delta) {
+        if (vec2Equal(point, p_proj)) {
             return true;
         } else {
             return false;

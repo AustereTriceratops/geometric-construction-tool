@@ -12,6 +12,7 @@ export function vec2Equal(a: THREE.Vector2, b: THREE.Vector2, cutoff: number = 1
     return (floatEqual(a.x, b.x, cutoff) && floatEqual(a.y, b.y, cutoff));
 }
 
+// constrains a to be within [0, b);
 export function modulo(a: number, b: number): number {
     return ((a % b) + b) % b;
 }
@@ -267,7 +268,21 @@ export function findIntersectionOfLineAndArc(line: LineData, arc: ArcData): THRE
     const dx = line.end.x - line.start.x;
 
     if (dx == 0) {
-        return []
+        const x = line.start.x
+        const f = x - arc.center.x;
+        let points = []
+
+        if (floatEqual(Math.abs(f), arc.radius)) {
+            points = [new THREE.Vector2(line.start.x, arc.center.y)]
+        } else {
+            const root = Math.sqrt(arc.radius*arc.radius - f*f);
+            const y_1 = arc.center.y + root;
+            const y_2 = arc.center.y - root;
+    
+            points = [new THREE.Vector2(x, y_1), new THREE.Vector2(x, y_2)];
+        }
+
+        return points.filter((p) => (arc.contains(p) && line.contains(p)));
     } else {
         // y = mx + b
         const m = (line.end.y - line.start.y)/dx;
